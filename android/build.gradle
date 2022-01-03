@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+
+buildscript {
+   
+    repositories {
+        mavenLocal()
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.0'
+    }
+}
+
+android {
+    compileSdkVersion 31
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 1
+        versionName version
+    }
+
+    lintOptions {
+        abortOnError true
+    }
+
+    // enable for better logging on these warnings:
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    google()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    compileOnly 'com.facebook.react:react-native:0.20.1'
+    implementation 'com.newrelic.agent.android:android-agent:6.3.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+
+
+}

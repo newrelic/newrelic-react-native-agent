@@ -1,0 +1,5 @@
+Libs folder is used to embed aar for beta/alpha.
+
+UPDATE THE GRADLE FILE TO LOOK HERE WHEN DOING ALPHA/BETA
+
+TODO delete this folder when we release the agent

@@ -1,0 +1,44 @@
+{
+    "android/src/main/java/com/NewRelic/NRMModularAgentModule.java": {
+        "hash": "n/a",
+        "libraries": [
+            "New Relic"
+        ]
+    },
+    "android/src/main/java/com/NewRelic/NRMModularAgentPackage.java": {
+        "hash": "n/a",
+        "libraries": [
+            "New Relic"
+        ]
+    },
+    "index.js": {
+        "hash": "n/a",
+        "libraries": [
+            "New Relic"
+        ]
+    },
+    "ios/NRMModularAgent.h": {
+        "hash": "n/a",
+        "libraries": [
+            "New Relic"
+        ]
+    },
+    "ios/NRMModularAgent.m": {
+        "hash": "n/a",
+        "libraries": [
+            "New Relic"
+        ]
+    },
+    "ios/NRMModularAgent.podspec": {
+        "hash": "n/a",
+        "libraries": [
+            "New Relic"
+        ]
+    },
+    "prelink.js": {
+        "hash": "n/a",
+        "libraries": [
+            "New Relic"
+        ]
+    }
+}

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo $PWD
+
+SRC_PATTERN="ios/bridge/"
+
+echo "checking for changes to ios bridge"
+
+if git diff --cached --name-only | grep --quiet "$SRC_PATTERN"; then
+  echo "ios bridge changes detected. Creating a zip."
+  npm run build:pack-ios-bridge
+else
+  echo "no ios bridge changes detected"
+  exit 0
+fi

@@ -1,0 +1,17 @@
+LicenseData
+.git*
+README.md
+*.project
+*build.gradle
+*/gradle-wrapper.jar
+*.properties
+*gradlew
+*gradlew.bat
+*AndroidManifest.xml
+grandcentral.yml
+package-lock.json
+package.json
+Dockerfile
+android/settings.gradle
+scripts/*
+*.xcodeproj*

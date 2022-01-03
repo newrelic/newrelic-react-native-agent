@@ -1,0 +1,28 @@
+slack_channel: "mobile-notifications"
+require_sidekick_approval: false
+monitored_branches:
+- master
+- develop
+test_suites:
+  - name: Unit Tests
+    environment:
+      dockerfile: Dockerfile
+    command: git submodule update --init && npm ci && npm test
+
+build:
+  publish_pull_requests: true
+  environment:
+    dockerfile: Dockerfile
+    secret_env_vars:
+      - name: ARTIFACTORY_USERNAME
+        shared_path: artifactory
+      - name: ARTIFACTORY_PASSWORD
+        shared_path: artifactory
+      - name: AWS_ACCESS_KEY_ID
+        shared_path: mobile-modular-agent
+      - name: AWS_SECRET_ACCESS_KEY
+        shared_path: mobile-modular-agent
+  build_artifact:
+    command: git submodule update --init && ./scripts/pre-build-validation.sh && npm ci
+  publish:
+    command: git submodule update --init && npm run publish:staging && npm run pack:alpha && npm run upload:alpha

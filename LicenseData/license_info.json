@@ -1,0 +1,17 @@
+{
+    "libraries": {
+        "New Relic": {
+            "licenses": [
+                "New Relic"
+            ],
+            "name": "New Relic",
+            "url": "http://newrelic.com/"
+        }
+    },
+    "licenses": {
+        "New Relic": {
+            "name": "New Relic",
+            "url": "http://newrelic.com/"
+        }
+    }
+}

@@ -1,0 +1,58 @@
+{
+  "name": "newrelic-react-native-agent",
+  "version": "0.0.1",
+  "description": "A New Relic Mobile Agent for React Native",
+  "main": "index.js",
+  "scripts": {
+    "prepare:ios": "node ./scripts/prepare-ios.js",
+    "setup": "./setup.sh",
+    "publish:staging": "./modular-build/utils/publish.sh newrelic-mobile-rn",
+    "pack:alpha": "./modular-build/utils/pack-alpha.sh newrelic-mobile-rn",
+    "upload:alpha": "./modular-build/utils/upload-alpha.sh newrelic-mobile-rn",
+    "build:pack-ios-bridge": "./modular-build/utils/pack-ios-bridge.sh",
+    "use:npmReadme": "mv 'README.md' 'git.README.md' && mv 'npm.README.md' 'README.md'",
+    "use:gitReadme": "mv 'README.md' 'npm.README.md' && mv 'git.README.md' 'README.md'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --collect-coverage",
+    "lint": "eslint ./**/*.js",
+    "lint:fix": "eslint ./**/*.js --fix",
+    "docs:generate": "jsdoc -c jsdoc.json"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
+  "keywords": [
+    "new relic",
+    "react-native"
+  ],
+  "author": "New Relic",
+  "license": "New Relic",
+  "publishConfig": {
+    "registry": "https://pdx-artifacts.pdx.vm.datanerd.us/api/npm/newrelic-mobile-rn/"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/plugin-proposal-class-properties": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@types/jest": "^24.9.1",
+    "aws-sdk": "^2.1046.0",
+    "babel-eslint": "^8.2.6",
+    "babel-jest": "^24.8.0",
+    "docdash": "^1.2.0",
+    "edit-json-file": "^1.6.2",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.27.1",
+    "jest": "^24.8.0",
+    "jsdoc": "^3.6.7",
+    "react-native": "^0.59.3",
+    "react-native-promise-rejection-utils": "0.0.1",
+    "shelljs": "^0.8.4",
+    "unzipper": "^0.10.11"
+  }
+}

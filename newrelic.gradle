@@ -1,0 +1,102 @@
+/**
+ *
+ * New Relic React Native Gradle Plugin
+ *
+ **/
+
+def config = project.hasProperty("react") ? project.react : [];
+def reactRootDir = file(config.rootDir ?: "../..")
+def shell = config.shell ?: ["/bin/sh"]    // TODO get from environment
+def sourcemapGenPath = "$reactRootDir/node_modules/newrelic-mobile-rn/new-relic/scripts/js-sourcemap/rn-gen-source-map.sh"
+
+def logger = project.logger
+
+dependencies {
+    implementation group: 'com.google.guava', name: 'guava', version: '27.1-jre'
+}
+
+gradle.projectsEvaluated {
+
+    try {
+        projectVariants(project).all { variant ->
+            def variantNameCap = variant.name.capitalize()
+            try {
+                def targetTask = "bundle${variantNameCap}JsAndAssets"
+                project.tasks.getByName(targetTask) { task ->
+                    if (task.getEnabled()) {
+                        def nameCliTask = "bundle${variantNameCap}SourceMapUpload"
+                        task.finalizedBy {
+                            project.task(nameCliTask, type: Exec) {
+                                description = "New Relic upload js source maps"
+                                group = 'react'
+
+                                workingDir reactRootDir
+                                def args = [ sourcemapGenPath ]
+
+                                environment['REACT_ROOTDIR'] = reactRootDir
+                                environment['PLATFORM'] = 'android'
+                                environment['buildType'] = variant.buildType.name.toLowerCase()
+                                commandLine(*shell, *args)
+
+                                enabled true
+                            }
+                        }
+                    }
+                }
+            } catch (UnknownTaskException e) {
+                // task for this variant not available
+            }
+        }
+
+    } catch(Exception e) {
+        logger.warn e as String
+    }
+}
+
+def bundleTasks(Project project) {
+    def bundleTasks = []
+    try {
+        bundleTasks = project.tasks.findAll { it.name ==~ /bundle.*JsAndAssets/ }
+    } catch (Exception e) {
+        logger.warn("[NRMA] bundleTasks: " + e)
+    }
+    bundleTasks
+}
+
+def projectVariants(Project project) {
+    def variants = []
+    try {
+        def android = project.getProperties().get("android")
+        if (android != null) {
+            if (android.hasProperty("applicationVariants")) {
+                variants = android.applicationVariants
+            } else if (android.hasProperty("libraryVariants")) {
+                variants = android.libraryVariants
+            }
+        }
+
+    } catch (MissingPropertyException) {
+        // has no android closure or variants property
+        logger.warn("[NRMA] projectVariants: " + e)
+    }
+    catch (Exception e) {
+        logger.warn("[NRMA] projectVariants: " + e)
+    }
+
+    variants
+}
+
+task copyNRFiles(type: Copy)
+
+copyNRFiles {
+    outputs.upToDateWhen { false }
+    description = 'Copies newrelic.json to asset folder.'
+    from "$projectDir/../../"
+    into "$projectDir/src/main/assets/"
+    include('newrelic.json')
+}
+
+preBuild.dependsOn copyNRFiles
+
+
+
