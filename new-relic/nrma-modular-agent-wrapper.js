@@ -115,6 +115,7 @@ class NRMAModularAgentWrapper {
 
   startAgent = (appKey) => {
     NRMModularAgent.startAgent(appKey);
+    NRMAModularAgentWrapper.isAgentStarted = true;
   }
 
 }

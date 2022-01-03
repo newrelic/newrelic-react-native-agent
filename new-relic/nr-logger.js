@@ -19,7 +19,7 @@ class Log {
 
   error(text) {
     // eslint-disable-next-line no-console
-    console.log(`${this.nameSpace} ${text}`);
+    //console.log(`${this.nameSpace} ${text}`);
   }
 
   warn(text) {

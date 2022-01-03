@@ -138,10 +138,9 @@ class NewRelic {
 
   addNewRelicPromiseRejectionHandler () {
 
-const prevTracker = getUnhandledPromiseRejectionTracker();
+  const prevTracker = getUnhandledPromiseRejectionTracker();
  
 setUnhandledPromiseRejectionTracker((id, error) => {
-  console.warn('Unhandled promise rejection!', id, error);
 
   this.NRMAModularAgentWrapper.execute('recordStack',
     error.name,
@@ -220,15 +219,12 @@ setUnhandledPromiseRejectionTracker((id, error) => {
       // start time is tracked by the `send` method
       
       // eslint-disable-next-line prefer-rest-params
-      console.log("nis" + method);
-      console.log(url);
       return originalXhrOpen.apply(this, arguments)
       
     }
   
     XMLHttpRequest.prototype.send = function(data) {
      
-      console.log(data);
       
       if (this.addEventListener) {
         this.addEventListener(
@@ -237,7 +233,6 @@ setUnhandledPromiseRejectionTracker((id, error) => {
             if (this.readyState === this.HEADERS_RECEIVED) {
               const contentTypeString = this.getResponseHeader('Content-Type');
               if (contentTypeString) {            
-                console.log("1"+contentTypeString);
               }
                 
               if (this.getAllResponseHeaders()) {
@@ -248,20 +243,16 @@ setUnhandledPromiseRejectionTracker((id, error) => {
                   const value = element.split(':')[1];
                   responseHeadersDictionary[key] = value;
                 });
-                console.log("2"+responseHeadersDictionary);
               }
             }
             if (this.readyState === this.DONE) {
-              console.log("3"+this.status);
               
               if (this.response) {
                 if (this.responseType === 'blob') {
                   var responseText =  await (new Response(this.response)).text();
-                   console.log("3"+responseText);
                 NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(responseText),responseText);
 
                 } else if (this.responseType === 'text') {
-                   console.log ("3"+this.response);
                 }
                 NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(this.response),this.response);
               }

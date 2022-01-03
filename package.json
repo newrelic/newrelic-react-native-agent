@@ -22,7 +22,18 @@
   "jest": {
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
-    }
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!react-native-promise-rejection-utils)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   },
   "keywords": [
     "new relic",
@@ -34,20 +45,20 @@
     "registry": "https://pdx-artifacts.pdx.vm.datanerd.us/api/npm/newrelic-mobile-rn/"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.5",
-    "@babel/plugin-proposal-class-properties": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
+    "@babel/core": "^7.16.7",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
     "@types/jest": "^24.9.1",
-    "aws-sdk": "^2.1046.0",
+    "aws-sdk": "^2.1048.0",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^24.8.0",
     "docdash": "^1.2.0",
-    "edit-json-file": "^1.6.2",
+    "edit-json-file": "^1.7.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react": "^7.28.0",
     "jest": "^24.8.0",
     "jsdoc": "^3.6.7",
     "react-native": "^0.59.3",

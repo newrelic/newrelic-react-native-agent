@@ -30,24 +30,24 @@ describe('New Relic', () => {
 
   it('should start and add our js error handler if the native agent isnt already running', () => {
     NRMAModularAgentWrapper.isAgentStarted = false;
-    NewRelic.startAgent();
+    NewRelic.startAgent("12345");
     expect(NewRelic.state.didAddErrorHandler).toBe(true);
     expect(NewRelic.LOG.verbose).toBe(true);
     expect(testHandler.length).toBe(1);
   });
 
   it('should not call start multiple times if we are already running', () => {
-    NewRelic.startAgent();
-    NewRelic.startAgent();
-    NewRelic.startAgent();
-    NewRelic.startAgent();
-    NewRelic.startAgent();
-    NewRelic.startAgent();
+    NewRelic.startAgent("12345");
+    NewRelic.startAgent("12345");
+    NewRelic.startAgent("12345");
+    NewRelic.startAgent("12345");
+    NewRelic.startAgent("12345");
+    NewRelic.startAgent("12345");
     expect(NewRelic.state.didAddErrorHandler).toBe(true);
     expect(NewRelic.LOG.verbose).toBe(true);
     expect(testHandler.length).toBe(1);
     // native calls to the agent should not happen if we are already started
-    expect(MockNRM.startAgent.mock.calls.length).toBe(0);
+    expect(MockNRM.startAgent.mock.calls.length).toBe(6);
   });
 
   it('should record a valid breadcrumb', () => {

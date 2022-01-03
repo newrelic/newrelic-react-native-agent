@@ -10,10 +10,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "newrelic-mobile-rn": "file:../dist/newrelic-mobile-rn-0.6.3.tgz",
-    "new-relic-mobile-cli": "file:../downloads/newrelic-mobile-cli-0.1.74.tgz",
-    "react": "16.9.0",
-    "react-native": "0.61.2"
+    "newrelic-mobile-rn": "file:../newrelic-react-native-agent-0.0.1.tgz",
+    "react": "^16.9.0",
+    "react-native": "^0.61.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
