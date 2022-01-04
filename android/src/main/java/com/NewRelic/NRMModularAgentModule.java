@@ -10,7 +10,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.Callback;
 import com.newrelic.agent.android.NewRelic;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
@@ -148,8 +147,6 @@ public void recordStack(String errorName, String errorMessage, String errorStack
 
     } catch (IllegalArgumentException e) {
         Log.w("NRMA", e.getMessage());
-    } catch (JsonProcessingException e) {
-        e.printStackTrace();
     }
 }
 }

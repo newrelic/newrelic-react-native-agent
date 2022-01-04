@@ -44,6 +44,9 @@
   "publishConfig": {
     "registry": "https://pdx-artifacts.pdx.vm.datanerd.us/api/npm/newrelic-mobile-rn/"
   },
+  "dependencies": {
+    "react-native-promise-rejection-utils": "0.0.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
@@ -62,7 +65,6 @@
     "jest": "^24.8.0",
     "jsdoc": "^3.6.7",
     "react-native": "^0.59.3",
-    "react-native-promise-rejection-utils": "0.0.1",
     "shelljs": "^0.8.4",
     "unzipper": "^0.10.11"
   }
