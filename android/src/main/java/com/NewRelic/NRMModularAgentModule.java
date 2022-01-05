@@ -10,7 +10,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.Callback;
 import com.newrelic.agent.android.NewRelic;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newrelic.agent.android.ApplicationFramework;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
          
                         NewRelic.withApplicationToken(appKey)
+                        .withApplicationFramework(ApplicationFramework.ReactNative)
                                 .withCrashReportingEnabled(true)
                                 .start(reactContext);
         }
@@ -119,6 +121,33 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void startInteraction(String actionName) {
+        NewRelic.startInteraction(actionName);
+    }
+
+    @ReactMethod
+    public void endInteraction(String actionName) {
+        NewRelic.endInteraction(actionName);
+    }
+
+    @ReactMethod
+    public void setInteractionName(String name) {
+        NewRelic.setInteractionName(name);
+    }
+
+    @ReactMethod
+    public void nativeLog(String name, String message) {
+
+        NewRelic.setInteractionName("Console Events");
+
+        Map<String, Object> logs = new HashMap<>();
+        logs.put("Name", name);
+        logs.put("Message", message);
+        NewRelic.recordBreadcrumb("Console Logs",logs);
+        NewRelic.recordCustomEvent("Console Events", "", logs);
+    }
+
+    @ReactMethod
     public void noticeHttpTransaction(String url, String method,int statusCode,int startTime,int endTime,int bytesSent,int bytesReceived,String responseBody) {
         NewRelic.noticeHttpTransaction(url,method,statusCode,startTime,endTime,bytesSent,bytesReceived,responseBody);
     }
@@ -131,7 +160,6 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 @ReactMethod
 public void recordStack(String errorName, String errorMessage, String errorStack, boolean isFatal, String jsAppVersion) {
 
-    ObjectMapper mapper = new ObjectMapper();
     try {
 
         Map<String,Object> crashEvents = new HashMap<>();
@@ -141,6 +169,7 @@ public void recordStack(String errorName, String errorMessage, String errorStack
         crashEvents.put("jsAppVersion", jsAppVersion);
         crashEvents.put("errorStack", errorStack);
 
+        NewRelic.recordBreadcrumb("JS Errors", crashEvents);
         NewRelic.recordCustomEvent("JS Errors", "", crashEvents);
 
         RNStackTrace rnStackTrace = new RNStackTrace(errorName, errorMessage, errorStack, isFatal, jsAppVersion);

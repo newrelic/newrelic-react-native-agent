@@ -67,6 +67,25 @@ class NewRelic {
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', eventType, eventName, attributes);
   }
 
+  startInteraction(actionName) {
+    if(Platform.OS === 'android') {
+      this.NRMAModularAgentWrapper.execute('startInteraction', actionName);
+    }
+  }
+
+  endInteraction(actionName) {
+    if(Platform.OS === 'android') {
+      this.NRMAModularAgentWrapper.execute('endInteraction', actionName);
+    }
+  }
+
+  setInteractionName(name) {
+    if(Platform.OS === 'android') {
+      this.NRMAModularAgentWrapper.execute('setInteractionName', name);
+    }
+  }
+
+
   /**
    * Creates a custom attribute with a specified name and value.
    * When called, it overwrites its previous value and type.

@@ -118,6 +118,18 @@ class NRMAModularAgentWrapper {
     NRMAModularAgentWrapper.isAgentStarted = true;
   }
 
+  startInteraction = (actionName) => {
+    NRMModularAgent.startInteraction(actionName);
+  }
+  
+  endInteraction = (actionName) => {
+    NRMModularAgent.endInteraction(actionName);
+  }
+
+  setInteractionName = (name) => {
+    NRMModularAgent.setInteractionName(name);
+  }
+
 }
 
 

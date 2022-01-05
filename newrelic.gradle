@@ -7,7 +7,7 @@
 def config = project.hasProperty("react") ? project.react : [];
 def reactRootDir = file(config.rootDir ?: "../..")
 def shell = config.shell ?: ["/bin/sh"]    // TODO get from environment
-def sourcemapGenPath = "$reactRootDir/node_modules/newrelic-mobile-rn/new-relic/scripts/js-sourcemap/rn-gen-source-map.sh"
+def sourcemapGenPath = "$reactRootDir/node_modules/newrelic-react-native-agent/new-relic/scripts/js-sourcemap/rn-gen-source-map.sh"
 
 def logger = project.logger
 

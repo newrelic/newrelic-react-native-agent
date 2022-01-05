@@ -92,6 +92,11 @@ RCT_EXPORT_METHOD(noticeHttpTransaction:(NSString* _Nonnull) url method:(NSStrin
   
 }
 
+RCT_EXPORT_METHOD(nativeLog:(NSString* _Nonnull) name message:(NSString* _Nonnull) message) {
+    NSDictionary *logs =  @{@"Name":name,@"Message": message};
+    [NewRelic recordCustomEvent:@"Console Events" attributes:logs];
+}
+
 RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
                   errorMessage:(NSString* _Nullable)errorMessage
                   errorStack:(NSString* _Nullable)errorStack
@@ -100,32 +105,10 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
     
     
     NSDictionary *dict =  @{@"Name":errorName,@"Message": errorMessage,@"isFatal": isFatal,@"jsAppVersion": jsAppVersion,@"errorStack": errorStack};
-    
-    [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];
 
-    
-    
-//    NRMAStackTrace* trace = [[NRMAStackTrace alloc] init];
-//    trace.buildId = jsAppVersion;
-//    trace.fatal = isFatal;
-//    trace.stackType = ReactNative;
-//    NRMAStackException* message = [NRMAStackException messageWithName:errorName reason:errorMessage];
-//    trace.message  = message;
-//    NRMAStack* stack = [[NRMAStack alloc] init];
-//    stack.identifier = @"JS Thread";
-//    stack.isThrowingThread = @YES;
-//    NSArray* stackArray = [errorStack componentsSeparatedByString:@"\n"];
-//    for (NSString* frameString in stackArray){
-//        NRMAStackFrame* frame = [[NRMAStackFrame alloc] init];
-//        frame.sourceLine = frameString;
-//        [stack.stackFrames addObject:frame];
-//    }
-//
-//    trace.occurrenceId = [NSUUID new].UUIDString;
-//
-//    [trace.stacks addObject:stack];
-//
-//    [NewRelic recordStack:trace];
+
+    [NewRelic recordBreadcrumb:@"JS Errors" attributes:dict];
+    [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];
 }
 
 @end
