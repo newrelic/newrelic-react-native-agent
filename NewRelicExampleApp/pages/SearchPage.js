@@ -78,6 +78,9 @@ export default class SearchPage extends Component<{}> {
       <ActivityIndicator size='large'/> : null;
     return (
       <View style={styles.container}>
+
+        
+
         <Text style={styles.description}>
           Search for houses to buy!
         </Text>
@@ -99,6 +102,7 @@ export default class SearchPage extends Component<{}> {
         <Image source={require('./../Resources/house.png')} style={styles.image}/>
         {spinner}
         <Text style={styles.description}>{this.state.message}</Text>
+
       </View>
     );
   }

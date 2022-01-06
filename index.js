@@ -198,9 +198,9 @@ setUnhandledPromiseRejectionTracker((id, error) => {
   sendConsole(type, args) {
     const argsStr = JSON.stringify(args);
     this.send('JSConsole', {consoleType: type, args: argsStr});
-    if (type === 'error') {
-      this.NRMAModularAgentWrapper.execute('consoleEvents','[JSConsole:Error] ' + argsStr); 
-    }
+    // if (type === 'error') {
+    //   this.NRMAModularAgentWrapper.execute('consoleEvents','[JSConsole:Error] ' + argsStr); 
+    // }
   }
 
   send(name, args) {
