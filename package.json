@@ -18,7 +18,9 @@
     "lint": "eslint ./**/*.js",
     "lint:fix": "eslint ./**/*.js --fix",
     "docs:generate": "jsdoc -c jsdoc.json",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "commit": "cz"
+
   },
   "jest": {
     "transform": {
@@ -46,6 +48,7 @@
     "registry": "https://pdx-artifacts.pdx.vm.datanerd.us/api/npm/newrelic-mobile-rn/"
   },
   "dependencies": {
+    "commitizen": "^4.2.4",
     "react-native-promise-rejection-utils": "0.0.1"
   },
   "devDependencies": {
