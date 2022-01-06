@@ -1,4 +1,17 @@
+import groovy.json.JsonSlurper
+
 apply plugin: 'com.android.library'
+
+
+def getVersionFromPackageJson() {
+    //  Read and parse package.json file from project root
+    def inputFile = new File("$rootDir/../../package.json")
+    def packageJson = new JsonSlurper().parseText(inputFile.text)
+
+    // Return the version, you can get any value this way
+    return packageJson["sdkVersions"]["android"]["newrelic"]
+}
+
 
 buildscript {
    
@@ -12,6 +25,13 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.2.2'
     }
 }
+
+
+def appProject
+if (findProject(':@newrelic-react-native-agent')) {
+  appProject = project(':@newrelic-react-native-agent')
+}
+
 
 android {
     compileSdkVersion 31
@@ -42,7 +62,7 @@ repositories {
 dependencies {
     testImplementation 'junit:junit:4.12'
     compileOnly 'com.facebook.react:react-native:+'
-    implementation 'com.newrelic.agent.android:android-agent:6.3.1'
+    implementation 'com.newrelic.agent.android:android-agent:'+ getVersionFromPackageJson()
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 

@@ -1,6 +1,9 @@
 require 'json'
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
+#NewRelic IOS Agent
+newrelic_sdk_version = package['sdkVersions']['ios']['newrelic']
+
 Pod::Spec.new do |s|
   s.name         = package['name']
   s.version      = package['version']
@@ -18,7 +21,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
 # todo: change these to their public repos - changes these to the correct versions
-  s.dependency 'NewRelicAgent', '7.3.4'
+  s.dependency 'NewRelicAgent', newrelic_sdk_version
 #
 
   s.preserve_paths = '*.js'
