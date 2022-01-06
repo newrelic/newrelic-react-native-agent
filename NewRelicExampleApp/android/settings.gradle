@@ -1,0 +1,5 @@
+rootProject.name = 'AgentTestApp'
+include ':newrelic-react-native-agent'
+project(':newrelic-react-native-agent').projectDir = new File(rootProject.projectDir, '../newrelic-react-native-agent/android')
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+include ':app'

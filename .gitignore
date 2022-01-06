@@ -56,3 +56,5 @@ buck-out/
 *.keystore
       
 dist
+
+.vscode/
