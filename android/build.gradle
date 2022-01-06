@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.0'
+        classpath 'com.android.tools.build:gradle:4.2.2'
     }
 }
 
@@ -41,7 +41,7 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    compileOnly 'com.facebook.react:react-native:0.20.1'
+    compileOnly 'com.facebook.react:react-native:+'
     implementation 'com.newrelic.agent.android:android-agent:6.3.1'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'

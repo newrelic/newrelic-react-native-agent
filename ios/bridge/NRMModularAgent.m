@@ -34,6 +34,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey
                  startWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject){
     NSLog(@"NRMA calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
+    [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_React];
     [NewRelic startWithApplicationToken: appKey];
     resolve(@(TRUE));
 }
@@ -70,11 +71,6 @@ RCT_EXPORT_METHOD(setUserId:(NSString* _Nonnull)userId) {
 
 RCT_EXPORT_METHOD(setJSAppVersion:(NSString* _Nonnull)version) {
     [NewRelic setAttribute:@"JSAppVersion" value:version];
-}
-
-RCT_EXPORT_METHOD(nativeLog:(NSString* _Nonnull) name message:(NSString* _Nonnull) message) {
-    NSDictionary *logs =  @{@"Name":name,@"Message": message};
-    [NewRelic recordCustomEvent:@"Console Events" attributes:logs];
 }
 
 
