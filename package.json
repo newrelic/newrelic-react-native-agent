@@ -19,7 +19,8 @@
     "lint:fix": "eslint ./**/*.js --fix",
     "docs:generate": "jsdoc -c jsdoc.json",
     "prepare": "husky install",
-    "commit": "cz"
+    "commit": "cz",
+    "build:plugin": "rimraf plugin/build && tsc --build plugin"
   },
   "jest": {
     "transform": {
@@ -48,13 +49,15 @@
   },
   "dependencies": {
     "commitizen": "^4.2.4",
-    "react-native-promise-rejection-utils": "0.0.1"
+    "react-native-promise-rejection-utils": "0.0.1",
+    "@expo/config-plugins": "^4.0.14"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
     "@types/jest": "^24.9.1",
+    "@types/node": "^17.0.8",
     "aws-sdk": "^2.1048.0",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^24.8.0",
