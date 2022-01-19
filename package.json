@@ -74,7 +74,15 @@
     "jsdoc": "^3.6.7",
     "react-native": "^0.63.2",
     "shelljs": "^0.8.4",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.10.11",
+    "ansi-regex": ">=5.0.1",
+    "marked": ">=4.0.10",
+    "markdown-it": ">=12.3.2",
+    "node-notifier": ">=8.0.1"
+
+
+
+
   },
   "config": {
     "commitizen": {
