@@ -1,4 +1,3 @@
-IntegrationApp
 downloads
 node_modules
 scripts
@@ -22,3 +21,5 @@ npm.README.md
 nr-versions.json
 .idea
 CHANGELOG.md
+NewRelicExampleApp
+.husky
