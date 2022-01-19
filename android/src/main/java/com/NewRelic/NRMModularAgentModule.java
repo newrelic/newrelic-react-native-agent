@@ -168,7 +168,7 @@ public void recordStack(String errorName, String errorMessage, String errorStack
         crashEvents.put("isFatal", isFatal);
         crashEvents.put("jsAppVersion", jsAppVersion);
         //attribute limit is 4096
-        crashEvents.put("errorStack", errorStack.substring(0,4090));
+        crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0,4094):errorStack);
 
         NewRelic.recordBreadcrumb("JS Errors", crashEvents);
         NewRelic.recordCustomEvent("JS Errors", "", crashEvents);
