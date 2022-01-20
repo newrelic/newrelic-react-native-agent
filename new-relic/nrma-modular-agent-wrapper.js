@@ -87,6 +87,10 @@ class NRMAModularAgentWrapper {
     });
   };
 
+  removeAttribute = (attributeName) => {
+    NRMModularAgent.removeAttribute(attributeName);
+  };
+
   setJSAppVersion = (version) => {
     NRMModularAgent.setJSAppVersion(version);
   };

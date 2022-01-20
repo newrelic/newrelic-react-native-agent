@@ -61,6 +61,12 @@ RCT_EXPORT_METHOD(setBoolAttribute:(NSString* _Nonnull)key withBool:value) {
     [NewRelic setAttribute:key value:value];
 }
 
+RCT_EXPORT_METHOD(removeAttribute:(NSString *)name)
+{
+    [NewRelic removeAttribute:(NSString * _Nonnull)name];
+}
+
+
 RCT_EXPORT_METHOD(setUserId:(NSString* _Nonnull)userId) {
     [NewRelic setUserId:userId];
 }

@@ -67,13 +67,28 @@ class NewRelic {
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', eventType, eventName, attributes);
   }
 
+  /**
+ * Track a method as an interaction
+ */
   async startInteraction(actionName)  {
      return await this.NRMAModularAgentWrapper.startInteraction(actionName);  
   }
 
+  /**
+ * End an interaction
+ * Required. The string ID for the interaction you want to end.
+ * This string is returned when you use startInteraction().
+ */
+
    endInteraction(actionName) {
       this.NRMAModularAgentWrapper.execute('endInteraction', actionName);
   }
+
+
+  /**
+ * ANDROID ONLY
+ * Name or rename an interaction
+ */
 
   setInteractionName(name) {
     if(Platform.OS === 'android') {
@@ -93,6 +108,16 @@ class NewRelic {
    */
   setAttribute(attributeName, value) {
     this.NRMAModularAgentWrapper.execute('setAttribute', attributeName, value);
+  }
+
+    /**
+   * Remove a custom attribute with a specified name and value.
+   * When called, it removes the attribute specified by the name string.
+   * The removed attribute is shared by multiple Mobile event types.
+   * @param attributeName {string} Name of the attribute.
+   */
+  removeAttribute(attributeName) {
+    this.NRMAModularAgentWrapper.execute('removeAttribute', attributeName, value);
   }
 
   /**

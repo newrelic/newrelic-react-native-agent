@@ -97,6 +97,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
         NewRelic.setAttribute(key, value);
     }
 
+
     @ReactMethod
     public void setBoolAttribute(String key, boolean value) {
         NewRelic.setAttribute(key, value);
@@ -109,6 +110,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
         } else {
             NewRelic.setAttribute(key, value);
         }
+    }
+
+    @ReactMethod
+    public void removeAttribute(String key) {
+        NewRelic.removeAttribute(key);
     }
 
     @ReactMethod
