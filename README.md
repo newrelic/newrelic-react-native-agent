@@ -22,7 +22,7 @@ This agent utilizes native New Relic agents to expose the Javascript environment
 Native support levels based on [React Native requirements](https://github.com/facebook/react-native#-requirements)
 
 ### Requirements
-- React Native >= 0.60
+- React Native >= 0.63
 - IOS native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/get-started/new-relic-ios-compatibility-requirements
 - Android native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements
 
