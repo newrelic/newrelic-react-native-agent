@@ -1,4 +1,4 @@
-export default {
+export default  {
   startAgent: jest.fn(),
   recordBreadcrumb: jest.fn(),
   recordCustomEvent: jest.fn(),
@@ -8,6 +8,10 @@ export default {
   setJSAppVersion: jest.fn(),
   setUserId: jest.fn(),
   recordStack: jest.fn(),
+  startInteraction: jest.fn(),
+  endInteraction:jest.fn(),
+  setInteractionName:jest.fn(),
+
   isAgentStarted: (name, callback) => {
     callback(true);
   },
