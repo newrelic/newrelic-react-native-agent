@@ -118,8 +118,8 @@ class NRMAModularAgentWrapper {
     NRMAModularAgentWrapper.isAgentStarted = true;
   }
 
-  startInteraction = (actionName) => {
-    NRMModularAgent.startInteraction(actionName);
+  startInteraction = async (actionName) => {
+     return await  NRMModularAgent.startInteraction(actionName);
   }
   
   endInteraction = (actionName) => {

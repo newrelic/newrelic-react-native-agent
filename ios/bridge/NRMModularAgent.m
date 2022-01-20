@@ -88,6 +88,33 @@ RCT_EXPORT_METHOD(noticeHttpTransaction:(NSString* _Nonnull) url method:(NSStrin
   
 }
 
+/**
+ * Track a method as an interaction
+ */
+RCT_EXPORT_METHOD(startInteraction:(NSString *)interactionName
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    @try {
+        NSString* interactionId = [NewRelic startInteractionWithName:(NSString * _Null_unspecified)interactionName];
+        resolve((NSString *)interactionId);
+    } @catch (NSException *exception) {
+        [NewRelic recordHandledException:exception];
+        reject([exception name], [exception reason], nil);
+    }
+}
+
+/**
+ * End an interaction
+ * Required. The string ID for the interaction you want to end.
+ * This string is returned when you use startInteraction().
+ */
+RCT_EXPORT_METHOD(endInteraction:(NSString *)interactionId)
+{
+        [NewRelic stopCurrentInteraction:(NSString * _Null_unspecified)interactionId];
+}
+
+
 RCT_EXPORT_METHOD(nativeLog:(NSString* _Nonnull) name message:(NSString* _Nonnull) message) {
     NSDictionary *logs =  @{@"Name":name,@"Message": message};
     [NewRelic recordCustomEvent:@"Console Events" attributes:logs];

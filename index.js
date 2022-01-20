@@ -67,25 +67,23 @@ class NewRelic {
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', eventType, eventName, attributes);
   }
 
-  startInteraction(actionName) {
-    if(Platform.OS === 'android') {
-      this.NRMAModularAgentWrapper.execute('startInteraction', actionName);
-    }
+  async startInteraction(actionName)  {
+     return await this.NRMAModularAgentWrapper.startInteraction(actionName);  
   }
 
-  endInteraction(actionName) {
-    if(Platform.OS === 'android') {
+   endInteraction(actionName) {
       this.NRMAModularAgentWrapper.execute('endInteraction', actionName);
-    }
   }
 
   setInteractionName(name) {
     if(Platform.OS === 'android') {
       this.NRMAModularAgentWrapper.execute('setInteractionName', name);
+    } else {
+      this.LOG.info(`setInterActionName is not supported by iOS Agent`);
     }
   }
 
-
+ 
   /**
    * Creates a custom attribute with a specified name and value.
    * When called, it overwrites its previous value and type.
@@ -123,12 +121,6 @@ class NewRelic {
     }
   }
 
-  /**
-   * Extend the current session.
-   */
-  continueSession() {
-    this.NRMAModularAgentWrapper.execute('continueSession');
-  }
 
   /**
    * @private
