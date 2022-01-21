@@ -9,7 +9,7 @@ This agent utilizes native New Relic agents to expose the Javascript environment
 * Distributed Tracing
 * Tracking console log, warn and error
 * Promise rejection tracking
-* Capture interactions and the sequence they were created
+* Capture interactions and the sequence in which they were created
 * Pass user information to New Relic to track user sessions
 * Expo Support (Managed Workflow)
 
@@ -17,7 +17,7 @@ This agent utilizes native New Relic agents to expose the Javascript environment
 #### Current Support:
 - Android API 21+
 - iOS 10
-- depends on newrelic xcframework and newrelic android agent
+- depends on New Relic iOS/XCFramework and Android agents
 
 Native support levels based on [React Native requirements](https://github.com/facebook/react-native#-requirements)
 
@@ -78,7 +78,7 @@ NewRelic.startAgent("GENERATED_TOKEN");
   ```
 
 ### iOS Setup
-- Run this and it will install newrelic xcframework 
+- Run this and it will install the New Relic XCFramework agent
 ```shell
   npx pod-install
 ```
@@ -112,7 +112,7 @@ After this,you need to use the  <span style="color:orange;">expo prebuild --clea
 
 
 ## Usage
-See [new relic IOS sdk doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [android sdk](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api) for more detail
+See [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [Android SDK](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api) for more detail
 
 ### startInteraction(interactionName: string): Promise<InteractionId>;
 > Track a method as an interaction
