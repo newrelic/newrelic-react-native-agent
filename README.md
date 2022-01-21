@@ -83,6 +83,21 @@ NewRelic.startAgent("GENERATED_TOKEN");
   npx pod-install
 ```
 
+### AutoLinking and rebuilding
+ - Once the above steps have been completed, the React Native Firebase library must be linked to your project and your application needs to be rebuilt.
+
+ - Users on React Native 0.60+ automatically have access to "autolinking", requiring no further manual installation steps. To automatically link the package, rebuild your project:
+```shell
+# Android apps
+npx react-native run-android
+
+# iOS apps
+cd ios/
+pod install --repo-update
+cd ..
+npx react-native run-ios
+```
+
 ## Usage
 See [new relic IOS sdk doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [android sdk](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api) for more detail
 
