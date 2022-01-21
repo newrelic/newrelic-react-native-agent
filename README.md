@@ -97,6 +97,19 @@ pod install --repo-update
 cd ..
 npx react-native run-ios
 ```
+### Expo
+
+Integration with Expo is possible in both bare workflow and [custom managed workflow](https://docs.expo.io/workflow/customizing/) via [config plugins](https://docs.expo.io/guides/config-plugins/).
+
+### Installation
+
+if you are using [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow),Please follow the above installation steps instead.
+
+if you are using [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow) after installing our package,add the config plugin to the plugins array of your app.json or app.config.js.
+
+After this,you need to use the  <span style="color:orange;">expo prebuild --clean </span> command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. if this command is not running,you will get error to start New Relic Agent.
+
+
 
 ## Usage
 See [new relic IOS sdk doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [android sdk](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api) for more detail
