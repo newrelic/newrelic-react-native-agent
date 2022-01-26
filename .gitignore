@@ -49,7 +49,7 @@ bin/
 .gradle
 local.properties
 *.iml
-
+android/.project
 # BUCK
 buck-out/
 \.buckd/

@@ -78,9 +78,11 @@ dependencies {
     implementation "com.newrelic.agent.android:android-agent:${ReactNative.ext.getVersion("newrelic", "android")}"
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:4.9.1"
 
 }
 
 ReactNative.shared.applyPackageVersion()
 ReactNative.shared.applyDefaultExcludes()
-ReactNative.module.applyReactNativeDependency("api")
+//ReactNative.module.applyReactNativeDependency("api")

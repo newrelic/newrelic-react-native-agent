@@ -3,6 +3,7 @@ package com.NewRelic;
 
 import android.util.Log;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -96,6 +97,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
         NewRelic.setAttribute(key, value);
     }
 
+
     @ReactMethod
     public void setBoolAttribute(String key, boolean value) {
         NewRelic.setAttribute(key, value);
@@ -111,6 +113,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void removeAttribute(String key) {
+        NewRelic.removeAttribute(key);
+    }
+
+    @ReactMethod
     public void setUserId(String userId) {
         NewRelic.setUserId(userId);
     }
@@ -121,8 +128,15 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startInteraction(String actionName) {
-        NewRelic.startInteraction(actionName);
+    public void startInteraction(String actionName, Promise promise) {
+        try {
+            String interactionId = NewRelic.startInteraction(actionName);
+            promise.resolve(interactionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            NewRelic.recordHandledException(e);
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
@@ -168,7 +182,7 @@ public void recordStack(String errorName, String errorMessage, String errorStack
         crashEvents.put("isFatal", isFatal);
         crashEvents.put("jsAppVersion", jsAppVersion);
         //attribute limit is 4096
-        crashEvents.put("errorStack", errorStack.substring(0,4090));
+        crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0,4094):errorStack);
 
         NewRelic.recordBreadcrumb("JS Errors", crashEvents);
         NewRelic.recordCustomEvent("JS Errors", "", crashEvents);
