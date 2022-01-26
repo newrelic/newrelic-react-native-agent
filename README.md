@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/angular2-expandable-list.svg)](https://badge.fury.io/js/angular2-expandable-list)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 # newrelic-react-native-agent
 
@@ -11,7 +13,7 @@ This agent utilizes native New Relic agents to expose the Javascript environment
 * Promise rejection tracking
 * Capture interactions and the sequence in which they were created
 * Pass user information to New Relic to track user sessions
-* Expo Support (Managed Workflow)
+* Expo Support (Bare Workflow & Managed Workflow)
 
 
 #### Current Support:
