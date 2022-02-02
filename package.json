@@ -1,14 +1,10 @@
 {
   "name": "newrelic-react-native-agent",
-  "version": "0.0.1-beta.0",
+  "version": "0.0.1-beta.1",
   "description": "A New Relic Mobile Agent for React Native",
   "main": "index.js",
   "scripts": {
     "prepare:ios": "node ./scripts/prepare-ios.js",
-    "setup": "./setup.sh",
-    "publish:staging": "./modular-build/utils/publish.sh newrelic-mobile-rn",
-    "pack:alpha": "./modular-build/utils/pack-alpha.sh newrelic-mobile-rn",
-    "upload:alpha": "./modular-build/utils/upload-alpha.sh newrelic-mobile-rn",
     "build:pack-ios-bridge": "./modular-build/utils/pack-ios-bridge.sh",
     "use:npmReadme": "mv 'README.md' 'git.README.md' && mv 'npm.README.md' 'README.md'",
     "use:gitReadme": "mv 'README.md' 'npm.README.md' && mv 'git.README.md' 'README.md'",
@@ -44,6 +40,7 @@
   ],
   "author": "New Relic",
   "license": "New Relic",
+  "homepage": "https://github.com/newrelic/newrelic-react-native-agent#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
     },
