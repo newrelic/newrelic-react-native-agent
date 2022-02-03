@@ -1,0 +1,67 @@
+---
+name: "release"
+
+# Controls when the action will run.
+# Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      name:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Person to greet'
+        # Default value if no value is explicitly provided
+        default: 'World'
+        # Input has to be provided for the workflow to run
+        required: true
+
+# A workflow run is made up of one or more jobs
+# that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  release:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [14.x]
+        os: [ubuntu-latest]
+
+    # Steps represent a sequence of tasks that
+    # will be executed as part of the job
+    steps:
+      - name: Checkout the release branch for testing
+        uses: actions/checkout@v2
+        with:
+          ref: release.0.0.1-beta
+          # token: ${{ secrets.API_CLI_TOKEN }}
+          # path: newrelic-actions  # This might have to exist within ".github"
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1 # https://github.com/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run all test cases
+        run: npm run test
+
+      - name: Publish as NPM package on new relic account(we need npm secret from new relic account)
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AGENT_NPM_TOKEN}}
+        run: npm publish
+
+      - name: Capture logs if previous failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.workflow }}-npm-logs
+          path: |
+            /home/runner/.npm/_logs/
+      # Check ENV variables
+      - name: Check environmental variables
+        if: ${{ always() }}
+        run: printenv | sort -f

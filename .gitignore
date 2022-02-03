@@ -58,3 +58,6 @@ buck-out/
 dist
 
 .vscode/
+coverage/
+docs/
+git.README.md
