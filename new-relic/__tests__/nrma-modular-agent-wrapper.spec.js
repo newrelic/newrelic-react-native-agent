@@ -21,8 +21,38 @@ describe('nrmaModularAgentWrapper', () => {
   it('should not execute commands if the agent is not started', () => {
     NRMAModularAgentWrapper.isAgentStarted = false;
     test.execute('setJSAppVersion', '123');
+    test.execute('consoleEvents','hello');
     expect(MockNRM.setJSAppVersion.mock.calls.length).toBe(0);
+    expect(MockNRM.consoleEvents.mock.calls.length).toBe(0);
+
+
   });
+
+  it('should not execute InterAction commands if the agent is not started', () => {
+    NRMAModularAgentWrapper.isAgentStarted = false;
+    test.execute('startInteraction', '123');
+    test.execute('endInteraction','hello');
+    test.execute('setInteractionName','hello');
+
+    expect(MockNRM.startInteraction.mock.calls.length).toBe(0);
+    expect(MockNRM.endInteraction.mock.calls.length).toBe(0);
+    expect(MockNRM.setInteractionName.mock.calls.length).toBe(0);
+  });
+
+
+  it('should execute InterAction commands if the agent is started', () => {
+    NRMAModularAgentWrapper.isAgentStarted = true;
+    test.execute('startInteraction', '123');
+    test.execute('endInteraction','hello');
+    test.execute('setInteractionName','hello');
+
+    expect(MockNRM.startInteraction.mock.calls.length).toBe(1);
+    expect(MockNRM.endInteraction.mock.calls.length).toBe(1);
+    expect(MockNRM.setInteractionName.mock.calls.length).toBe(1);
+  });
+
+
+
 
   it('should ignore commands that are not commands', () => {
     expect(test.hasMethod('badTest')).toBe(false);

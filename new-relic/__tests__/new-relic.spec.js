@@ -1,6 +1,6 @@
 import NewRelic from '../../index';
 import MockNRM from '../../__mocks__/nrm-modular-agent';
-import NRMAModularAgentWrapper from '../nrma-modular-agent-wrapper';
+import NRMAModularAgentWrapper from '../nrma-modular-agent-wrapper';      
 
 let testHandler = [];
 let tracker =[];
@@ -18,13 +18,18 @@ describe('New Relic', () => {
     // mock that the native agents are started
     NRMAModularAgentWrapper.isAgentStarted = true;
     NewRelic.state.didAddErrorHandler = false;
+    NewRelic.state.didAddPromiseRejection = false;
+    NewRelic.state.didOverrideConsole = false;
     NewRelic.LOG.verbose = false;
     testHandler = [];
   });
 
   it('should have sane default state', () => {
     expect(NewRelic.JSAppVersion).toBeFalsy();
+    expect(NewRelic.state.didAddPromiseRejection).toBe(false);
     expect(NewRelic.state.didAddErrorHandler).toBe(false);
+    expect(NewRelic.state.didOverrideConsole).toBe(false);
+
     expect(NewRelic.LOG.verbose).toBe(false);
   });
 
@@ -32,6 +37,8 @@ describe('New Relic', () => {
     NRMAModularAgentWrapper.isAgentStarted = false;
     NewRelic.startAgent("12345");
     expect(NewRelic.state.didAddErrorHandler).toBe(true);
+    expect(NewRelic.state.didAddPromiseRejection).toBe(true);
+    expect(NewRelic.state.didOverrideConsole).toBe(true);
     expect(NewRelic.LOG.verbose).toBe(true);
     expect(testHandler.length).toBe(1);
   });
@@ -44,6 +51,9 @@ describe('New Relic', () => {
     NewRelic.startAgent("12345");
     NewRelic.startAgent("12345");
     expect(NewRelic.state.didAddErrorHandler).toBe(true);
+    expect(NewRelic.state.didAddPromiseRejection).toBe(true);
+    expect(NewRelic.state.didOverrideConsole).toBe(true);
+
     expect(NewRelic.LOG.verbose).toBe(true);
     expect(testHandler.length).toBe(1);
     // native calls to the agent should not happen if we are already started
@@ -59,6 +69,16 @@ describe('New Relic', () => {
   it('should not record a bad breadcrumb', () => {
     NewRelic.recordBreadcrumb(null, { test: 123, valid: 'no' });
     expect(MockNRM.recordBreadcrumb.mock.calls.length).toBe(0);
+  });
+
+  it('should not start InterAction', () => {
+    NewRelic.startInteraction();
+    expect(MockNRM.startInteraction.mock.calls.length).toBe(0);
+  });
+
+  it('should not End InterAction', () => {
+    NewRelic.endInteraction();
+    expect(MockNRM.endInteraction.mock.calls.length).toBe(0);
   });
 
   it('should record a valid Custom Event', () => {
@@ -121,6 +141,18 @@ describe('New Relic', () => {
     expect(MockNRM.setUserId.mock.calls.length).toBe(2);
   });
 
+  it('should record to start method Interaction', () => {
+    NewRelic.startInteraction('Start InterAction');
+
+    expect(MockNRM.startInteraction.mock.calls.length).toBe(1);
+  });
+
+  it('should end method Interaction', () => {
+    NewRelic.endInteraction('Start InterAction');
+
+    expect(MockNRM.endInteraction.mock.calls.length).toBe(1);
+  });
+
   it('should not set a bad User Id', () => {
     NewRelic.setUserId(null);
     NewRelic.setUserId(123);
@@ -151,4 +183,19 @@ describe('New Relic', () => {
     NRMAModularAgentWrapper.isAgentStarted = true;
     expect(NewRelic.isAgentStarted()).toBeTruthy();
   });
+
+  it('sends console.log to record custom Events', () => {
+    NewRelic.startAgent("12345");
+    console.log('hello');
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(12);
+  });
+
+  it('sends console.warn to record custom Events', () => {
+    NewRelic.startAgent("12345");
+    console.log('hello');
+    console.warn('hello');
+    console.error('hello');
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(25);
+  });
+
 });
