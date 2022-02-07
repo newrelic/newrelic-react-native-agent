@@ -59,7 +59,7 @@ NewRelic.startAgent("GENERATED_TOKEN");
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.3.1"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.4.1"
       }
     }
   ```
