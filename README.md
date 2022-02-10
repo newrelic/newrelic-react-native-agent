@@ -140,7 +140,7 @@ See [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new
 
 ### How Can User see JSerros(Fatal/Non Fatal) in NewRelic One?
 
-There is no section for JS Errors but you can see jserrors in custom events and also query it in NRQL explorer. 
+There is no section for JS errors but you can see JS errors in custom events and also query it in NRQL explorer. 
   
 <img width="1753" alt="Screen Shot 2022-02-10 at 12 41 11 PM" src="https://user-images.githubusercontent.com/89222514/153474861-87213e70-c3fb-4e14-aee7-a6a3fb482f73.png">
 
@@ -154,7 +154,7 @@ You can also build dashboard for errors using this query.
   
  ### Symbolicating a stack trace
   
- Rightnow There is no support for stack trace Symbolication. Please follow steps which describe here for [Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+There is no support for stack trace symbolication rightnow. Please follow steps which describe here for [Symbolication](https://reactnative.dev/docs/0.64/symbolication).
   
   
   
