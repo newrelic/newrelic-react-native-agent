@@ -83,7 +83,7 @@ NewRelic.startAgent("GENERATED_TOKEN");
 ```
 
 ### AutoLinking and rebuilding
- - Once the above steps have been completed, the React Native Firebase library must be linked to your project and your application needs to be rebuilt.
+ - Once the above steps have been completed, the React Native NewRelic library must be linked to your project and your application needs to be rebuilt.
 
  - Users on React Native 0.60+ automatically have access to "autolinking", requiring no further manual installation steps. To automatically link the package, rebuild your project:
 ```shell
