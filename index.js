@@ -4,6 +4,8 @@ import {Platform} from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
 import * as _ from 'lodash';
+import * as packageVersion from './../../package.json';
+
 
 import {
   getUnhandledPromiseRejectionTracker,
@@ -19,6 +21,8 @@ class NewRelic {
     this.JSAppVersion = '';
     this.state = {
       didAddErrorHandler: false,
+      didAddPromiseRejection:false,
+      didOverrideConsole:false
     };
     this.LOG = LOG;
     this.NRMAModularAgentWrapper = new NRMAModularAgentWrapper();
@@ -37,6 +41,7 @@ class NewRelic {
    startAgent(appkey) {
     this.LOG.verbose = true; // todo: should let this get set by a param
     this.NRMAModularAgentWrapper.startAgent(appkey);
+    this.setJSAppVersion(packageVersion.version);
     this.addNewRelicErrorHandler();
     this.addNewRelicPromiseRejectionHandler();
     this._overrideConsole();
@@ -71,7 +76,11 @@ class NewRelic {
  * Track a method as an interaction
  */
   async startInteraction(actionName)  {
-     return await this.NRMAModularAgentWrapper.startInteraction(actionName);  
+    if(utils.notEmptyString(actionName)) {
+      return await this.NRMAModularAgentWrapper.startInteraction(actionName);  
+    }  else {
+      this.LOG.warn(`actionName is required`);
+    }
   }
 
   /**
@@ -80,8 +89,12 @@ class NewRelic {
  * This string is returned when you use startInteraction().
  */
 
-   endInteraction(actionName) {
-      this.NRMAModularAgentWrapper.execute('endInteraction', actionName);
+   endInteraction(interActionId) {
+    if(utils.notEmptyString(interActionId)) {
+      this.NRMAModularAgentWrapper.execute('endInteraction', interActionId);
+    }  else {
+      this.LOG.warn(`interActionId is Required`);
+    }
   }
 
 
@@ -174,8 +187,9 @@ class NewRelic {
 
   addNewRelicPromiseRejectionHandler () {
 
-  const prevTracker = getUnhandledPromiseRejectionTracker();
- 
+const prevTracker = getUnhandledPromiseRejectionTracker();
+
+if(!this.state.didAddPromiseRejection) {
 setUnhandledPromiseRejectionTracker((id, error) => {
 
   this.NRMAModularAgentWrapper.execute('recordStack',
@@ -188,11 +202,16 @@ setUnhandledPromiseRejectionTracker((id, error) => {
   if (prevTracker !== undefined) {
     prevTracker(id, error)
   }
+
 });
+this.state.didAddPromiseRejection = true;
+
+}
 
   }
 
   _overrideConsole() {
+    if(!this.state.didOverrideConsole) {
     const defaultLog = console.log;
     const defaultWarn = console.warn;
     const defaultError = console.error;
@@ -210,6 +229,8 @@ setUnhandledPromiseRejectionTracker((id, error) => {
       self.sendConsole('error', arguments);
       defaultError.apply(console, arguments);
     };
+    this.state.didOverrideConsole = true;
+   }
   }
 
   sendConsole(type, args) {
@@ -229,85 +250,80 @@ setUnhandledPromiseRejectionTracker((id, error) => {
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', 'consoleEvents', nameStr, argsStr);
   }
 
-  /**
-   * @private
-   */
-  setConfiguration(config) {
-    this.LOG.debug(`handle config ${config}`);
-  }
+
+  // enableNetworkInteraction() {
 
 
-  enableNetworkInteraction() {
-
-
-   var network = {
-      startTime: 0
-    };
+  //  var network = {
+  //     startTime: 0
+  //   };
   
 
-  var NRMAModularAgentWrapper = this.NRMAModularAgentWrapper;  
+  // var NRMAModularAgentWrapper = this.NRMAModularAgentWrapper;  
 
-	var originalXhrOpen = XMLHttpRequest.prototype.open;
-  var originalXHRSend = XMLHttpRequest.prototype.send;
+	// var originalXhrOpen = XMLHttpRequest.prototype.open;
+  // var originalXHRSend = XMLHttpRequest.prototype.send;
 
-    XMLHttpRequest.prototype.open = function ( method, url) {
-      // Keep track of the method and url
-      // start time is tracked by the `send` method
+  //   XMLHttpRequest.prototype.open = function ( method, url) {
+  //     // Keep track of the method and url
+  //     // start time is tracked by the `send` method
       
-      // eslint-disable-next-line prefer-rest-params
-      return originalXhrOpen.apply(this, arguments)
+  //     // eslint-disable-next-line prefer-rest-params
+  //     return originalXhrOpen.apply(this, arguments)
       
-    }
+  //   }
   
-    XMLHttpRequest.prototype.send = function(data) {
+  //   XMLHttpRequest.prototype.send = function(data) {
      
       
-      if (this.addEventListener) {
-        this.addEventListener(
-          'readystatechange',async () =>{
+  //     if (this.addEventListener) {
+  //       this.addEventListener(
+  //         'readystatechange',async () =>{
            
-            if (this.readyState === this.HEADERS_RECEIVED) {
-              const contentTypeString = this.getResponseHeader('Content-Type');
-              if (contentTypeString) {            
-              }
+  //           if (this.readyState === this.HEADERS_RECEIVED) {
+  //             const contentTypeString = this.getResponseHeader('Content-Type');
+  //             if (contentTypeString) {            
+  //             }
                 
-              if (this.getAllResponseHeaders()) {
-                const responseHeaders = this.getAllResponseHeaders().split('\r\n');
-                const responseHeadersDictionary = {};
-                responseHeaders.forEach(element => {
-                  const key = element.split(':')[0];
-                  const value = element.split(':')[1];
-                  responseHeadersDictionary[key] = value;
-                });
-              }
-            }
-            if (this.readyState === this.DONE) {
+  //             if (this.getAllResponseHeaders()) {
+  //               const responseHeaders = this.getAllResponseHeaders().split('\r\n');
+  //               const responseHeadersDictionary = {};
+  //               responseHeaders.forEach(element => {
+  //                 const key = element.split(':')[0];
+  //                 const value = element.split(':')[1];
+  //                 responseHeadersDictionary[key] = value;
+  //               });
+  //             }
+  //           }
+  //           if (this.readyState === this.DONE) {
               
-              if (this.response) {
-                if (this.responseType === 'blob') {
-                  var responseText =  await (new Response(this.response)).text();
-                NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(responseText),responseText);
+  //             if (this.response) {
+  //               if (this.responseType === 'blob') {
+  //                 var responseText =  await (new Response(this.response)).text();
+  //               NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(responseText),responseText);
 
-                } else if (this.responseType === 'text') {
-                }
-                NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(this.response),this.response);
-              }
+  //               } else if (this.responseType === 'text') {
+  //               }
+  //               NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(this.response),this.response);
+  //             }
 
-            }
-          },
-          false
-        );
+  //           }
+  //         },
+  //         false
+  //       );
   
-      }
-      network.startTime = Date.now();
-      originalXHRSend.apply(this, arguments);
-    }
+  //     }
+  //     network.startTime = Date.now();
+  //     originalXHRSend.apply(this, arguments);
+  //   }
 
-  }
+  // }
+
+
 }
-
-
 const byteSize = str => new Blob([str]).size;
 
 const newRelic = new NewRelic();
 export default newRelic;
+
+

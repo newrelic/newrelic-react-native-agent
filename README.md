@@ -1,17 +1,18 @@
 # New Relic React Native Agent
 
-This agent utilizes native New Relic agents to expose the Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
+This agent utilizes native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
+
+### This agent SDK is not yet officially supported. If you’re interested in participating in our Early Access Program, contact Support or your account representative.
 
 ### Features
 * Capture JavaScript errors
 * Network Instrumentation
-* Distributed Tracing
+* Distributed Tracing (currently functional in Android, iOS support coming in the near future)
 * Tracking console log, warn and error
 * Promise rejection tracking
 * Capture interactions and the sequence in which they were created
 * Pass user information to New Relic to track user sessions
 * Expo Support (Bare Workflow & Managed Workflow)
-
 
 #### Current Support:
 - Android API 21+
@@ -24,7 +25,6 @@ Native support levels based on [React Native requirements](https://github.com/fa
 - React Native >= 0.63
 - IOS native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/get-started/new-relic-ios-compatibility-requirements
 - Android native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements
-
 
 ## Installation
 - Yarn
@@ -59,7 +59,7 @@ NewRelic.startAgent("GENERATED_TOKEN");
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.3.1"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.4.1"
       }
     }
   ```
@@ -137,6 +137,29 @@ See [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new
 
 ### recordCustomEvent(eventType: string, eventName?: string, attributes?: {[key: string]: boolean | number | string}): void;
 > Creates and records a custom event, for use in New Relic Insights
+
+### How Can User see JSerros(Fatal/Non Fatal) in NewRelic One?
+
+There is no section for JS errors but you can see JS errors in custom events and also query it in NRQL explorer. 
+  
+<img width="1753" alt="Screen Shot 2022-02-10 at 12 41 11 PM" src="https://user-images.githubusercontent.com/89222514/153474861-87213e70-c3fb-4e14-aee7-a6a3fb482f73.png">
+
+  
+You can also build dashboard for errors using this query. 
+
+  ```sql
+  SELECT jsAppVersion,name,Message,errorStack,isFatal FROM `JS Errors` SINCE 24 hours ago
+ 
+  ```
+  
+ ### Symbolicating a stack trace
+  
+Currently there is no symbolication of Javascript errors. Please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+  
+### Symbolication for Javascript errors are coming in future releases.  
+
+  
+  
 ```angular2html
 * IMPORTANT considerations and best practices include:
 *
@@ -150,5 +173,6 @@ See [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new
 *
 * - Using the optional name parameter has the same effect as adding a name key in the attributes dictionary.
 * name is a keyword used for displaying your events in the New Relic UI.
+
 * To create a useful name, you might combine several attributes.
 ```
