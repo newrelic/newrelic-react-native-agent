@@ -4,6 +4,8 @@ import {Platform} from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
 import * as _ from 'lodash';
+import * as packageVersion from './../../package.json';
+
 
 import {
   getUnhandledPromiseRejectionTracker,
@@ -39,6 +41,7 @@ class NewRelic {
    startAgent(appkey) {
     this.LOG.verbose = true; // todo: should let this get set by a param
     this.NRMAModularAgentWrapper.startAgent(appkey);
+    this.setJSAppVersion(packageVersion.version);
     this.addNewRelicErrorHandler();
     this.addNewRelicPromiseRejectionHandler();
     this._overrideConsole();

@@ -84,7 +84,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setJSAppVersion(String jsAppVersion) {
-        NewRelic.setAttribute("JSAppVersion", jsAppVersion);
+        NewRelic.setAttribute("JSBundleId", jsAppVersion);
     }
 
     @ReactMethod
