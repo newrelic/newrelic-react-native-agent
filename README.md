@@ -1,17 +1,18 @@
 # New Relic React Native Agent
 
-This agent utilizes native New Relic agents to expose the Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
+This agent utilizes native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
+
+### This agent SDK is not yet officially supported. If you’re interested in participating in our Early Access Program, contact Support or your account representative.
 
 ### Features
 * Capture JavaScript errors
 * Network Instrumentation
-* Distributed Tracing (only functional in android,ios support coming in near future)
+* Distributed Tracing (currently functional in Android, iOS support coming in the near future)
 * Tracking console log, warn and error
 * Promise rejection tracking
 * Capture interactions and the sequence in which they were created
 * Pass user information to New Relic to track user sessions
 * Expo Support (Bare Workflow & Managed Workflow)
-
 
 #### Current Support:
 - Android API 21+
@@ -24,7 +25,6 @@ Native support levels based on [React Native requirements](https://github.com/fa
 - React Native >= 0.63
 - IOS native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/get-started/new-relic-ios-compatibility-requirements
 - Android native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements
-
 
 ## Installation
 - Yarn
@@ -154,14 +154,10 @@ You can also build dashboard for errors using this query.
   
  ### Symbolicating a stack trace
   
-Rightnoe There is no symbolication of Javascript errors. Please follow steps which describe here for [Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+Currently there is no symbolication of Javascript errors. Please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
   
-### Symbolication for Javascript errors are coming in future releases.
-  
-### There is official support only who invited for Early Access Program.
-  
-  
-  
+### Symbolication for Javascript errors are coming in future releases.  
+
   
   
 ```angular2html
