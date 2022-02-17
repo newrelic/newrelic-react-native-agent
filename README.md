@@ -5,7 +5,7 @@ This agent utilizes native New Relic agents to expose the Javascript environment
 ### Features
 * Capture JavaScript errors
 * Network Instrumentation
-* Distributed Tracing
+* Distributed Tracing (only functional in android,ios support coming in near future)
 * Tracking console log, warn and error
 * Promise rejection tracking
 * Capture interactions and the sequence in which they were created
@@ -154,9 +154,11 @@ You can also build dashboard for errors using this query.
   
  ### Symbolicating a stack trace
   
-There is no support for stack trace symbolication rightnow. Please follow steps which describe here for [Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+Rightnoe There is no symbolication of Javascript errors. Please follow steps which describe here for [Symbolication](https://reactnative.dev/docs/0.64/symbolication).
   
+### Symbolication for Javascript errors are coming in future releases.
   
+### There is official support only who invited for Early Access Program.
   
   
   
