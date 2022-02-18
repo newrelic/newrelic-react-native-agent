@@ -42,6 +42,7 @@ Native support levels based on [React Native requirements](https://github.com/fa
 
 ```js
 NewRelic.startAgent("GENERATED_TOKEN");
+NewRelic.setJSAppVersion("APP_JS_VERSION");
 
 ```
 "GENERATED_TOKEN" is Platform Specific. User needs to genrate for Android and iOS apps.

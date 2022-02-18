@@ -43,7 +43,7 @@
   "homepage": "https://github.com/newrelic/newrelic-react-native-agent#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-    },
+  },
   "dependencies": {
     "commitizen": "^4.2.4",
     "react-native-promise-rejection-utils": "0.0.1",

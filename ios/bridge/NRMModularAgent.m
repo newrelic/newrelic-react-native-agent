@@ -76,7 +76,7 @@ RCT_EXPORT_METHOD(setUserId:(NSString* _Nonnull)userId) {
 //}
 
 RCT_EXPORT_METHOD(setJSAppVersion:(NSString* _Nonnull)version) {
-    [NewRelic setAttribute:@"JSAppVersion" value:version];
+    [NewRelic setAttribute:@"JSBundleId" value:version];
 }
 
 
