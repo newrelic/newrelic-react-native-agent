@@ -1,6 +1,6 @@
 {
   "name": "newrelic-react-native-agent",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "A New Relic Mobile Agent for React Native",
   "main": "index.js",
   "scripts": {
@@ -43,7 +43,7 @@
   "homepage": "https://github.com/newrelic/newrelic-react-native-agent#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-    },
+  },
   "dependencies": {
     "commitizen": "^4.2.4",
     "react-native-promise-rejection-utils": "0.0.1",
