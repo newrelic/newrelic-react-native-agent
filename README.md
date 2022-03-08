@@ -84,7 +84,7 @@ Run the following, and it will install the New Relic XCFramework agent:
 ### AutoLinking and rebuilding
 Once you've completed the steps above, you need to link the React Native Firebase library to your project and your application needs to be rebuilt.
 
-If you use React Native 0.60+, you automatically have access to "autolinking", requiring no further manual installation steps.
+If you use React Native 0.60+, you automatically have access to "autolinking," requiring no further manual installation steps.
 
 To automatically link the package, rebuild your project:
 ```shell
@@ -101,13 +101,10 @@ npx react-native run-ios
 
 Integration with Expo is possible in both bare workflow and [custom managed workflow](https://docs.expo.io/workflow/customizing/) via [config plugins](https://docs.expo.io/guides/config-plugins/).
 
-### Installation
+* [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): Please follow the above installation steps instead.
+* [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): After installing our package, add the config plugin to the plugins array of your `app.json` or `app.config.js`.
 
-if you are using [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow),Please follow the above installation steps instead.
-
-if you are using [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow) after installing our package,add the config plugin to the plugins array of your app.json or app.config.js.
-
-After this,you need to use the  <span style="color:orange;">expo prebuild --clean </span> command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. if this command is not running,you will get error to start New Relic Agent.
+After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
 
 ## Usage
 See the examples below, and for more detail, see [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [Android SDK](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api).
