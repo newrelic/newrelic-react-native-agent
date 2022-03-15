@@ -1,10 +1,10 @@
 # New Relic React Native Agent
 
-This agent utilizes native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
+This agent uses native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
 
-### This agent SDK is not yet officially supported. If you’re interested in participating in our Early Access Program, contact Support or your account representative.
+**NOTE:** This agent SDK is not yet officially supported. If you’re interested in participating in our early access program, contact Support or your account representative.
 
-### Features
+## Features
 * Capture JavaScript errors
 * Network Instrumentation
 * Distributed Tracing (currently functional in Android, iOS support coming in the near future)
@@ -14,43 +14,42 @@ This agent utilizes native New Relic Android and iOS agents to instrument the Re
 * Pass user information to New Relic to track user sessions
 * Expo Support (Bare Workflow & Managed Workflow)
 
-#### Current Support:
+## Current Support:
 - Android API 21+
 - iOS 10
-- depends on New Relic iOS/XCFramework and Android agents
+- Depends on New Relic iOS/XCFramework and Android agents
 
-Native support levels based on [React Native requirements](https://github.com/facebook/react-native#-requirements)
+Native support levels are based on [React Native requirements](https://github.com/facebook/react-native#-requirements).
 
-### Requirements
+## Requirements
 - React Native >= 0.63
-- IOS native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/get-started/new-relic-ios-compatibility-requirements
-- Android native requirements https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements
+- [IOS native requirements](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/get-started/new-relic-ios-compatibility-requirements)
+- [Android native requirements](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements)
 
 ## Installation
-- Yarn
+1. Yarn
 ```sh
 # yarn add @bibabovn/react-native-newrelic
 ```
-- Don't forget to run:
+2. Run the following:
 ```shell
   npx pod-install
 ```
 
-### React Native Setup
+## React Native Setup
 
-- Start Agent From index.js
+Start the agent from `index.js`:
 
 ```js
 NewRelic.startAgent("GENERATED_TOKEN");
 NewRelic.setJSAppVersion("APP_JS_VERSION");
 
 ```
-"GENERATED_TOKEN" is Platform Specific. User needs to genrate for Android and iOS apps.
-
+"GENERATED_TOKEN" is platform-specific. You need to generate the token for Android and iOS apps.
 
 ### Android Setup
-- Install the New Relic native Android agent ([instructions here](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/install-android-apps-gradle-android-studio))
-- Update build.gradle:
+1. Install the New Relic native Android agent ([instructions here](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/install-android-apps-gradle-android-studio)).
+2. Update `build.gradle`:
   ```java
     buildscript {
       ...
@@ -65,28 +64,29 @@ NewRelic.setJSAppVersion("APP_JS_VERSION");
     }
   ```
 
-- Update app/build.gradle
+3. Update `app/build.gradle`:
   ```
     apply plugin: "com.android.application"
     apply plugin: 'newrelic' // <-- add this
 
-- Set app permissions
-  - Ensure that your app requests INTERNET and ACCESS_NETWORK_STATE permissions by adding these lines to your AndroidManifest.xml.
+4. Make sure your app requests INTERNET and ACCESS_NETWORK_STATE permissions by adding these lines to your `AndroidManifest.xml`
   ```
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />    
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   ```
 
 ### iOS Setup
-- Run this and it will install the New Relic XCFramework agent
+Run the following, and it will install the New Relic XCFramework agent:
 ```shell
   npx pod-install
 ```
 
 ### AutoLinking and rebuilding
- - Once the above steps have been completed, the React Native Firebase library must be linked to your project and your application needs to be rebuilt.
+Once you've completed the steps above, you need to link the React Native Firebase library to your project and your application needs to be rebuilt.
 
- - Users on React Native 0.60+ automatically have access to "autolinking", requiring no further manual installation steps. To automatically link the package, rebuild your project:
+If you use React Native 0.60+, you automatically have access to "autolinking," requiring no further manual installation steps.
+
+To automatically link the package, rebuild your project:
 ```shell
 # Android apps
 npx react-native run-android
@@ -101,66 +101,58 @@ npx react-native run-ios
 
 Integration with Expo is possible in both bare workflow and [custom managed workflow](https://docs.expo.io/workflow/customizing/) via [config plugins](https://docs.expo.io/guides/config-plugins/).
 
-### Installation
+* [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): Please follow the above installation steps instead.
+* [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): After installing our package, add the config plugin to the plugins array of your `app.json` or `app.config.js`.
 
-if you are using [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow),Please follow the above installation steps instead.
-
-if you are using [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow) after installing our package,add the config plugin to the plugins array of your app.json or app.config.js.
-
-After this,you need to use the  <span style="color:orange;">expo prebuild --clean </span> command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. if this command is not running,you will get error to start New Relic Agent.
-
-
+After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
 
 ## Usage
-See [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [Android SDK](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api) for more detail
+See the examples below, and for more detail, see [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [Android SDK](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api).
 
-### startInteraction(interactionName: string): Promise<InteractionId>;
-> Track a method as an interaction
-- `InteractionId` is string
+### startInteraction(interactionName: string): Promise&lt;InteractionId&gt;;
+> Track a method as an interaction.
+
+`InteractionId` is string.
 
 ### setInteractionName(interactionName: string): void;
-> Name or rename interaction (Android Specific)
+> Name or rename interaction (Android-specific).
 
 ### endInteraction(id: InteractionId): void;
 > End an interaction
-> Required. The string ID for the interaction you want to end.
+> (Required). This uses the string ID for the interaction you want to end.
 > This string is returned when you use startInteraction().
 
 
-#### setAttribute(name: string, value: boolean | number | string): void;
-> Create or update an attribute
+### setAttribute(name: string, value: boolean | number | string): void;
+> Create or update an attribute.
 
 ### setUserId(userId: string): void;
-> Set custom user ID for associating sessions with events and attributes
+> Set custom user ID for associating sessions with events and attributes.
 
 ### recordBreadcrumb(name: string, attributes?: {[key: string]: boolean | number | string}): void;
-> Track app activity/screen that may be helpful for troubleshooting crashes
+> Track app activity/screen that may be helpful for troubleshooting crashes.
 
 ### recordCustomEvent(eventType: string, eventName?: string, attributes?: {[key: string]: boolean | number | string}): void;
-> Creates and records a custom event, for use in New Relic Insights
+> Creates and records a custom event for use in New Relic Insights.
 
-### How Can User see JSerros(Fatal/Non Fatal) in NewRelic One?
+## How to see JSerros(Fatal/Non Fatal) in NewRelic One?
 
-There is no section for JS errors but you can see JS errors in custom events and also query it in NRQL explorer. 
-  
+There is no section for JavaScript errors, but you can see JavaScript errors in custom events and also query them in NRQL explorer.
+
 <img width="1753" alt="Screen Shot 2022-02-10 at 12 41 11 PM" src="https://user-images.githubusercontent.com/89222514/153474861-87213e70-c3fb-4e14-aee7-a6a3fb482f73.png">
 
-  
-You can also build dashboard for errors using this query. 
+You can also build dashboard for errors using this query:
 
   ```sql
   SELECT jsAppVersion,name,Message,errorStack,isFatal FROM `JS Errors` SINCE 24 hours ago
- 
   ```
-  
- ### Symbolicating a stack trace
-  
-Currently there is no symbolication of Javascript errors. Please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
-  
-### Symbolication for Javascript errors are coming in future releases.  
 
-  
-  
+ ## Symbolicating a stack trace
+
+Currently there is no symbolication of Javascript errors. Please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+
+### Symbolication for Javascript errors are coming in future releases.
+
 ```angular2html
 * IMPORTANT considerations and best practices include:
 *
