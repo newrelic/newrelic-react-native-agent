@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import NewRelic from '../../index';
 import MockNRM from '../../__mocks__/nrm-modular-agent';
 import NRMAModularAgentWrapper from '../nrma-modular-agent-wrapper';      
@@ -12,9 +13,13 @@ global.ErrorUtils = {
 };
 
 
+
+
 describe('New Relic', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    MockNRM.getReactNativeVersion = "0.66.3";
     // mock that the native agents are started
     NRMAModularAgentWrapper.isAgentStarted = true;
     NewRelic.state.didAddErrorHandler = false;

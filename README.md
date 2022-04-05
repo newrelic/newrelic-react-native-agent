@@ -29,8 +29,13 @@ Native support levels based on [React Native requirements](https://github.com/fa
 ## Installation
 - Yarn
 ```sh
-# yarn add @bibabovn/react-native-newrelic
+yarn add newrelic-react-native-agent
 ```
+- NPM
+```sh
+npm i newrelic-react-native-agent
+```
+
 - Don't forget to run:
 ```shell
   npx pod-install
@@ -41,8 +46,13 @@ Native support levels based on [React Native requirements](https://github.com/fa
 - Start Agent From index.js
 
 ```js
+import NewRelic from 'newrelic-react-native-agent';
+import * as appVesrion from './package.json';
+
+
 NewRelic.startAgent("GENERATED_TOKEN");
-NewRelic.setJSAppVersion("APP_JS_VERSION");
+NewRelic.setJSAppVersion(appVesrion.version);
+
 
 ```
 "GENERATED_TOKEN" is Platform Specific. User needs to genrate for Android and iOS apps.
@@ -60,7 +70,7 @@ NewRelic.setJSAppVersion("APP_JS_VERSION");
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.4.1"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.5.0"
       }
     }
   ```
