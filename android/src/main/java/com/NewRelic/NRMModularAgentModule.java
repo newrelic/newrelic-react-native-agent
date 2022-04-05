@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.Callback;
 import com.newrelic.agent.android.NewRelic;
 import com.newrelic.agent.android.ApplicationFramework;
+import com.newrelic.agent.android.stats.StatsEngine;
 
 
 import java.util.HashMap;
@@ -33,17 +34,20 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startAgent(String appKey) {
+    public void startAgent(String appKey,String agentVersion,String reactNativeVersion) {
         if (appKey != null) {
             Log.w("NRMA", "calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
-            System.out.println(appKey);
-            System.out.println(reactContext);
+    
 
          
-                        NewRelic.withApplicationToken(appKey)
-                        .withApplicationFramework(ApplicationFramework.ReactNative)
-                                .withCrashReportingEnabled(true)
-                                .start(reactContext);
+            NewRelic.withApplicationToken(appKey)
+                    .withApplicationFramework(ApplicationFramework.ReactNative)
+                    .withCrashReportingEnabled(true)
+                    .start(reactContext);
+
+            NewRelic.setAttribute("React Native Version", reactNativeVersion);
+            StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Agent/"+agentVersion);
+            StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Framework/"+reactNativeVersion);                    
         }
     }
 
@@ -187,7 +191,8 @@ public void recordStack(String errorName, String errorMessage, String errorStack
         NewRelic.recordBreadcrumb("JS Errors", crashEvents);
         NewRelic.recordCustomEvent("JS Errors", "", crashEvents);
 
-        RNStackTrace rnStackTrace = new RNStackTrace(errorName, errorMessage, errorStack, isFatal, jsAppVersion);
+        StatsEngine.get().inc("Supportability/Mobile/ReactNative/JSError");
+
 
     } catch (IllegalArgumentException e) {
         Log.w("NRMA", e.getMessage());

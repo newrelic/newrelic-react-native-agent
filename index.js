@@ -38,7 +38,7 @@ class NewRelic {
    */
    startAgent(appkey) {
     this.LOG.verbose = true; // todo: should let this get set by a param
-    this.NRMAModularAgentWrapper.startAgent(appkey);
+    this.NRMAModularAgentWrapper.startAgent(appkey,this.agentVersion,this.getReactNativeVersion());
     this.addNewRelicErrorHandler();
     this.addNewRelicPromiseRejectionHandler();
     this._overrideConsole();
@@ -47,6 +47,10 @@ class NewRelic {
     this.LOG.info(`New Relic React Native agent version ${this.agentVersion}`);
     this.setAttribute('ReactNativeAgentVersion', this.agentVersion);
 
+  }
+  getReactNativeVersion() {
+    var rnVersion =  Platform.constants.reactNativeVersion;
+    return `${rnVersion.major}.${rnVersion.minor}.${rnVersion.patch}`
   }
 
   /**
