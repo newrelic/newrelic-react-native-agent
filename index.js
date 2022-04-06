@@ -46,6 +46,8 @@ class NewRelic {
     this.LOG.info('React Native agent started.');
     this.LOG.info(`New Relic React Native agent version ${this.agentVersion}`);
     this.setAttribute('ReactNativeAgentVersion', this.agentVersion);
+    this.setAttribute('JSEngine', global.HermesInternal ? "Hermes":"JavaScriptCore");
+
 
   }
   getReactNativeVersion() {
