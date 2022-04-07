@@ -27,35 +27,40 @@ Native support levels are based on [React Native requirements](https://github.co
 - [Android native requirements](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements)
 
 ## Installation
-1. Yarn
+Yarn
 ```sh
 yarn add newrelic-react-native-agent
 ```
-- NPM
+NPM
 ```sh
 npm i newrelic-react-native-agent
 ```
 
-- Don't forget to run:
-```shell
-  npx pod-install
-```
 
 ## React Native Setup
 
-Start the agent from `index.js`:
+Now open your `index.js` and add the following code to launch NewRelic (don't forget to put proper application tokens):
 
 ```js
 import NewRelic from 'newrelic-react-native-agent';
 import * as appVesrion from './package.json';
+import {Platform} from 'react-native';
+
+    let appToken;
+
+    if (Platform.OS === 'ios') {
+        appToken = '<IOS-APP-TOKEN>';
+    } else {
+        appToken = '<ANDROID-APP-TOKEN>';
+    }
 
 
-NewRelic.startAgent("GENERATED_TOKEN");
+NewRelic.startAgent(appToken);
 NewRelic.setJSAppVersion(appVesrion.version);
 
 
 ```
-"GENERATED_TOKEN" is platform-specific. You need to generate the token for Android and iOS apps.
+AppToken is platform-specific. You need to generate the seprate token for Android and iOS apps.
 
 ### Android Setup
 1. Install the New Relic native Android agent ([instructions here](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/install-android-apps-gradle-android-studio)).
@@ -78,6 +83,8 @@ NewRelic.setJSAppVersion(appVesrion.version);
   ```
     apply plugin: "com.android.application"
     apply plugin: 'newrelic' // <-- add this
+  
+  ```
 
 4. Make sure your app requests INTERNET and ACCESS_NETWORK_STATE permissions by adding these lines to your `AndroidManifest.xml`
   ```
@@ -86,6 +93,7 @@ NewRelic.setJSAppVersion(appVesrion.version);
   ```
 
 ### iOS Setup
+
 Run the following, and it will install the New Relic XCFramework agent:
 ```shell
   npx pod-install
@@ -107,6 +115,17 @@ pod install --repo-update
 cd ..
 npx react-native run-ios
 ```
+
+If you run following commands then Fatal JS erros will show up as a crash in NR.
+
+```shell
+
+npx react-native run-ios --configuration Release
+
+npx react-native run-android --variant=release
+
+```
+
 ### Expo
 
 Integration with Expo is possible in both bare workflow and [custom managed workflow](https://docs.expo.io/workflow/customizing/) via [config plugins](https://docs.expo.io/guides/config-plugins/).
@@ -114,36 +133,73 @@ Integration with Expo is possible in both bare workflow and [custom managed work
 * [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): Please follow the above installation steps instead.
 * [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): After installing our package, add the config plugin to the plugins array of your `app.json` or `app.config.js`.
 
+```
+{
+  "name": "my app",
+  "plugins": ["newrelic-react-native-agent"]
+}
+
+```
+
 After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
 
 ## Usage
 See the examples below, and for more detail, see [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [Android SDK](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api).
 
-### startInteraction(interactionName: string): Promise&lt;InteractionId&gt;;
+### [startInteraction](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/start-interaction)(interactionName: string): Promise&lt;InteractionId&gt;;
 > Track a method as an interaction.
 
 `InteractionId` is string.
 
-### setInteractionName(interactionName: string): void;
+### [setInteractionName](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-interaction-name)(interactionName: string): void;
 > Name or rename interaction (Android-specific).
 
-### endInteraction(id: InteractionId): void;
+### [endInteraction](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/end-interaction)(id: InteractionId): void;
 > End an interaction
 > (Required). This uses the string ID for the interaction you want to end.
 > This string is returned when you use startInteraction().
 
+  ```
+  var HttpDemo_id = NewRelic.startInteraction("HttpDemo");
 
-### setAttribute(name: string, value: boolean | number | string): void;
-> Create or update an attribute.
+  return(
+    <View style = {main.container}>
+    <Text>Select the below buttons. Background your application and the data will arrive in NR.</Text>
+    <Button style = {button_blue.blue} title="Good Http Request" onPress= {() => goodRequest()} />
+    <Button style = {button_blue.blue} title="Bad Http Request" onPress = {() => badRequest()} />
+    </View>
+  );
 
-### setUserId(userId: string): void;
-> Set custom user ID for associating sessions with events and attributes.
+  NewRelic.endInteraction(HttpDemo_id);  
+  
+  ```
 
-### recordBreadcrumb(name: string, attributes?: {[key: string]: boolean | number | string}): void;
+### [setAttribute](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-attribute)(name: string, value: boolean | number | string): void;
+> Creates a session-level attribute shared by multiple mobile event types. Overwrites its previous value and type each time it is called.
+  ```
+     NewRelic.setAttribute('RNCustomAttrNumber', 37);
+  ```
+
+### [setUserId](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-user-id)(userId: string): void;
+> Set a custom user identifier value to associate user sessions with analytics events and attributes.
+  ```
+     NewRelic.setUserId("RN12934");
+  ```
+
+### [recordBreadcrumb](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordbreadcrumb)(name: string, attributes?: {[key: string]: boolean | number | string}): void;
 > Track app activity/screen that may be helpful for troubleshooting crashes.
 
-### recordCustomEvent(eventType: string, eventName?: string, attributes?: {[key: string]: boolean | number | string}): void;
+  ```
+     NewRelic.recordBreadcrumb("shoe", {"shoeColor": "blue","shoesize": 9,"shoeLaces": true});
+  ```
+
+### [recordCustomEvent](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordcustomevent-android-sdk-api)(eventType: string, eventName?: string, attributes?: {[key: string]: boolean | number | string}): void;
 > Creates and records a custom event for use in New Relic Insights.
+
+  ```
+     NewRelic.recordCustomEvent("mobileClothes", "pants", {"pantsColor": "blue","pantssize": 32,"belt": true});
+  ```
+
 
 ## How to see JSerros(Fatal/Non Fatal) in NewRelic One?
 
