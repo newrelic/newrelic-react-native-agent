@@ -113,8 +113,8 @@ class NRMAModularAgentWrapper {
     NRMModularAgent.nativeLog(message);
   }
 
-  startAgent = (appKey) => {
-    NRMModularAgent.startAgent(appKey);
+  startAgent = (appKey,agentVersion,reactNativeVersion) => {
+    NRMModularAgent.startAgent(appKey,agentVersion,reactNativeVersion);
     NRMAModularAgentWrapper.isAgentStarted = true;
   }
 

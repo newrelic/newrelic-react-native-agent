@@ -40,7 +40,7 @@ fi
 cd ${ROOTDIR}
 echo "PWD=$PWD"
 
-tempDirPath="./node_modules/newrelic-mobile-rn/new-relic/tmp"
+tempDirPath="./node_modules/newrelic-react-native-agent/new-relic/tmp"
 if [ ! -e $tempDirPath ] 
   then
     echo "Creating a temp dir at $tempDirPath"

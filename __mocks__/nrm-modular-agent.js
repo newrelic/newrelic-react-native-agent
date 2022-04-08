@@ -12,6 +12,7 @@ export default  {
   endInteraction:jest.fn(),
   setInteractionName:jest.fn(),
   consoleEvents:jest.fn(),
+  getReactNativeVersion:jest.fn(),
 
   isAgentStarted: (name, callback) => {
     callback(true);

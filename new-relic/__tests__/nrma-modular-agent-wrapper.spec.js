@@ -1,3 +1,4 @@
+import { NativeModules } from 'react-native';
 import NRMAModularAgentWrapper from '../nrma-modular-agent-wrapper';
 import MockNRM from '../../__mocks__/nrm-modular-agent';
 
