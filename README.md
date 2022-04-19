@@ -22,7 +22,7 @@ This agent uses native New Relic Android and iOS agents to instrument the React-
 Native support levels are based on [React Native requirements](https://github.com/facebook/react-native#-requirements).
 
 ## Requirements
-- React Native >= 0.63
+- React Native >= 0.61
 - [IOS native requirements](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/get-started/new-relic-ios-compatibility-requirements)
 - [Android native requirements](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements)
 
