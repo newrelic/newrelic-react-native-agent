@@ -7,7 +7,7 @@ This agent uses native New Relic Android and iOS agents to instrument the React-
 ## Features
 * Capture JavaScript errors
 * Network Instrumentation
-* Distributed Tracing (currently functional in Android, iOS support coming in the near future)
+* Distributed Tracing 
 * Tracking console log, warn and error
 * Promise rejection tracking
 * Capture interactions and the sequence in which they were created
