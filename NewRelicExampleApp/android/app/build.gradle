@@ -84,7 +84,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-apply from: "../../node_modules/newrelic-react-native-agent/newrelic.gradle"
+// apply from: "../../node_modules/newrelic-react-native-agent/newrelic.gradle"
 
 
 /**

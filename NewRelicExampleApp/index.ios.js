@@ -11,6 +11,6 @@ import * as appversion from './package.json';
 
 
 NewRelic.startAgent(keys.licenseKey.ios);
-NewRelic.setJSVersion(appversion.version);
+NewRelic.setJSAppVersion(appversion.version);
 NewRelic.recordCustomEvent("MobileModularAgentTest", "react-native-modular-agent", {"platform1": Platform.OS, "appDidMount": "true"});
 AppRegistry.registerComponent(appName, () => App);
