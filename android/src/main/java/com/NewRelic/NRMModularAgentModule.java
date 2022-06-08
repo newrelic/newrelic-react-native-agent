@@ -41,7 +41,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
          
             NewRelic.withApplicationToken(appKey)
-                    .withApplicationFramework(ApplicationFramework.ReactNative)
+                    .withApplicationFramework(ApplicationFramework.ReactNative,reactNativeVersion)
                     .withCrashReportingEnabled(true)
                     .start(reactContext);
 

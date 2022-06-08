@@ -252,77 +252,7 @@ this.state.didAddPromiseRejection = true;
     });
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', 'consoleEvents', nameStr, argsStr);
   }
-
-
-  // enableNetworkInteraction() {
-
-
-  //  var network = {
-  //     startTime: 0
-  //   };
   
-
-  // var NRMAModularAgentWrapper = this.NRMAModularAgentWrapper;  
-
-	// var originalXhrOpen = XMLHttpRequest.prototype.open;
-  // var originalXHRSend = XMLHttpRequest.prototype.send;
-
-  //   XMLHttpRequest.prototype.open = function ( method, url) {
-  //     // Keep track of the method and url
-  //     // start time is tracked by the `send` method
-      
-  //     // eslint-disable-next-line prefer-rest-params
-  //     return originalXhrOpen.apply(this, arguments)
-      
-  //   }
-  
-  //   XMLHttpRequest.prototype.send = function(data) {
-     
-      
-  //     if (this.addEventListener) {
-  //       this.addEventListener(
-  //         'readystatechange',async () =>{
-           
-  //           if (this.readyState === this.HEADERS_RECEIVED) {
-  //             const contentTypeString = this.getResponseHeader('Content-Type');
-  //             if (contentTypeString) {            
-  //             }
-                
-  //             if (this.getAllResponseHeaders()) {
-  //               const responseHeaders = this.getAllResponseHeaders().split('\r\n');
-  //               const responseHeadersDictionary = {};
-  //               responseHeaders.forEach(element => {
-  //                 const key = element.split(':')[0];
-  //                 const value = element.split(':')[1];
-  //                 responseHeadersDictionary[key] = value;
-  //               });
-  //             }
-  //           }
-  //           if (this.readyState === this.DONE) {
-              
-  //             if (this.response) {
-  //               if (this.responseType === 'blob') {
-  //                 var responseText =  await (new Response(this.response)).text();
-  //               NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(responseText),responseText);
-
-  //               } else if (this.responseType === 'text') {
-  //               }
-  //               NRMAModularAgentWrapper.execute('noticeHttpTransaction',this.responseURL,this._method,this.status,network.startTime,Date.now(),byteSize(data),byteSize(this.response),this.response);
-  //             }
-
-  //           }
-  //         },
-  //         false
-  //       );
-  
-  //     }
-  //     network.startTime = Date.now();
-  //     originalXHRSend.apply(this, arguments);
-  //   }
-
-  // }
-
-
 }
 const byteSize = str => new Blob([str]).size;
 

@@ -7,7 +7,7 @@
  */
 
  import React from 'react';
-//  import NewRelic from 'newrelic-react-native-agent';
+ import NewRelic from 'newrelic-react-native-agent';
  import type {Node} from 'react';
  import {
    SafeAreaView,
@@ -62,43 +62,43 @@
  
    //Http Error and InterAction Example
    const badApiLoad = async () => {
-    //  const interactionId = await NewRelic.startInteraction('StartLoadBadApiCall');
+     const interactionId = await NewRelic.startInteraction('StartLoadBadApiCall');
      console.log(interactionId);
      const url = 'https://facebook.github.io/react-native/moviessssssssss.json';
      fetch(url)
        .then((response) => response.json())
        .then((responseJson) => {
          console.log(responseJson);
-        //  NewRelic.endInteraction(interactionId);
+         NewRelic.endInteraction(interactionId);
        }) .catch((error) => {
-        //  NewRelic.endInteraction(interactionId);
+         NewRelic.endInteraction(interactionId);
          console.error(error);
        });;
    };
  
    // Http Request and Interaction Example
    const goodApiLoad = async () => {
-    //  const interactionId = await NewRelic.startInteraction('StartLoadGoodApiCall');
+     const interactionId = await NewRelic.startInteraction('StartLoadGoodApiCall');
      console.log(interactionId);
      const url = 'https://facebook.github.io/react-native/movies.json';
  
-    //  NewRelic.recordBreadcrumb("Http Request Start",{
-    //    "url":url,
-    //    "starttine":new Date()
-    //  })
+     NewRelic.recordBreadcrumb("Http Request Start",{
+       "url":url,
+       "starttine":new Date()
+     })
      fetch(url)
        .then((response) => response.json())
        .then((responseJson) => {
-        //  NewRelic.recordBreadcrumb("Http Request Success",{
-        //    "response":responseJson,
-        //    "url":url,
-        //    "endtime":new Date()
-        //  })
+         NewRelic.recordBreadcrumb("Http Request Success",{
+           "response":responseJson,
+           "url":url,
+           "endtime":new Date()
+         })
          console.log(responseJson);
-        //  NewRelic.endInteraction(interactionId);
+         NewRelic.endInteraction(interactionId);
        })
        .catch((error) => {
-        //  NewRelic.endInteraction(interactionId);
+         NewRelic.endInteraction(interactionId);
          console.error(error);
        });
    };
@@ -113,14 +113,14 @@
        .then((response) => response.json())
        .then((responseJson) => {
          console.log(responseJson);
-        //  NewRelic.endInteraction(interactionId);
+         NewRelic.endInteraction(interactionId);
        }) 
    };
  
    // JS Error Example
    // When Javascript throws error it captures by our Error Handler
    const throwError = () => {
-      
+      NewRelic.removeAttribute("")
       throw new Error("I am Error");
    }
  

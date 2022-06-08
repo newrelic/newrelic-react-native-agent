@@ -73,10 +73,10 @@ PODS:
   - fmt (6.2.1)
   - glog (0.3.5)
   - libevent (2.1.12)
-  - newrelic-react-native-agent (0.0.1-beta.5):
-    - NewRelicAgent (= 7.3.4)
+  - newrelic-react-native-agent (0.0.1):
+    - NewRelicAgent (= 7.3.6)
     - React
-  - NewRelicAgent (7.3.4)
+  - NewRelicAgent (7.3.6)
   - OpenSSL-Universal (1.1.180)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -512,8 +512,8 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 5337263514dd6f09803962437687240c5dc39aa4
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  newrelic-react-native-agent: ffb30b69371c04f04784184204db6a43ffc585c5
-  NewRelicAgent: d0d9b04bdb4694ad8d97619db7a4a542e2333e8b
+  newrelic-react-native-agent: e143e5d657b9419c04add6abbe0409082abfbf51
+  NewRelicAgent: e935016bcbf6940b2ff516d60a86049abbec2eb9
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
   RCTRequired: 4bf86c70714490bca4bf2696148638284622644b

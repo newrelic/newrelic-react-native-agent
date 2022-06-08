@@ -2,7 +2,6 @@
 
 This agent uses native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
 
-**NOTE:** This agent SDK is not yet officially supported. If you’re interested in participating in our early access program, contact Support or your account representative.
 
 ## Features
 * Capture JavaScript errors
@@ -57,7 +56,7 @@ import {Platform} from 'react-native';
 
 NewRelic.startAgent(appToken);
 NewRelic.setJSAppVersion(appVesrion.version);
-
+AppRegistry.registerComponent(appName, () => App);
 
 ```
 AppToken is platform-specific. You need to generate the seprate token for Android and iOS apps.
@@ -65,7 +64,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
 ### Android Setup
 1. Install the New Relic native Android agent ([instructions here](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/install-android-apps-gradle-android-studio)).
 2. Update `build.gradle`:
-  ```java
+  ```groovy
     buildscript {
       ...
       repositories {
@@ -74,13 +73,13 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.5.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.6.0"
       }
     }
   ```
 
 3. Update `app/build.gradle`:
-  ```
+  ```groovy
     apply plugin: "com.android.application"
     apply plugin: 'newrelic' // <-- add this
   
@@ -133,7 +132,7 @@ Integration with Expo is possible in both bare workflow and [custom managed work
 * [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): Please follow the above installation steps instead.
 * [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): After installing our package, add the config plugin to the plugins array of your `app.json` or `app.config.js`.
 
-```
+```js
 {
   "name": "my app",
   "plugins": ["newrelic-react-native-agent"]
@@ -159,44 +158,52 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 > (Required). This uses the string ID for the interaction you want to end.
 > This string is returned when you use startInteraction().
 
-  ```
-  var HttpDemo_id = NewRelic.startInteraction("HttpDemo");
-
-  return(
-    <View style = {main.container}>
-    <Text>Select the below buttons. Background your application and the data will arrive in NR.</Text>
-    <Button style = {button_blue.blue} title="Good Http Request" onPress= {() => goodRequest()} />
-    <Button style = {button_blue.blue} title="Bad Http Request" onPress = {() => badRequest()} />
-    </View>
-  );
-
-  NewRelic.endInteraction(HttpDemo_id);  
+  ```js
+   const badApiLoad = async () => {
+     const interactionId = await NewRelic.startInteraction('StartLoadBadApiCall');
+     console.log(interactionId);
+     const url = 'https://facebook.github.io/react-native/moviessssssssss.json';
+     fetch(url)
+       .then((response) => response.json())
+       .then((responseJson) => {
+         console.log(responseJson);
+         NewRelic.endInteraction(interactionId);
+       }) .catch((error) => {
+         NewRelic.endInteraction(interactionId);
+         console.error(error);
+       });;
+   };
   
   ```
 
 ### [setAttribute](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-attribute)(name: string, value: boolean | number | string): void;
 > Creates a session-level attribute shared by multiple mobile event types. Overwrites its previous value and type each time it is called.
-  ```
+  ```js
      NewRelic.setAttribute('RNCustomAttrNumber', 37);
+  ```
+### [removeAttribute](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/remove-attribute)(name: string, value: boolean | number | string): void;
+> This method removes the attribute specified by the name string..
+  ```js
+     NewRelic.removeAttribute('RNCustomAttrNumber');
   ```
 
 ### [setUserId](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-user-id)(userId: string): void;
 > Set a custom user identifier value to associate user sessions with analytics events and attributes.
-  ```
+  ```js
      NewRelic.setUserId("RN12934");
   ```
 
 ### [recordBreadcrumb](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordbreadcrumb)(name: string, attributes?: {[key: string]: boolean | number | string}): void;
 > Track app activity/screen that may be helpful for troubleshooting crashes.
 
-  ```
+  ```js
      NewRelic.recordBreadcrumb("shoe", {"shoeColor": "blue","shoesize": 9,"shoeLaces": true});
   ```
 
 ### [recordCustomEvent](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordcustomevent-android-sdk-api)(eventType: string, eventName?: string, attributes?: {[key: string]: boolean | number | string}): void;
 > Creates and records a custom event for use in New Relic Insights.
 
-  ```
+  ```js
      NewRelic.recordCustomEvent("mobileClothes", "pants", {"pantsColor": "blue","pantssize": 32,"belt": true});
   ```
 

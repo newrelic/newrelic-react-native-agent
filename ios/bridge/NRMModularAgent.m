@@ -35,7 +35,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
                  startWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject){
     NSLog(@"NRMA calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
-    [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_React];
+    [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_ReactNative];
     [NewRelic startWithApplicationToken: appKey];
     
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];

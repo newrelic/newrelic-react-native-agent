@@ -38,4 +38,4 @@ project.xcworkspace
 InstabugSample.xcworkspace
 local.properties
 package-lock.json
-Podfile.lock
+ios/Podfile.lock
