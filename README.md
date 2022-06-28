@@ -14,7 +14,7 @@ This agent uses native New Relic Android and iOS agents to instrument the React-
 * Expo Support (Bare Workflow & Managed Workflow)
 
 ## Current Support:
-- Android API 21+
+- Android API 24+
 - iOS 10
 - Depends on New Relic iOS/XCFramework and Android agents
 
