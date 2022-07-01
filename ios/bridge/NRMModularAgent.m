@@ -4,6 +4,7 @@
 
 
 
+
 @interface NewRelic (Private)
     + (bool) isAgentStarted:(SEL _Nonnull)callingMethod;
 @end
@@ -30,12 +31,15 @@ RCT_EXPORT_MODULE()
 
 // Refer to https://facebook.github.io/react-native/docs/native-modules-ios for a list of supported argument types
 
-RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey
+RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* _Nonnull) agentVersion reactNativeVersion:(NSString* _Nonnull) reactNativeVersion
                  startWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject){
     NSLog(@"NRMA calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
-    [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_React];
+    [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_ReactNative];
     [NewRelic startWithApplicationToken: appKey];
+    
+    [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
+
     resolve(@(TRUE));
 }
 
@@ -76,7 +80,7 @@ RCT_EXPORT_METHOD(setUserId:(NSString* _Nonnull)userId) {
 //}
 
 RCT_EXPORT_METHOD(setJSAppVersion:(NSString* _Nonnull)version) {
-    [NewRelic setAttribute:@"JSAppVersion" value:version];
+    [NewRelic setAttribute:@"JSBundleId" value:version];
 }
 
 
@@ -134,8 +138,6 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
     
     
     NSDictionary *dict =  @{@"Name":errorName,@"Message": errorMessage,@"isFatal": isFatal,@"jsAppVersion": jsAppVersion,@"errorStack": errorStack};
-
-
     [NewRelic recordBreadcrumb:@"JS Errors" attributes:dict];
     [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];
 }

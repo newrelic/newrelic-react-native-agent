@@ -106,7 +106,7 @@
    //Promise Rejection Example
    // if user is not handling error in catch then it captures by our prmose rejection handler
    const promiseRejection = async () => {
-     const interactionId = await NewRelic.startInteraction('PromiseRejectionCall');
+    //  const interactionId = await NewRelic.startInteraction('PromiseRejectionCall');
      console.log(interactionId);
      const url = 'https://facebook.github.io/react-native/moviessssssssss.json';
      fetch(url)
@@ -120,7 +120,7 @@
    // JS Error Example
    // When Javascript throws error it captures by our Error Handler
    const throwError = () => {
-      
+      NewRelic.removeAttribute("")
       throw new Error("I am Error");
    }
  

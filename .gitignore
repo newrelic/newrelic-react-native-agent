@@ -3,7 +3,6 @@ downloads/
 ios/NewRelic_Mobile_iOS_local/
 new-relic/tmp
 modular-build/
-scripts/
 
 # OSX
 #
@@ -58,3 +57,7 @@ buck-out/
 dist
 
 .vscode/
+coverage/
+docs/
+git.README.md
+package-lock.json

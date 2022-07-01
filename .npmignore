@@ -23,3 +23,4 @@ nr-versions.json
 CHANGELOG.md
 NewRelicExampleApp
 .husky
+.github/

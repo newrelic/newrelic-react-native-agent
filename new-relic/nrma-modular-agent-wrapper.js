@@ -109,29 +109,31 @@ class NRMAModularAgentWrapper {
   };
 
 
-  continueSession = () => {
-    NRMModularAgent.continueSession();
-  }
-
   consoleEvents = (message) => {
     NRMModularAgent.nativeLog(message);
   }
 
-  startAgent = (appKey) => {
-    NRMModularAgent.startAgent(appKey);
+  startAgent = (appKey,agentVersion,reactNativeVersion) => {
+    NRMModularAgent.startAgent(appKey,agentVersion,reactNativeVersion);
     NRMAModularAgentWrapper.isAgentStarted = true;
   }
 
   startInteraction = async (actionName) => {
+    if(NRMAModularAgentWrapper.isAgentStarted) {
      return await  NRMModularAgent.startInteraction(actionName);
+    }
   }
   
   endInteraction = (actionName) => {
-    NRMModularAgent.endInteraction(actionName);
+    if(NRMAModularAgentWrapper.isAgentStarted) {
+         NRMModularAgent.endInteraction(actionName);
+    }
   }
 
   setInteractionName = (name) => {
-    NRMModularAgent.setInteractionName(name);
+    if(NRMAModularAgentWrapper.isAgentStarted) {
+     NRMModularAgent.setInteractionName(name);
+    }
   }
 
 }

@@ -7,9 +7,12 @@
  import {name as appName} from './app.json';
  import * as keys from './newrelic.json';
  import NewRelic from 'newrelic-react-native-agent';
- 
+ import * as appversion from './package.json';
+
  //start the Agent
  NewRelic.startAgent(keys.licenseKey.ios);
+ NewRelic.setJSVersion(appversion.version);
+
  //set Attribute
  NewRelic.setAttribute("NewRelic RN App","1.0.0")
  // Adding Custom Event
