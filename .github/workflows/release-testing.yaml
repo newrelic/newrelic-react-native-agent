@@ -52,10 +52,6 @@ jobs:
           else
           npm i
           fi
-<<<<<<< HEAD
-=======
-
->>>>>>> release.0.0.1-beta
       - name: Run all test cases
         run: npm run test
 
