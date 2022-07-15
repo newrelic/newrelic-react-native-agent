@@ -1,4 +1,3 @@
-
 package com.NewRelic;
 
 import android.util.Log;
@@ -34,20 +33,19 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startAgent(String appKey,String agentVersion,String reactNativeVersion) {
+    public void startAgent(String appKey, String agentVersion, String reactNativeVersion) {
         if (appKey != null) {
             Log.w("NRMA", "calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
-    
 
-         
+
             NewRelic.withApplicationToken(appKey)
-                    .withApplicationFramework(ApplicationFramework.ReactNative,reactNativeVersion)
+                    .withApplicationFramework(ApplicationFramework.ReactNative, reactNativeVersion)
                     .withCrashReportingEnabled(true)
                     .start(reactContext);
 
             NewRelic.setAttribute("React Native Version", reactNativeVersion);
-            StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Agent/"+agentVersion);
-            StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Framework/"+reactNativeVersion);                    
+            StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Agent/" + agentVersion);
+            StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Framework/" + reactNativeVersion);
         }
     }
 
@@ -161,13 +159,13 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
         Map<String, Object> logs = new HashMap<>();
         logs.put("Name", name);
         logs.put("Message", message);
-        NewRelic.recordBreadcrumb("Console Logs",logs);
+        NewRelic.recordBreadcrumb("Console Logs", logs);
         NewRelic.recordCustomEvent("Console Events", "", logs);
     }
 
     @ReactMethod
-    public void noticeHttpTransaction(String url, String method,int statusCode,int startTime,int endTime,int bytesSent,int bytesReceived,String responseBody) {
-        NewRelic.noticeHttpTransaction(url,method,statusCode,startTime,endTime,bytesSent,bytesReceived,responseBody);
+    public void noticeHttpTransaction(String url, String method, int statusCode, int startTime, int endTime, int bytesSent, int bytesReceived, String responseBody) {
+        NewRelic.noticeHttpTransaction(url, method, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody);
     }
 
 //    @ReactMethod
@@ -175,27 +173,29 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 //        NewRelic.continueSession();
 //    }
 
-@ReactMethod
-public void recordStack(String errorName, String errorMessage, String errorStack, boolean isFatal, String jsAppVersion) {
+    @ReactMethod
+    public void recordStack(String errorName, String errorMessage, String errorStack, boolean isFatal, String jsAppVersion) {
 
-    try {
+        try {
 
-        Map<String,Object> crashEvents = new HashMap<>();
-        crashEvents.put("Name", errorName);
-        crashEvents.put("Message", errorMessage);
-        crashEvents.put("isFatal", isFatal);
-        crashEvents.put("jsAppVersion", jsAppVersion);
-        //attribute limit is 4096
-        crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0,4094):errorStack);
+            Map<String, Object> crashEvents = new HashMap<>();
+            crashEvents.put("Name", errorName);
+            crashEvents.put("Message", errorMessage);
+            crashEvents.put("isFatal", isFatal);
+            crashEvents.put("jsAppVersion", jsAppVersion);
+            if (errorStack != null) {
+                //attribute limit is 4096
+                crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0, 4094) : errorStack);
+            }
 
-        NewRelic.recordBreadcrumb("JS Errors", crashEvents);
-        NewRelic.recordCustomEvent("JS Errors", "", crashEvents);
+            NewRelic.recordBreadcrumb("JS Errors", crashEvents);
+            NewRelic.recordCustomEvent("JS Errors", "", crashEvents);
 
-        StatsEngine.get().inc("Supportability/Mobile/ReactNative/JSError");
+            StatsEngine.get().inc("Supportability/Mobile/ReactNative/JSError");
 
 
-    } catch (IllegalArgumentException e) {
-        Log.w("NRMA", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            Log.w("NRMA", e.getMessage());
+        }
     }
-}
 }
