@@ -34,7 +34,7 @@ jobs:
       - name: Checkout the release branch for testing
         uses: actions/checkout@v2
         with:
-          ref: release.0.0.1-beta
+          ref:  release-0.0.2
           # token: ${{ secrets.API_CLI_TOKEN }}
           # path: newrelic-actions  # This might have to exist within ".github"
 
