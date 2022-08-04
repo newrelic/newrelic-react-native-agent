@@ -2,18 +2,15 @@
 #import <NewRelic/NewRelic.h>
 
 
-
-
-
 @interface NewRelic (Private)
-    + (bool) isAgentStarted:(SEL _Nonnull)callingMethod;
++ (bool) isAgentStarted:(SEL _Nonnull)callingMethod;
 @end
 
 @implementation NRMModularAgent
 
 -(id)init {
     static dispatch_once_t predicate;
-
+    
     dispatch_once(&predicate, ^{
     });
     return self;
@@ -32,20 +29,43 @@ RCT_EXPORT_MODULE()
 // Refer to https://facebook.github.io/react-native/docs/native-modules-ios for a list of supported argument types
 
 RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* _Nonnull) agentVersion reactNativeVersion:(NSString* _Nonnull) reactNativeVersion
-                 startWithResolver:(RCTPromiseResolveBlock)resolve
-                 rejecter:(RCTPromiseRejectBlock)reject){
+                  config:(NSDictionary* _Nullable)agentConfig
+                  startWithResolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject){
     NSLog(@"NRMA calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
+    
+    if([[agentConfig objectForKey:@"crashReportingEnabled"]boolValue] == NO) {
+        [NewRelic disableFeatures:NRFeatureFlag_CrashReporting];
+    }
+    
+    
+    if ([[agentConfig objectForKey:@"networkRequestEnabled"]boolValue] == NO){
+        [NewRelic disableFeatures:NRFeatureFlag_NetworkRequestEvents];
+        [NewRelic disableFeatures:NRFeatureFlag_NSURLSessionInstrumentation];
+        [NewRelic disableFeatures:NRFeatureFlag_RequestErrorEvents];
+    }
+    if([[agentConfig objectForKey:@"httpRequestBodyCaptureEnabled"]boolValue] == NO) {
+        [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
+    }
+    if([[agentConfig objectForKey:@"webViewInstrumentationEnabled"]boolValue] == NO) {
+        [NewRelic disableFeatures:NRFeatureFlag_WebViewInstrumentation];
+    }
+    
+    if([[agentConfig objectForKey:@"interActionTracingEnabled"]boolValue] == NO) {
+        [NewRelic disableFeatures:NRFeatureFlag_InteractionTracing];
+    }
+    
     [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_ReactNative];
     [NewRelic startWithApplicationToken: appKey];
     
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
-
+    
     resolve(@(TRUE));
 }
 
 
 RCT_EXPORT_METHOD(isAgentStarted:(NSString* _Nonnull)call
-                   callback: (RCTResponseSenderBlock)callback){
+                  callback: (RCTResponseSenderBlock)callback){
     callback(@[[NSNull null], @(TRUE)]);
 }
 
@@ -92,10 +112,10 @@ RCT_EXPORT_METHOD(recordCustomEvent:(NSString* _Nonnull) eventType eventName:(NS
 RCT_EXPORT_METHOD(noticeHttpTransaction:(NSString* _Nonnull) url method:(NSString* _Nonnull)method statusCode:(NSInteger*)statusCode startTime:(NSUInteger* )startTime endTime:(NSUInteger*)endTime bytesSent:(NSUInteger* )bytesSent bytesReceived:(NSUInteger*)bytesReceived responseBody:(NSString* _Nullable)responseBody) {
     
     NSURL *nsurl = [NSURL URLWithString:url];
-
+    
     [NewRelic noticeNetworkRequestForURL:nsurl httpMethod:method withTimer:NULL responseHeaders:NULL statusCode:*statusCode bytesSent:*bytesSent bytesReceived:*bytesReceived responseData:[responseBody dataUsingEncoding:NSUTF8StringEncoding] andParams:NULL];
     // todo: Not sure if we need to check the validity of these arguments at all..
-  
+    
 }
 
 /**
@@ -121,12 +141,13 @@ RCT_EXPORT_METHOD(startInteraction:(NSString *)interactionName
  */
 RCT_EXPORT_METHOD(endInteraction:(NSString *)interactionId)
 {
-        [NewRelic stopCurrentInteraction:(NSString * _Null_unspecified)interactionId];
+    [NewRelic stopCurrentInteraction:(NSString * _Null_unspecified)interactionId];
 }
 
 
 RCT_EXPORT_METHOD(nativeLog:(NSString* _Nonnull) name message:(NSString* _Nonnull) message) {
     NSDictionary *logs =  @{@"Name":name,@"Message": message};
+    [NewRelic recordBreadcrumb:@"Console Events" attributes:logs];
     [NewRelic recordCustomEvent:@"Console Events" attributes:logs];
 }
 
