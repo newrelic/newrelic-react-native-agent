@@ -247,6 +247,24 @@ class NewRelic {
     }
   }
 
+  setUser = (id, name, email) => {
+    const safeStringify = value => {
+      try {
+        return String(value)
+      } catch (e) {
+        // calling String() on an object with a null
+        // prototype can throw, so tolerate that here
+        return undefined
+      }
+    }
+
+    // the native setUser() fn only accepts strings so coerce each values
+    id = safeStringify(id)
+    name = safeStringify(name)
+    email = safeStringify(email)
+
+  }
+
 
   /**
    * @private

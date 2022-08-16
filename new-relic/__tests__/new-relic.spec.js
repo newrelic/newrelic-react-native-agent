@@ -203,4 +203,44 @@ describe('New Relic', () => {
     expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(25);
   });
 
+  it('sends breadcrumb for navigation if it is not first screen', () => {
+
+    NewRelic.state.isFirstScreen = false;
+    var event = {"initialProps":{"componentId":"Component4"},"rootTag":11};
+    
+    NewRelic.componentDidAppearListener(event);
+    
+    expect(MockNRM.recordBreadcrumb.mock.calls.length).toBe(1);
+  });
+
+  it('not sending breadcrumb for navigation if it is first screen', () => {
+
+    NewRelic.state.isFirstScreen = false;
+    var event = {"initialProps":{"componentId":"Component4"},"rootTag":11};
+    
+    NewRelic.componentDidAppearListener(event);
+    
+    expect(MockNRM.recordBreadcrumb.mock.calls.length).toBe(0);
+  });
+
+  it('sends breadcrumb from navigationStateChange Listener', () => {
+
+    NewRelic.state.isFirstScreen = false;
+    var newState = {"index": 1, "isTransitioning": false, "key": "StackRouterRoot", "routes": [{"key": "id-1660675098665-0", "routeName": "Home"}, {"key": "id-1660675098665-1", "params": [Object], "routeName": "Profile"}]};
+    
+    NewRelic.onNavigationStateChange('',newState,'');
+    
+    expect(MockNRM.recordBreadcrumb.mock.calls.length).toBe(1);
+  });
+
+  it('sends breadcrumb from statechange Listener', () => {
+
+    NewRelic.state.isFirstScreen = false;
+    var newState = {"index": 1, "key": "stack-YjJKdS9Cyw2S_9eqBwGy5", "routeNames": ["Home", "HttpDemo", "ErrorDemo", "CustomDataDemo"], "routes": [{"key": "Home-04bWmlOhC_9ZpO6vsNNai", "name": "Home", "params": undefined}, {"key": "HttpDemo-zQsn6TtkDwiNm4A4OSw32", "name": "HttpDemo", "params": [Object], "path": undefined}], "stale": false, "type": "stack"};
+    
+    NewRelic.onStateChange(newState);
+    
+    expect(MockNRM.recordBreadcrumb.mock.calls.length).toBe(1);
+  });
+
 });

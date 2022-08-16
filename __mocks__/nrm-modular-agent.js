@@ -13,6 +13,9 @@ export default  {
   setInteractionName:jest.fn(),
   consoleEvents:jest.fn(),
   getReactNativeVersion:jest.fn(),
+  onNavigationStateChange:jest.fn(),
+  componentDidAppearListener:jest.fn(),
+  onStateChange:jest.fn(),
 
   isAgentStarted: (name, callback) => {
     callback(true);
