@@ -142,6 +142,52 @@ Integration with Expo is possible in both bare workflow and [custom managed work
 
 After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
 
+## Routing Instrumentation
+
+We currently provide two routing instrumentations out of the box to instrument route changes for and route changes record as Breadcrumb.
+
+*[React Navigation](https://github.com/react-navigation/react-navigation)
+*[React Native Navigation](https://github.com/wix/react-native-navigation)
+
+*  **[react-navigation](https://github.com/react-navigation/react-navigation)**
+
+	  *  **v5**
+		set the `onStateChange` to `NewRelic.onStateChange` in your NavigationContainer as follows:
+
+			```javascript
+			<NavigationContainer
+			onStateChange={  NewRelic.onStateChange  }  />
+			```
+
+	 *  **<=v4**
+		set the `onNavigationStateChange` to `NewRelic.onNavigationStateChange` in your App wrapper as follows:
+
+		```javascript
+		export  default () => (
+		<App
+		onNavigationStateChange={ NewRelic.onNavigationStateChange  }  />
+		);
+		```
+
+  *  **[react-native-navigation](https://github.com/wix/react-native-navigation)**
+
+		Register `NewRelic.componentDidAppearListener` listener using:
+		```javascript
+		Navigation.events().registerComponentDidAppearListener( NewRelic.componentDidAppearListener );
+		```
+		
+Alternatively, you can report your screen changes manually using the following API:
+
+
+  ```js
+   var params = {
+      'screenName':'screenName'
+    };
+    
+    NewRelic.recordBreadcrumb('navigation',params);
+  
+  ```
+
 ## Usage
 See the examples below, and for more detail, see [New Relic IOS SDK doc](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/ios-sdk-api) or [Android SDK](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api).
 
