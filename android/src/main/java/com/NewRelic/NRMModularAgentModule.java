@@ -70,6 +70,12 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.CrashReporting);
             }
 
+            if ((Boolean) agentConfig.get("interactionTracingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.InteractionTracing);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.InteractionTracing);
+            }
+
 
             NewRelic.withApplicationToken(appKey)
                     .withApplicationFramework(ApplicationFramework.ReactNative, reactNativeVersion)

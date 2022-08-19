@@ -38,12 +38,14 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic disableFeatures:NRFeatureFlag_CrashReporting];
     }
     
-    
-    if ([[agentConfig objectForKey:@"networkRequestEnabled"]boolValue] == NO){
+     if ([[agentConfig objectForKey:@"networkRequestEnabled"]boolValue] == NO){
         [NewRelic disableFeatures:NRFeatureFlag_NetworkRequestEvents];
-        [NewRelic disableFeatures:NRFeatureFlag_NSURLSessionInstrumentation];
+    }
+
+     if ([[agentConfig objectForKey:@"networkErrorRequestEnabled"]boolValue] == NO){
         [NewRelic disableFeatures:NRFeatureFlag_RequestErrorEvents];
     }
+    
     if([[agentConfig objectForKey:@"httpRequestBodyCaptureEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
     }
@@ -51,7 +53,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic disableFeatures:NRFeatureFlag_WebViewInstrumentation];
     }
     
-    if([[agentConfig objectForKey:@"interActionTracingEnabled"]boolValue] == NO) {
+    if([[agentConfig objectForKey:@"interactionTracingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_InteractionTracing];
     }
     
@@ -109,15 +111,6 @@ RCT_EXPORT_METHOD(recordCustomEvent:(NSString* _Nonnull) eventType eventName:(NS
     [NewRelic recordCustomEvent:eventType name:eventName attributes:attributes];
 }
 
-RCT_EXPORT_METHOD(noticeHttpTransaction:(NSString* _Nonnull) url method:(NSString* _Nonnull)method statusCode:(NSInteger*)statusCode startTime:(NSUInteger* )startTime endTime:(NSUInteger*)endTime bytesSent:(NSUInteger* )bytesSent bytesReceived:(NSUInteger*)bytesReceived responseBody:(NSString* _Nullable)responseBody) {
-    
-    NSURL *nsurl = [NSURL URLWithString:url];
-    
-    [NewRelic noticeNetworkRequestForURL:nsurl httpMethod:method withTimer:NULL responseHeaders:NULL statusCode:*statusCode bytesSent:*bytesSent bytesReceived:*bytesReceived responseData:[responseBody dataUsingEncoding:NSUTF8StringEncoding] andParams:NULL];
-    // todo: Not sure if we need to check the validity of these arguments at all..
-    
-}
-
 /**
  * Track a method as an interaction
  */
@@ -157,8 +150,10 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
                   isFatal:(NSNumber* _Nonnull)isFatal
                   jsAppVersion:(NSString* _Nullable)jsAppVersion) {
     
-    
-    NSDictionary *dict =  @{@"Name":errorName,@"Message": errorMessage,@"isFatal": isFatal,@"jsAppVersion": jsAppVersion,@"errorStack": errorStack};
+    //Errorstack length may be more that attribute length limit 4096.
+    NSRange needleRange = NSMakeRange(0,3994);
+    NSString *error = [errorStack substringWithRange:needleRange];
+    NSDictionary *dict =  @{@"Name":errorName,@"Message": errorMessage,@"isFatal": isFatal,@"jsAppVersion": jsAppVersion,@"errorStack": error};
     [NewRelic recordBreadcrumb:@"JS Errors" attributes:dict];
     [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];
 }

@@ -30,7 +30,7 @@ class NewRelic {
     this.agentConfiguration = {
       analyticsEventEnabled: true,
       crashReportingEnabled: true,
-      interActionTracingEnabled: true,
+      interactionTracingEnabled: true,
       networkRequestEnabled: true,
       networkErrorRequestEnabled: true,
       httpRequestBodyCaptureEnabled: true,
