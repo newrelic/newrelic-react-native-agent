@@ -177,8 +177,8 @@ After this, you need to use the `expo prebuild --clean` command as described in 
 
 We currently provide two routing instrumentations out of the box to instrument route changes for and route changes record as Breadcrumb.
 
-*[React Navigation](https://github.com/react-navigation/react-navigation)
-*[React Native Navigation](https://github.com/wix/react-native-navigation)
+* [React Navigation](https://github.com/react-navigation/react-navigation)
+* [React Native Navigation](https://github.com/wix/react-native-navigation)
 
 *  **[react-navigation](https://github.com/react-navigation/react-navigation)**
 
