@@ -1,3 +1,4 @@
+
 package com.NewRelic;
 
 import android.util.Log;
@@ -9,6 +10,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.Callback;
+import com.newrelic.agent.android.FeatureFlag;
 import com.newrelic.agent.android.NewRelic;
 import com.newrelic.agent.android.ApplicationFramework;
 import com.newrelic.agent.android.stats.StatsEngine;
@@ -33,14 +35,51 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startAgent(String appKey, String agentVersion, String reactNativeVersion) {
+    public void startAgent(String appKey, String agentVersion, String reactNativeVersion, ReadableMap config) {
         if (appKey != null) {
             Log.w("NRMA", "calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
+
+            Map<String, Object> agentConfig = mapToAttributes(config);
+
+            if ((Boolean) agentConfig.get("analyticsEventEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.AnalyticsEvents);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.AnalyticsEvents);
+            }
+
+            if ((Boolean) agentConfig.get("networkRequestEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.NetworkRequests);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.NetworkRequests);
+            }
+            if ((Boolean) agentConfig.get("networkErrorRequestEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.NetworkErrorRequests);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.NetworkErrorRequests);
+            }
+
+            if ((Boolean) agentConfig.get("httpRequestBodyCaptureEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.HttpResponseBodyCapture);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.HttpResponseBodyCapture);
+            }
+
+            if ((Boolean) agentConfig.get("crashReportingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.CrashReporting);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.CrashReporting);
+            }
+
+            if ((Boolean) agentConfig.get("interactionTracingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.InteractionTracing);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.InteractionTracing);
+            }
 
 
             NewRelic.withApplicationToken(appKey)
                     .withApplicationFramework(ApplicationFramework.ReactNative, reactNativeVersion)
-                    .withCrashReportingEnabled(true)
+                    .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
                     .start(reactContext);
 
             NewRelic.setAttribute("React Native Version", reactNativeVersion);
@@ -168,10 +207,6 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
         NewRelic.noticeHttpTransaction(url, method, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody);
     }
 
-//    @ReactMethod
-//    public void continueSession() {
-//        NewRelic.continueSession();
-//    }
 
     @ReactMethod
     public void recordStack(String errorName, String errorMessage, String errorStack, boolean isFatal, String jsAppVersion) {
@@ -183,10 +218,8 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
             crashEvents.put("Message", errorMessage);
             crashEvents.put("isFatal", isFatal);
             crashEvents.put("jsAppVersion", jsAppVersion);
-            if (errorStack != null) {
-                //attribute limit is 4096
-                crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0, 4094) : errorStack);
-            }
+            //attribute limit is 4096
+            crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0, 4094) : errorStack);
 
             NewRelic.recordBreadcrumb("JS Errors", crashEvents);
             NewRelic.recordCustomEvent("JS Errors", "", crashEvents);

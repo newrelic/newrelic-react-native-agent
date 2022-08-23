@@ -1,6 +1,6 @@
 {
   "name": "newrelic-react-native-agent",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A New Relic Mobile Agent for React Native",
   "main": "index.js",
   "scripts": {
@@ -84,10 +84,10 @@
   },
   "sdkVersions": {
     "ios": {
-      "newrelic": "7.3.6"
+      "newrelic": "7.3.7"
     },
     "android": {
-      "newrelic": "6.6.0"
+      "newrelic": "6.8.0"
     }
   }
 }

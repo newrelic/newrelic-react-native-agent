@@ -1,6 +1,6 @@
 import utils from './new-relic/nr-utils';
-import {LOG} from './new-relic/nr-logger';
-import {Platform} from 'react-native';
+import { LOG } from './new-relic/nr-logger';
+import { Platform } from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
 import * as _ from 'lodash';
@@ -19,12 +19,24 @@ class NewRelic {
     this.JSAppVersion = '';
     this.state = {
       didAddErrorHandler: false,
-      didAddPromiseRejection:false,
-      didOverrideConsole:false
+      didAddPromiseRejection: false,
+      didOverrideConsole: false,
+      isFirstScreen: true
     };
+    this.lastScreen = '';
     this.LOG = LOG;
     this.NRMAModularAgentWrapper = new NRMAModularAgentWrapper();
     this.agentVersion = version;
+    this.agentConfiguration = {
+      analyticsEventEnabled: true,
+      crashReportingEnabled: true,
+      interactionTracingEnabled: true,
+      networkRequestEnabled: true,
+      networkErrorRequestEnabled: true,
+      httpRequestBodyCaptureEnabled: true,
+      loggingEnabled: true,
+      webViewInstrumentation: true
+    };
   }
 
   /**
@@ -34,11 +46,84 @@ class NewRelic {
   isAgentStarted = () => NRMAModularAgentWrapper.isAgentStarted;
 
   /**
+  * Navigation Route Listener
+  */
+  /**
+   * Subcribe onNavigationStateChange Listenr from React Navigation Version 4.x and lower
+ =
+    * Creates and records a MobileBreadcrumb for Current Screen
+    */
+  onNavigationStateChange = (prevState, newState, action) => {
+
+    var currentScreenName = this.getCurrentRouteName(newState);
+    var params = {
+      'screenName': currentScreenName
+    };
+
+    this.recordBreadcrumb('navigation', params);
+
+  }
+
+  getCurrentRouteName = (currentState) => {
+    if (!currentState) {
+      return null;
+    }
+    const route = currentState.routes[currentState.index];
+    if (route.routes) {
+      return getActiveRouteName(route);
+    }
+    return route.routeName;
+  }
+  /**
+   * Subcribe componentDidAppearListener Listenr from React Native Navigation Package
+   * Creates and records a MobileBreadcrumb for Current Screen
+   */
+  componentDidAppearListener = (event) => {
+    if (this.state.isFirstScreen) {
+      this.lastScreen = event.componentName;
+      this.state.isFirstScreen = false;
+      return;
+    }
+    if (this.lastScreen != event.componentName) {
+      var currentScreenName = event.componentName;
+      this.lastScreen = currentScreenName;
+      var params = {
+        'screenName': currentScreenName
+      };
+
+      this.recordBreadcrumb('navigation', params);
+    }
+  }
+
+  /**
+   * Subcribe OnStateChange Listenr from React Navigation Version 5.x and higer
+  * Creates and records a MobileBreadcrumb for Current Screen
+  */
+  onStateChange = (state) => {
+    var currentScreenName = this.getCurrentScrren(state);
+    var params = {
+      'screenName': currentScreenName
+    };
+
+    this.recordBreadcrumb('navigation', params);
+
+  }
+
+  getCurrentScrren(state) {
+
+    if (!state.routes[state.index].state) {
+      return state.routes[state.index].name
+    }
+    return this.getCurrentScrren(state.routes[state.index].state);
+  }
+
+  /**
    * Start the agent
    */
-   startAgent(appkey) {
+  startAgent(appkey, customerConfiguration) {
     this.LOG.verbose = true; // todo: should let this get set by a param
-    this.NRMAModularAgentWrapper.startAgent(appkey,this.agentVersion,this.getReactNativeVersion());
+    this.config = Object.assign(this.agentConfiguration, customerConfiguration);
+    this.NRMAModularAgentWrapper.startAgent(appkey, this.agentVersion, this.getReactNativeVersion(), this.config);
     this.addNewRelicErrorHandler();
     this.addNewRelicPromiseRejectionHandler();
     this._overrideConsole();
@@ -46,12 +131,12 @@ class NewRelic {
     this.LOG.info('React Native agent started.');
     this.LOG.info(`New Relic React Native agent version ${this.agentVersion}`);
     this.setAttribute('ReactNativeAgentVersion', this.agentVersion);
-    this.setAttribute('JSEngine', global.HermesInternal ? "Hermes":"JavaScriptCore");
+    this.setAttribute('JSEngine', global.HermesInternal ? "Hermes" : "JavaScriptCore");
 
 
   }
   getReactNativeVersion() {
-    var rnVersion =  Platform.constants.reactNativeVersion;
+    var rnVersion = Platform.constants.reactNativeVersion;
     return `${rnVersion.major}.${rnVersion.minor}.${rnVersion.patch}`
   }
 
@@ -78,10 +163,10 @@ class NewRelic {
   /**
  * Track a method as an interaction
  */
-  async startInteraction(actionName)  {
-    if(utils.notEmptyString(actionName)) {
-      return await this.NRMAModularAgentWrapper.startInteraction(actionName);  
-    }  else {
+  async startInteraction(actionName) {
+    if (utils.notEmptyString(actionName)) {
+      return await this.NRMAModularAgentWrapper.startInteraction(actionName);
+    } else {
       this.LOG.warn(`actionName is required`);
     }
   }
@@ -92,10 +177,10 @@ class NewRelic {
  * This string is returned when you use startInteraction().
  */
 
-   endInteraction(interActionId) {
-    if(utils.notEmptyString(interActionId)) {
+  endInteraction(interActionId) {
+    if (utils.notEmptyString(interActionId)) {
       this.NRMAModularAgentWrapper.execute('endInteraction', interActionId);
-    }  else {
+    } else {
       this.LOG.warn(`interActionId is Required`);
     }
   }
@@ -107,14 +192,14 @@ class NewRelic {
  */
 
   setInteractionName(name) {
-    if(Platform.OS === 'android') {
+    if (Platform.OS === 'android') {
       this.NRMAModularAgentWrapper.execute('setInteractionName', name);
     } else {
       this.LOG.info(`setInterActionName is not supported by iOS Agent`);
     }
   }
 
- 
+
   /**
    * Creates a custom attribute with a specified name and value.
    * When called, it overwrites its previous value and type.
@@ -126,12 +211,12 @@ class NewRelic {
     this.NRMAModularAgentWrapper.execute('setAttribute', attributeName, value);
   }
 
-    /**
-   * Remove a custom attribute with a specified name and value.
-   * When called, it removes the attribute specified by the name string.
-   * The removed attribute is shared by multiple Mobile event types.
-   * @param attributeName {string} Name of the attribute.
-   */
+  /**
+ * Remove a custom attribute with a specified name and value.
+ * When called, it removes the attribute specified by the name string.
+ * The removed attribute is shared by multiple Mobile event types.
+ * @param attributeName {string} Name of the attribute.
+ */
   removeAttribute(attributeName) {
     this.NRMAModularAgentWrapper.execute('removeAttribute', attributeName, value);
   }
@@ -188,57 +273,57 @@ class NewRelic {
     }
   }
 
-  addNewRelicPromiseRejectionHandler () {
+  addNewRelicPromiseRejectionHandler() {
 
-const prevTracker = getUnhandledPromiseRejectionTracker();
+    const prevTracker = getUnhandledPromiseRejectionTracker();
 
-if(!this.state.didAddPromiseRejection) {
-setUnhandledPromiseRejectionTracker((id, error) => {
+    if (!this.state.didAddPromiseRejection) {
+      setUnhandledPromiseRejectionTracker((id, error) => {
 
-  this.NRMAModularAgentWrapper.execute('recordStack',
-    error.name,
-    error.message,
-    error.stack,
-    false,
-    this.JSAppVersion);  
-  
-  if (prevTracker !== undefined) {
-    prevTracker(id, error)
-  }
+        this.NRMAModularAgentWrapper.execute('recordStack',
+          error.name,
+          error.message,
+          error.stack,
+          false,
+          this.JSAppVersion);
 
-});
-this.state.didAddPromiseRejection = true;
+        if (prevTracker !== undefined) {
+          prevTracker(id, error)
+        }
 
-}
+      });
+      this.state.didAddPromiseRejection = true;
+
+    }
 
   }
 
   _overrideConsole() {
-    if(!this.state.didOverrideConsole) {
-    const defaultLog = console.log;
-    const defaultWarn = console.warn;
-    const defaultError = console.error;
-    const self = this;
+    if (!this.state.didOverrideConsole) {
+      const defaultLog = console.log;
+      const defaultWarn = console.warn;
+      const defaultError = console.error;
+      const self = this;
 
-    console.log = function() {
-      self.sendConsole('log', arguments);
-      defaultLog.apply(console, arguments);
-    };
-    console.warn = function() {
-      self.sendConsole('warn', arguments);
-      defaultWarn.apply(console, arguments);
-    };
-    console.error = function() {
-      self.sendConsole('error', arguments);
-      defaultError.apply(console, arguments);
-    };
-    this.state.didOverrideConsole = true;
-   }
+      console.log = function () {
+        self.sendConsole('log', arguments);
+        defaultLog.apply(console, arguments);
+      };
+      console.warn = function () {
+        self.sendConsole('warn', arguments);
+        defaultWarn.apply(console, arguments);
+      };
+      console.error = function () {
+        self.sendConsole('error', arguments);
+        defaultError.apply(console, arguments);
+      };
+      this.state.didOverrideConsole = true;
+    }
   }
 
   sendConsole(type, args) {
     const argsStr = JSON.stringify(args);
-    this.send('JSConsole', {consoleType: type, args: argsStr});
+    this.send('JSConsole', { consoleType: type, args: argsStr });
     // if (type === 'error') {
     //   this.NRMAModularAgentWrapper.execute('consoleEvents','[JSConsole:Error] ' + argsStr); 
     // }
@@ -252,7 +337,7 @@ this.state.didAddPromiseRejection = true;
     });
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', 'consoleEvents', nameStr, argsStr);
   }
-  
+
 }
 const byteSize = str => new Blob([str]).size;
 
