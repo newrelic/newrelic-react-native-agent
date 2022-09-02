@@ -218,8 +218,10 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
             crashEvents.put("Message", errorMessage);
             crashEvents.put("isFatal", isFatal);
             crashEvents.put("jsAppVersion", jsAppVersion);
-            //attribute limit is 4096
-            crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0, 4094) : errorStack);
+            if (errorStack != null) {
+                //attribute limit is 4096
+                crashEvents.put("errorStack", errorStack.length() > 4095 ? errorStack.substring(0, 4094) : errorStack);
+            }
 
             NewRelic.recordBreadcrumb("JS Errors", crashEvents);
             NewRelic.recordCustomEvent("JS Errors", "", crashEvents);
