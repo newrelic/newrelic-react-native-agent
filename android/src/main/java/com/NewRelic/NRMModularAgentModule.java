@@ -159,6 +159,15 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void incrementAttribute(String key, Double value) {
+        if(value == value.longValue()) {
+            NewRelic.incrementAttribute(key, value.longValue());
+        } else {
+            NewRelic.incrementAttribute(key, value);
+        }
+    }
+
+    @ReactMethod
     public void setUserId(String userId) {
         NewRelic.setUserId(userId);
     }
