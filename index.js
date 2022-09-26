@@ -226,7 +226,7 @@ class NewRelic {
    * When called, it overwrites its previous value and type each time.
    * If attribute does not exist, it creates an attribute with a value of 1.
    * The incremented attribute is shared by multiple Mobile event types.
-   * @param attributeName {string} Name of the Aatribute.
+   * @param attributeName {string} Name of the Attribute.
    * @param value {number} Optional argument that increments the attribute by this value.
    */
   incrementAttribute(attributeName, value=1) {
