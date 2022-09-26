@@ -126,6 +126,27 @@ describe('New Relic', () => {
     expect(MockNRM.setBoolAttribute.mock.calls.length).toBe(0);
   });
 
+  it('should create a new attribute on increment if it does not exist', () => {
+    NewRelic.incrementAttribute('eventType');
+    expect(MockNRM.incrementAttribute.mock.calls.length).toBe(1);
+
+    NewRelic.incrementAttribute('eventTypeWithValue', 100);
+    expect(MockNRM.incrementAttribute.mock.calls.length).toBe(2);
+  });
+
+  it('should not increment attributes with bad values', () => {
+    NewRelic.incrementAttribute(null, null);
+    NewRelic.incrementAttribute(null, 2);
+    NewRelic.incrementAttribute('yes', null);
+    NewRelic.incrementAttribute('', undefined);
+    NewRelic.incrementAttribute(null);
+    NewRelic.incrementAttribute(undefined);
+    NewRelic.incrementAttribute('bool', true);
+
+    expect(MockNRM.incrementAttribute.mock.calls.length).toBe(0);
+  });
+
+
   it('should set a valid js app version', () => {
     NewRelic.setJSAppVersion('new version 123');
     NewRelic.setJSAppVersion('12.12.12');

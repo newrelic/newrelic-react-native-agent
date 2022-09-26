@@ -5,6 +5,7 @@ export default  {
   setStringAttribute: jest.fn(),
   setNumberAttribute: jest.fn(),
   setBoolAttribute: jest.fn(),
+  incrementAttribute: jest.fn(),
   setJSAppVersion: jest.fn(),
   setUserId: jest.fn(),
   recordStack: jest.fn(),

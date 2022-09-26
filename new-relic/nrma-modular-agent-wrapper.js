@@ -91,6 +91,21 @@ class NRMAModularAgentWrapper {
     NRMModularAgent.removeAttribute(attributeName);
   };
 
+  incrementAttribute = (attributeName, value) => {
+    const attribute = new Attribute({attributeName, value});
+
+    attribute.attributeName.isValid(() => {
+      attribute.attributeValue.isValid(() => {
+        if (utils.isNumber(value) && !utils.isBool(value)) {
+          NRMModularAgent.incrementAttribute(attributeName, value);
+          return;
+        }
+
+        LOG.error(`invalid value '${value}' sent to incrementAttribute()`);
+      });
+    });
+  };
+
   setJSAppVersion = (version) => {
     NRMModularAgent.setJSAppVersion(version);
   };
