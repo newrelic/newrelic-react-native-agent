@@ -75,6 +75,80 @@ RCT_EXPORT_METHOD(recordBreadcrumb:(NSString* _Nonnull)eventName attributes:(NSD
     [NewRelic recordBreadcrumb:eventName attributes:attributes];
 }
 
+RCT_EXPORT_METHOD(crashNow:(NSString* )message) {
+    [NewRelic crashNow:message];
+}
+
+RCT_EXPORT_METHOD(currentSessionId:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        NSString* sessionId = [NewRelic currentSessionId];
+        resolve((NSString*)sessionId);
+    } @catch (NSException *exception) {
+        [NewRelic recordHandledException:exception];
+        reject([exception name], [exception reason], nil);
+    }
+}
+
+RCT_EXPORT_METHOD(noticeNetworkFailure:(NSString *)url
+                  httpMethod:(NSString*)httpMethod
+                  startTime:(double)startTime
+                  endTime:(double)endTime
+                  failure:(NSString* _Nonnull)failure) {
+    NSURL *nsurl = [[NSURL alloc] initWithString:url];
+    NSDictionary *dict = @{
+        @"Unknown": [NSNumber numberWithInt:NRURLErrorUnknown],
+        @"BadUrl": [NSNumber numberWithInt:NRURLErrorBadURL],
+        @"TimedOut": [NSNumber numberWithInt:NRURLErrorTimedOut],
+        @"CannotConnectToHost": [NSNumber numberWithInt:NRURLErrorCannotConnectToHost],
+        @"DNSLookupFailed": [NSNumber numberWithInt:NRURLErrorDNSLookupFailed],
+        @"BadServerResponse": [NSNumber numberWithInt:NRURLErrorBadServerResponse],
+        @"SecureConnectionFailed": [NSNumber numberWithInt:NRURLErrorSecureConnectionFailed],
+    };
+//    NSNumber* failureNum = [dict valueForKey:failure];
+    NSInteger iOSFailureCode = [[dict valueForKey:failure] integerValue];
+    [NewRelic noticeNetworkFailureForURL:nsurl httpMethod:httpMethod startTime:startTime endTime:endTime andFailureCode:iOSFailureCode];
+}
+
+RCT_EXPORT_METHOD(recordMetric:(NSString*)name
+                  category:(NSString *)category
+                  value:(NSNumber* _Nonnull)value
+                  countUnit:(NSString *)countUnit
+                  valueUnit:(NSString *)valueUnit) {
+    
+    NSDictionary *dict = @{
+        @"PERCENT": kNRMetricUnitPercent,
+        @"BYTES": kNRMetricUnitBytes,
+        @"SECONDS": kNRMetricUnitSeconds,
+        @"BYTES_PER_SECOND": kNRMetricUnitsBytesPerSecond,
+        @"OPERATIONS": kNRMetricUnitsOperations
+    };
+    if(value < 0) {
+        [NewRelic recordMetricWithName:name category:category];
+    } else {
+        if(countUnit == nil || valueUnit == nil) {
+            [NewRelic recordMetricWithName:name category:category value:value];
+        } else {
+            [NewRelic recordMetricWithName:name category:category value:value valueUnits:dict[valueUnit] countUnits:dict[countUnit]];
+        }
+    }
+
+}
+
+RCT_EXPORT_METHOD(removeAllAttributes) {
+    [NewRelic removeAllAttributes];
+}
+
+RCT_EXPORT_METHOD(setMaxEventBufferTime:(NSNumber* _Nonnull)seconds) {
+    unsigned int uint_seconds = seconds.unsignedIntValue;
+    [NewRelic setMaxEventBufferTime:uint_seconds];
+}
+
+RCT_EXPORT_METHOD(setMaxEventPoolSize:(NSNumber* _Nonnull)maxSize) {
+    unsigned int uint_maxSize = maxSize.unsignedIntValue;
+    [NewRelic setMaxEventPoolSize:uint_maxSize];
+}
+
 RCT_EXPORT_METHOD(setStringAttribute:(NSString* _Nonnull)key withString:(NSString* _Nonnull)value) {
     [NewRelic setAttribute:key value:value];
 }
@@ -93,7 +167,7 @@ RCT_EXPORT_METHOD(removeAttribute:(NSString *)name)
 }
 
 RCT_EXPORT_METHOD(incrementAttribute:(NSString *)key withNumber:(NSNumber* _Nonnull)value) {
-    [NewRelic incrementAttribute:key value:value]
+    [NewRelic incrementAttribute:key value:value];
 }
 
 

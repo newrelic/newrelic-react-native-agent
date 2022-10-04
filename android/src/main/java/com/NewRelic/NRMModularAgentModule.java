@@ -14,6 +14,8 @@ import com.newrelic.agent.android.FeatureFlag;
 import com.newrelic.agent.android.NewRelic;
 import com.newrelic.agent.android.ApplicationFramework;
 import com.newrelic.agent.android.stats.StatsEngine;
+import com.newrelic.agent.android.metric.MetricUnit;
+import com.newrelic.agent.android.util.NetworkFailure;
 
 
 import java.util.HashMap;
@@ -131,6 +133,71 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void recordCustomEvent(String eventType, String eventName, ReadableMap readableMap) {
         NewRelic.recordCustomEvent(eventType, eventName, mapToAttributes(readableMap));
+    }
+
+    @ReactMethod
+    public void crashNow(String message) {
+        NewRelic.crashNow(message);
+    }
+
+    @ReactMethod
+    public void currentSessionId(Promise promise) {
+        try {
+            String sessionId = NewRelic.currentSessionId();
+            promise.resolve(sessionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            NewRelic.recordHandledException(e);
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void noticeNetworkFailure(String url, String httpMethod, double startTime, double endTime, String failure) {
+        Map<String, NetworkFailure> strToNetworkFailure = new HashMap<>();
+        strToNetworkFailure.put("Unknown", NetworkFailure.Unknown);
+        strToNetworkFailure.put("BadURL", NetworkFailure.BadURL);
+        strToNetworkFailure.put("TimedOut", NetworkFailure.TimedOut);
+        strToNetworkFailure.put("CannotConnectToHost", NetworkFailure.CannotConnectToHost);
+        strToNetworkFailure.put("DNSLookupFailed", NetworkFailure.DNSLookupFailed);
+        strToNetworkFailure.put("BadServerResponse", NetworkFailure.BadServerResponse);
+        strToNetworkFailure.put("SecureConnectionFailed", NetworkFailure.SecureConnectionFailed);
+        NewRelic.noticeNetworkFailure(url, httpMethod, (long) startTime, (long) endTime, strToNetworkFailure.get(failure));
+    }
+
+    @ReactMethod
+    public void recordMetric(String name, String category, double value, String metricUnit, String valueUnit) {
+        Map<String, MetricUnit> strToMetricUnit = new HashMap<>();
+        strToMetricUnit.put("PERCENT", MetricUnit.PERCENT);
+        strToMetricUnit.put("BYTES", MetricUnit.BYTES);
+        strToMetricUnit.put("SECONDS", MetricUnit.SECONDS);
+        strToMetricUnit.put("BYTES_PER_SECOND", MetricUnit.BYTES_PER_SECOND);
+        strToMetricUnit.put("OPERATIONS", MetricUnit.OPERATIONS);
+
+        if(value < 0) {
+            NewRelic.recordMetric(name, category);
+        } else {
+            if(metricUnit == null || valueUnit == null) {
+                NewRelic.recordMetric(name, category, value);
+            } else {
+                NewRelic.recordMetric(name, category, 1, value, value, strToMetricUnit.get(metricUnit), strToMetricUnit.get(valueUnit));
+            }
+        }
+    }
+
+    @ReactMethod
+    public void removeAllAttributes() {
+        NewRelic.removeAllAttributes();
+    }
+
+    @ReactMethod
+    public void setMaxEventBufferTime(int maxEventBufferTimeInSeconds) {
+        NewRelic.setMaxEventBufferTime(maxEventBufferTimeInSeconds);
+    }
+
+    @ReactMethod
+    public void setMaxEventPoolSize(int maxSize) {
+        NewRelic.setMaxEventPoolSize(maxSize);
     }
 
     @ReactMethod

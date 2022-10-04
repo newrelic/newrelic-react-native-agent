@@ -160,6 +160,112 @@ class NewRelic {
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', eventType, eventName, attributes);
   }
 
+   /**
+   * Throws a demo run-time exception to test New Relic crash reporting
+   * @param message {string} Optional argument attached to the exception
+   */
+  crashNow(message) {
+    this.NRMAModularAgentWrapper.execute('crashNow', message);
+  }
+  
+  /**
+   * Returns the current session ID. 
+   * This method is useful for consolidating monitoring of app data (not just New Relic data) based on a single session definition and identifier.
+   * @return currentSessionId {Promise<sessionId} A promise that returns a string containing the current session id.
+   */
+  async currentSessionId() {
+    return await this.NRMAModularAgentWrapper.execute('currentSessionId');
+  }
+
+  /**
+   * Records network failures.
+   * If a network request fails, use this method to record details about the failure.
+   * In most cases, place this call inside exception handlers.
+   * @param url {string} The URL of the request.
+   * @param httpMethod {string} The HTTP method used, such as GET or POST.
+   * @param startTime {number} The start time of the request in milliseconds since the epoch.
+   * @param endTime {number} The end time of the request in milliseconds since the epoch.
+   * @param failure {string} Name of the network failure. Possible values are 'Unknown', 'BadUrl', 'TimedOut', 'CannotConnectToHost', 'DNSLookupFailed', 'BadServerResponse', 'SecureConnectionFailed'.
+   */
+  noticeNetworkFailure(url, httpMethod, startTime, endTime, failure) {
+    this.NRMAModularAgentWrapper.execute('noticeNetworkFailure', url, httpMethod, startTime, endTime, failure);
+  }
+
+  /**
+   * Records custom metrics (arbitrary numerical data).
+   * @param name {string} The name for the custom metric.
+   * @param category {string} The metric category name. 
+   * @param value {number} Optional. The value of the metric. Value should be a non-zero positive number. 
+   * @param countUnit {string} Optional (but requires value and valueUnit to be set). Unit of measurement for the metric count. Supported values are 'PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', or 'OPERATIONS.
+   * @param valueUnit {string} Optional (but requires value and countUnit to be set). Unit of measurement for the metric value. Supported values are 'PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', or 'OPERATIONS. 
+   */
+  recordMetric(name, category, value=-1, countUnit=null, valueUnit=null) {
+    this.NRMAModularAgentWrapper.execute('recordMetric', name, category, value, countUnit, valueUnit);
+  }
+
+
+  /**
+   * Removes all attributes from the session.
+   */
+  removeAllAttributes() {
+    this.NRMAModularAgentWrapper.execute('removeAllAttributes');
+  }
+
+  /**
+   * Records javascript errors for react-native
+   */
+  recordError(e) {
+    if(e) {
+      if(!this.JSAppVersion) {
+        this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
+      }
+
+      var error;
+
+      if(e instanceof Error) {
+        error = e;
+      }
+
+      if(typeof e === 'string') {
+        error = new Error(e || '');
+      }
+
+      if(error !== undefined) {
+        this.NRMAModularAgentWrapper.execute(
+          "recordStack",
+          error.name,
+          error.message,
+          error.stack,
+          false,
+          this.JSAppVersion)
+      } else {
+        this.LOG.warn('undefined error name or message');
+      }
+    } else {
+      this.LOG.warn('error is required');
+    }
+  }
+
+  /***
+   * Sets the event harvest cycle length.
+   * Default is 600 seconds (10 minutes).
+   * Minimum value cannot be less than 60 seconds.
+   * Maximum value should not be greater than 600 seconds.
+   * @param maxBufferTimeInSeconds {number} The maximum time (in seconds) that the agent should store events in memory.
+   */
+  setMaxEventBufferTime(maxBufferTimeInSeconds) {
+    this.NRMAModularAgentWrapper.execute('setMaxEventBufferTime', maxBufferTimeInSeconds);
+  }
+
+  /**
+   * Sets the maximum size of the event pool.
+   * Default is a maximum of 1000 events per event harvest cycle.
+   * @param maxSize {number} The maximum number of events per harvest cycle.
+   */
+  setMaxEventPoolSize(maxSize) {
+    this.NRMAModularAgentWrapper.execute('setMaxEventPoolSize', maxSize);
+  }
+
   /**
  * Track a method as an interaction
  */

@@ -58,8 +58,62 @@ class NRMAModularAgentWrapper {
     customEvent.attributes.isValid(() => {
       if (customEvent.eventName.isValid() && customEvent.eventType.isValid()) {
         NRMModularAgent.recordCustomEvent(eventType, eventName, attributes);
+      } else {
+        LOG.error("Invalid event name or type in recordCustomEvent");
       }
     });
+  };
+
+  crashNow = (message='') => {
+    NRMModularAgent.crashNow(message);
+  };
+
+  currentSessionId = async () => {
+    if(NRMAModularAgentWrapper.isAgentStarted) {
+      return await NRMModularAgent.currentSessionId();
+     }
+  };
+
+  noticeNetworkFailure = (url, httpMethod, startTime, endTime, failure) => {
+    const failureNames = new Set(['Unknown', 'BadURL', 'TimedOut', 'CannotConnectToHost', 'DNSLookupFailed', 'BadServerResponse', 'SecureConnectionFailed']);
+    if(!failureNames.has(failure)) {
+      LOG.error("Network failure name has to be one of: 'Unknown', 'BadURL', 'TimedOut', 'CannotConnectToHost', 'DNSLookupFailed', 'BadServerResponse', 'SecureConnectionFailed'");
+      return;
+    }
+    NRMModularAgent.noticeNetworkFailure(url, httpMethod, startTime, endTime, failure);
+  };
+
+  recordMetric = (name, category, value, countUnit, valueUnit) => {
+    const metricUnits = new Set(['PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', 'OPERATIONS']);
+    if(value < 0) {
+      if(countUnit !== null || valueUnit !== null) {
+        LOG.error('value must be set in recordMetric if countUnit and valueUnit are set');
+        return;
+      }
+    } else {
+      if((countUnit !== null && valueUnit == null) || (countUnit == null && valueUnit !== null)) {
+        LOG.error('countUnit and valueUnit in recordMetric must both be null or set');
+        return;
+      } else if(countUnit !== null && valueUnit !== null) {
+        if(!metricUnits.has(countUnit) || !metricUnits.has(valueUnit)) {
+          LOG.error("countUnit or valueUnit in recordMetric has to be one of 'PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', 'OPERATIONS'");
+          return;
+        }
+      }
+    }
+    NRMModularAgent.recordMetric(name, category, value, countUnit, valueUnit);
+  };
+
+  removeAllAttributes = () => {
+    NRMModularAgent.removeAllAttributes();
+  };
+
+  setMaxEventBufferTime = (maxBufferTimeInSeconds) => {
+    NRMModularAgent.setMaxEventBufferTime(maxBufferTimeInSeconds);
+  };
+
+  setMaxEventPoolSize = (maxSize) => {
+    NRMModularAgent.setMaxEventPoolSize(maxSize);
   };
 
   setAttribute = (attributeName, value) => {
@@ -92,13 +146,12 @@ class NRMAModularAgentWrapper {
   };
 
   incrementAttribute = (attributeName, value) => {
-    const attribute = new Attribute({attributeName, value});
+    const attribute = new Attribute({ attributeName, value });
 
     attribute.attributeName.isValid(() => {
       attribute.attributeValue.isValid(() => {
         if (utils.isNumber(value) && !utils.isBool(value)) {
-          NRMModularAgent.incrementAttribute(attributeName, value);
-          return;
+          return NRMModularAgent.incrementAttribute(attributeName, value);
         }
 
         LOG.error(`invalid value '${value}' sent to incrementAttribute()`);
