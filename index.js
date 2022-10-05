@@ -161,10 +161,10 @@ class NewRelic {
   }
 
    /**
-   * Throws a demo run-time exception to test New Relic crash reporting
-   * @param message {string} Optional argument attached to the exception
+   * Throws a demo run-time exception to test New Relic crash reporting.
+   * @param message {string} Optional argument attached to the exception.
    */
-  crashNow(message) {
+  crashNow(message='') {
     this.NRMAModularAgentWrapper.execute('crashNow', message);
   }
   
@@ -212,7 +212,7 @@ class NewRelic {
   }
 
   /**
-   * Records javascript errors for react-native
+   * Records javascript errors for react-native.
    */
   recordError(e) {
     if(e) {

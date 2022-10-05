@@ -64,7 +64,7 @@ class NRMAModularAgentWrapper {
     });
   };
 
-  crashNow = (message='') => {
+  crashNow = (message) => {
     NRMModularAgent.crashNow(message);
   };
 

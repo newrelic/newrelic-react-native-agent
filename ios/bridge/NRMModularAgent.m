@@ -76,7 +76,11 @@ RCT_EXPORT_METHOD(recordBreadcrumb:(NSString* _Nonnull)eventName attributes:(NSD
 }
 
 RCT_EXPORT_METHOD(crashNow:(NSString* )message) {
-    [NewRelic crashNow:message];
+    if([message length] == 0) {
+        [NewRelic crashNow];
+    } else {
+        [NewRelic crashNow:message];
+    }
 }
 
 RCT_EXPORT_METHOD(currentSessionId:(RCTPromiseResolveBlock)resolve
@@ -105,7 +109,6 @@ RCT_EXPORT_METHOD(noticeNetworkFailure:(NSString *)url
         @"BadServerResponse": [NSNumber numberWithInt:NRURLErrorBadServerResponse],
         @"SecureConnectionFailed": [NSNumber numberWithInt:NRURLErrorSecureConnectionFailed],
     };
-//    NSNumber* failureNum = [dict valueForKey:failure];
     NSInteger iOSFailureCode = [[dict valueForKey:failure] integerValue];
     [NewRelic noticeNetworkFailureForURL:nsurl httpMethod:httpMethod startTime:startTime endTime:endTime andFailureCode:iOSFailureCode];
 }

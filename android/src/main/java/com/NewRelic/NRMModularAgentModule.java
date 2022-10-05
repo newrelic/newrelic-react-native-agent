@@ -137,7 +137,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void crashNow(String message) {
-        NewRelic.crashNow(message);
+        if(message.isEmpty()) {
+            NewRelic.crashNow();
+        } else {
+            NewRelic.crashNow(message);
+        }
     }
 
     @ReactMethod
