@@ -102,7 +102,7 @@ RCT_EXPORT_METHOD(noticeNetworkFailure:(NSString *)url
     NSURL *nsurl = [[NSURL alloc] initWithString:url];
     NSDictionary *dict = @{
         @"Unknown": [NSNumber numberWithInt:NRURLErrorUnknown],
-        @"BadUrl": [NSNumber numberWithInt:NRURLErrorBadURL],
+        @"BadURL": [NSNumber numberWithInt:NRURLErrorBadURL],
         @"TimedOut": [NSNumber numberWithInt:NRURLErrorTimedOut],
         @"CannotConnectToHost": [NSNumber numberWithInt:NRURLErrorCannotConnectToHost],
         @"DNSLookupFailed": [NSNumber numberWithInt:NRURLErrorDNSLookupFailed],

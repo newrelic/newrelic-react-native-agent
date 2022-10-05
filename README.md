@@ -264,6 +264,13 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
      NewRelic.removeAttribute('RNCustomAttrNumber');
   ```
 
+### [incrementAttribute](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/increment-attribute)(name: string, value?: number): void;
+> Increments the count of an attribute with a specified name. Overwrites its previous value and type each time it is called. If the attribute does not exists, it creates a new attribute. If no value is given, it increments the value by 1.
+```js
+    NewRelic.incrementAttribute('RNCustomAttrNumber');
+    NewRelic.incrementAttribute('RNCustomAttrNumber', 5);
+```
+
 ### [setUserId](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-user-id)(userId: string): void;
 > Set a custom user identifier value to associate user sessions with analytics events and attributes.
   ```js
@@ -284,8 +291,64 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
      NewRelic.recordCustomEvent("mobileClothes", "pants", {"pantsColor": "blue","pantssize": 32,"belt": true});
   ```
 
+### [crashNow](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/crashnow-android-sdk-api)(message?: string): void;
+> Throws a demo run-time exception to test New Relic crash reporting.
 
-## How to see JSerros(Fatal/Non Fatal) in NewRelic One?
+```js
+    NewRelic.crashNow();
+    NewRelic.crashNow("New Relic example crash message");
+```
+
+### [currentSessionId](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/currentsessionid-android-sdk-api)(): Promise;
+> Returns the current session ID. This method is useful for consolidating monitoring of app data (not just New Relic data) based on a single session definition and identifier.
+```js
+    let sessionId = await NewRelic.currentSessionId();
+```
+
+### [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void;
+> Records network failures. If a network request fails, use this method to record details about the failures. I most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`
+```js
+    NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), 'BadURL');
+```
+
+### [recordMetric](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordmetric-android-sdk-api)(name: string, category: string, value?: number, countUnit?: string, valueUnit?: string): void;
+> Records custom metrics (arbitrary numerical data), where countUnit is the measurement unit of the metric count and valueUnit is the measurement unit for the metric value. If using countUnit or valueUnit, then all of value, countUnit, and valueUnit must all be set. Supported measurements for countUnit and valueUnit are: `PERCENT`, `BYTES`, `SECONDS`, `BYTES_PER_SECOND`, `OPERATIONS`
+```js
+    NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory');
+    NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 12);
+    NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 13, 'PERCENT', 'SECONDS');
+```
+
+### [removeAllAttributes](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/remove-all-attributes)(): void;
+> Removes all attributes from the session
+```js
+    NewRelic.removeAllAttributes();
+```
+
+### recordError(e: string|error): void;
+> Records javascript errors for react-native.
+```js
+    try {
+      var foo = {};
+      foo.bar();
+    } catch(e) {
+      NewRelic.recordError(e);
+    }
+```
+
+### [setMaxEventBufferTime](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-max-event-buffer-time)(maxBufferTimeInSeconds: number): void;
+> Sets the event harvest cycle length. Default is 600 seconds (10 minutes). Minimum value can not be less than 60 seconds. Maximum value should not be greater than 600 seconds.
+```js
+    NewRelic.setMaxEventBufferTime(60);
+```
+
+### [setMaxEventPoolSize](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/set-max-event-pool-size)(maxSize: number): void;
+> Sets the maximum size of the event pool stored in memory until the next harvest cycle. Default is a maximum of 1000 events per event harvest cycle. When the pool size limit is reached, the agent will start sampling events, discarding some new and old, until the pool of events is sent in the next harvest cycle.
+```js
+    NewRelic.setMaxEventPoolSize(2000);
+```
+
+## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
 There is no section for JavaScript errors, but you can see JavaScript errors in custom events and also query them in NRQL explorer.
 
