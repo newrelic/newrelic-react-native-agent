@@ -260,9 +260,17 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
                   isFatal:(NSNumber* _Nonnull)isFatal
                   jsAppVersion:(NSString* _Nullable)jsAppVersion) {
     
+    if(errorName == nil || errorMessage == nil) {
+        return;
+    }
     //Errorstack length may be more that attribute length limit 4096.
     NSRange needleRange = NSMakeRange(0,3994);
-    NSString *error = [errorStack substringWithRange:needleRange];
+    NSString *error;
+    if(errorStack != nil) {
+        error = [errorStack substringWithRange:needleRange];
+    } else {
+        error = @"";
+    }
     NSDictionary *dict =  @{@"Name":errorName,@"Message": errorMessage,@"isFatal": isFatal,@"jsAppVersion": jsAppVersion,@"errorStack": error};
     [NewRelic recordBreadcrumb:@"JS Errors" attributes:dict];
     [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];
