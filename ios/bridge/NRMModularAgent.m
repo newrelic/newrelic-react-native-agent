@@ -71,6 +71,35 @@ RCT_EXPORT_METHOD(isAgentStarted:(NSString* _Nonnull)call
     callback(@[[NSNull null], @(TRUE)]);
 }
 
+RCT_EXPORT_METHOD(analyticsEventEnabled:(BOOL) enabled) {
+    // This should only be an android method call, so we do nothing for iOS.
+    return;
+}
+
+RCT_EXPORT_METHOD(networkRequestEnabled:(BOOL) enabled) {
+    if(enabled) {
+        [NewRelic enableFeatures:NRFeatureFlag_NetworkRequestEvents];
+    } else {
+        [NewRelic disableFeatures:NRFeatureFlag_NetworkRequestEvents];
+    }
+}
+
+RCT_EXPORT_METHOD(networkErrorRequestEnabled:(BOOL) enabled) {
+    if(enabled) {
+        [NewRelic enableFeatures:NRFeatureFlag_RequestErrorEvents];
+    } else {
+        [NewRelic disableFeatures:NRFeatureFlag_RequestErrorEvents];
+    }
+}
+
+RCT_EXPORT_METHOD(httpRequestBodyCaptureEnabled:(BOOL) enabled) {
+    if(enabled) {
+        [NewRelic enableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
+    } else {
+        [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
+    }
+}
+
 RCT_EXPORT_METHOD(recordBreadcrumb:(NSString* _Nonnull)eventName attributes:(NSDictionary* _Nullable)attributes) {
     [NewRelic recordBreadcrumb:eventName attributes:attributes];
 }

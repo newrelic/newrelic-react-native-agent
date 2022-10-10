@@ -141,6 +141,39 @@ class NewRelic {
   }
 
   /**
+   * FOR ANDROID ONLY.
+   * Enable or disable collection of event data.
+   * @param enabled {boolean} Boolean value for enabling analytics events.
+   */
+  analyticsEventEnabled(enabled) {
+      this.NRMAModularAgentWrapper.execute('analyticsEventEnabled', enabled);
+  }
+  
+  /**
+   * Enable or disable reporting successful HTTP requests to the MobileRequest event type.
+   * @param enabled {boolean} Boolean value for enabling successful HTTP requests.
+   */
+  networkRequestEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('networkRequestEnabled', enabled);
+  }
+
+  /**
+   * Enable or disable reporting network and HTTP request errors to the MobileRequestError event type.
+   * @param enabled {boolean} Boolean value for enabling network request errors.
+   */
+  networkErrorRequestEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('networkErrorRequestEnabled', enabled);
+  }
+
+  /**
+   * Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
+   * @param enabled {boolean} Boolean value for enabling HTTP response bodies.
+   */
+  httpRequestBodyCaptureEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('httpRequestBodyCaptureEnabled', enabled);
+  }
+  
+  /**
    * Creates and records a MobileBreadcrumb event
    * @param eventName {string} the name you want to give to the breadcrumb event.
    * @param attributes {Map<string, string|number>} a map that includes a list of attributes.

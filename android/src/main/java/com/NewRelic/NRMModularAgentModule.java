@@ -131,6 +131,43 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void analyticsEventEnabled(boolean enabled) {
+        if(enabled) {
+            NewRelic.enableFeature(FeatureFlag.AnalyticsEvents);
+        } else {
+            NewRelic.disableFeature(FeatureFlag.AnalyticsEvents);
+        }
+    }
+
+    @ReactMethod
+    public void networkRequestEnabled(boolean enabled) {
+        if(enabled) {
+            NewRelic.enableFeature(FeatureFlag.NetworkRequests);
+        } else {
+            NewRelic.disableFeature(FeatureFlag.NetworkRequests);
+        }
+    }
+
+    @ReactMethod
+    public void networkErrorRequestEnabled(boolean enabled) {
+        if(enabled) {
+            NewRelic.enableFeature(FeatureFlag.NetworkErrorRequests);
+        } else {
+            NewRelic.disableFeature(FeatureFlag.NetworkErrorRequests);
+        }
+    }
+
+    @ReactMethod
+    public void httpRequestBodyCaptureEnabled(boolean enabled) {
+        if(enabled) {
+            NewRelic.enableFeature(FeatureFlag.HttpResponseBodyCapture);
+        } else {
+            NewRelic.disableFeature(FeatureFlag.HttpResponseBodyCapture);
+        }
+    }
+
+
+    @ReactMethod
     public void recordCustomEvent(String eventType, String eventName, ReadableMap readableMap) {
         NewRelic.recordCustomEvent(eventType, eventName, mapToAttributes(readableMap));
     }

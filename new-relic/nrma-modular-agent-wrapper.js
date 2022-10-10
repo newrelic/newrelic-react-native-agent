@@ -44,6 +44,22 @@ class NRMAModularAgentWrapper {
     });
   }
 
+  analyticsEventEnabled = (enabled) => {
+    NRMModularAgent.analyticsEventEnabled(enabled);
+  };
+
+  networkRequestEnabled = (enabled) => {
+    NRMModularAgent.networkRequestEnabled(enabled);
+  };
+
+  networkErrorRequestEnabled = (enabled) => {
+    NRMModularAgent.networkErrorRequestEnabled(enabled);
+  };
+
+  httpRequestBodyCaptureEnabled = (enabled) => {
+    NRMModularAgent.httpRequestBodyCaptureEnabled(enabled);
+  };
+
   recordBreadcrumb = (eventName, attributes) => {
     const crumb = new BreadCrumb({ eventName, attributes });
     crumb.attributes.isValid(() => {

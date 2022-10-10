@@ -65,6 +65,30 @@ describe('New Relic', () => {
     expect(MockNRM.startAgent.mock.calls.length).toBe(6);
   });
 
+  it('should set the analytics event flag', () => {
+    NewRelic.analyticsEventEnabled(true);
+    NewRelic.analyticsEventEnabled(false);
+    expect(MockNRM.analyticsEventEnabled.mock.calls.length).toBe(2);
+  });
+
+  it('should set the network request flag', () => {
+    NewRelic.networkRequestEnabled(true);
+    NewRelic.networkRequestEnabled(false);
+    expect(MockNRM.networkRequestEnabled.mock.calls.length).toBe(2);
+  });
+
+  it('should set the network error request flag', () => {
+    NewRelic.networkErrorRequestEnabled(true);
+    NewRelic.networkErrorRequestEnabled(false);
+    expect(MockNRM.networkErrorRequestEnabled.mock.calls.length).toBe(2);
+  });
+
+  it('should set the network error request flag', () => {
+    NewRelic.httpRequestBodyCaptureEnabled(true);
+    NewRelic.httpRequestBodyCaptureEnabled(false);
+    expect(MockNRM.httpRequestBodyCaptureEnabled.mock.calls.length).toBe(2);
+  });
+
   it('should record a valid breadcrumb', () => {
     NewRelic.recordBreadcrumb('testName', { test: 123, valid: 'yes' });
     NewRelic.recordBreadcrumb(null, { test: 123, valid: 'no' });
