@@ -306,7 +306,7 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 ```
 
 ### [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void;
-> Records network failures. If a network request fails, use this method to record details about the failures. I most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`
+> Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`
 ```js
     NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), 'BadURL');
 ```
@@ -346,6 +346,33 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 > Sets the maximum size of the event pool stored in memory until the next harvest cycle. Default is a maximum of 1000 events per event harvest cycle. When the pool size limit is reached, the agent will start sampling events, discarding some new and old, until the pool of events is sent in the next harvest cycle.
 ```js
     NewRelic.setMaxEventPoolSize(2000);
+```
+
+### The following methods allow you to set some agent configurations after the agent has started:
+ Follow [these steps](https://github.com/newrelic/newrelic-react-native-agent/blob/main/README.md#react-native-setup) if the agent has not started yet.
+
+### [analyticsEventEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-analytics-events)(enabled: boolean) : void;
+> FOR ANDROID ONLY. Enable or disable the collecton of event data.
+```js
+    NewRelic.analyticsEventEnabled(true);
+```
+
+### [networkRequestEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-networkRequests)(enabled: boolean) : void;
+> Enable or disable reporting successful HTTP requests to the MobileRequest event type.
+```js
+    NewRelic.networkRequestEnabled(true);
+```
+
+### [networkErrorRequestEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-networkErrorRequests)(enabled: boolean) : void;
+> Enable or disable reporting network and HTTP request errors to the MobileRequestError event type.
+```js
+    NewRelic.networkErrorRequestEnabled(true);
+```
+
+### [httpRequestBodyCaptureEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-withHttpResponseBodyCaptureEnabled)(enabled: boolean) : void;
+> Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
+```js
+    NewRelic.httpRequestBodyCaptureEnabled(true);
 ```
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
