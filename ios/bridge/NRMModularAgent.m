@@ -71,8 +71,114 @@ RCT_EXPORT_METHOD(isAgentStarted:(NSString* _Nonnull)call
     callback(@[[NSNull null], @(TRUE)]);
 }
 
+RCT_EXPORT_METHOD(analyticsEventEnabled:(BOOL) enabled) {
+    // This should only be an android method call, so we do nothing for iOS.
+    return;
+}
+
+RCT_EXPORT_METHOD(networkRequestEnabled:(BOOL) enabled) {
+    if(enabled) {
+        [NewRelic enableFeatures:NRFeatureFlag_NetworkRequestEvents];
+    } else {
+        [NewRelic disableFeatures:NRFeatureFlag_NetworkRequestEvents];
+    }
+}
+
+RCT_EXPORT_METHOD(networkErrorRequestEnabled:(BOOL) enabled) {
+    if(enabled) {
+        [NewRelic enableFeatures:NRFeatureFlag_RequestErrorEvents];
+    } else {
+        [NewRelic disableFeatures:NRFeatureFlag_RequestErrorEvents];
+    }
+}
+
+RCT_EXPORT_METHOD(httpRequestBodyCaptureEnabled:(BOOL) enabled) {
+    if(enabled) {
+        [NewRelic enableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
+    } else {
+        [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
+    }
+}
+
 RCT_EXPORT_METHOD(recordBreadcrumb:(NSString* _Nonnull)eventName attributes:(NSDictionary* _Nullable)attributes) {
     [NewRelic recordBreadcrumb:eventName attributes:attributes];
+}
+
+RCT_EXPORT_METHOD(crashNow:(NSString* )message) {
+    if([message length] == 0) {
+        [NewRelic crashNow];
+    } else {
+        [NewRelic crashNow:message];
+    }
+}
+
+RCT_EXPORT_METHOD(currentSessionId:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        NSString* sessionId = [NewRelic currentSessionId];
+        resolve((NSString*)sessionId);
+    } @catch (NSException *exception) {
+        [NewRelic recordHandledException:exception];
+        reject([exception name], [exception reason], nil);
+    }
+}
+
+RCT_EXPORT_METHOD(noticeNetworkFailure:(NSString *)url
+                  httpMethod:(NSString*)httpMethod
+                  startTime:(double)startTime
+                  endTime:(double)endTime
+                  failure:(NSString* _Nonnull)failure) {
+    NSURL *nsurl = [[NSURL alloc] initWithString:url];
+    NSDictionary *dict = @{
+        @"Unknown": [NSNumber numberWithInt:NRURLErrorUnknown],
+        @"BadURL": [NSNumber numberWithInt:NRURLErrorBadURL],
+        @"TimedOut": [NSNumber numberWithInt:NRURLErrorTimedOut],
+        @"CannotConnectToHost": [NSNumber numberWithInt:NRURLErrorCannotConnectToHost],
+        @"DNSLookupFailed": [NSNumber numberWithInt:NRURLErrorDNSLookupFailed],
+        @"BadServerResponse": [NSNumber numberWithInt:NRURLErrorBadServerResponse],
+        @"SecureConnectionFailed": [NSNumber numberWithInt:NRURLErrorSecureConnectionFailed],
+    };
+    NSInteger iOSFailureCode = [[dict valueForKey:failure] integerValue];
+    [NewRelic noticeNetworkFailureForURL:nsurl httpMethod:httpMethod startTime:startTime endTime:endTime andFailureCode:iOSFailureCode];
+}
+
+RCT_EXPORT_METHOD(recordMetric:(NSString*)name
+                  category:(NSString *)category
+                  value:(NSNumber* _Nonnull)value
+                  countUnit:(NSString *)countUnit
+                  valueUnit:(NSString *)valueUnit) {
+    
+    NSDictionary *dict = @{
+        @"PERCENT": kNRMetricUnitPercent,
+        @"BYTES": kNRMetricUnitBytes,
+        @"SECONDS": kNRMetricUnitSeconds,
+        @"BYTES_PER_SECOND": kNRMetricUnitsBytesPerSecond,
+        @"OPERATIONS": kNRMetricUnitsOperations
+    };
+    if(value < 0) {
+        [NewRelic recordMetricWithName:name category:category];
+    } else {
+        if(countUnit == nil || valueUnit == nil) {
+            [NewRelic recordMetricWithName:name category:category value:value];
+        } else {
+            [NewRelic recordMetricWithName:name category:category value:value valueUnits:dict[valueUnit] countUnits:dict[countUnit]];
+        }
+    }
+
+}
+
+RCT_EXPORT_METHOD(removeAllAttributes) {
+    [NewRelic removeAllAttributes];
+}
+
+RCT_EXPORT_METHOD(setMaxEventBufferTime:(NSNumber* _Nonnull)seconds) {
+    unsigned int uint_seconds = seconds.unsignedIntValue;
+    [NewRelic setMaxEventBufferTime:uint_seconds];
+}
+
+RCT_EXPORT_METHOD(setMaxEventPoolSize:(NSNumber* _Nonnull)maxSize) {
+    unsigned int uint_maxSize = maxSize.unsignedIntValue;
+    [NewRelic setMaxEventPoolSize:uint_maxSize];
 }
 
 RCT_EXPORT_METHOD(setStringAttribute:(NSString* _Nonnull)key withString:(NSString* _Nonnull)value) {
@@ -90,6 +196,10 @@ RCT_EXPORT_METHOD(setBoolAttribute:(NSString* _Nonnull)key withBool:value) {
 RCT_EXPORT_METHOD(removeAttribute:(NSString *)name)
 {
     [NewRelic removeAttribute:(NSString * _Nonnull)name];
+}
+
+RCT_EXPORT_METHOD(incrementAttribute:(NSString *)key withNumber:(NSNumber* _Nonnull)value) {
+    [NewRelic incrementAttribute:key value:value];
 }
 
 
@@ -150,9 +260,17 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
                   isFatal:(NSNumber* _Nonnull)isFatal
                   jsAppVersion:(NSString* _Nullable)jsAppVersion) {
     
+    if(errorName == nil || errorMessage == nil) {
+        return;
+    }
     //Errorstack length may be more that attribute length limit 4096.
     NSRange needleRange = NSMakeRange(0,3994);
-    NSString *error = [errorStack substringWithRange:needleRange];
+    NSString *error;
+    if(errorStack != nil) {
+        error = [errorStack substringWithRange:needleRange];
+    } else {
+        error = @"";
+    }
     NSDictionary *dict =  @{@"Name":errorName,@"Message": errorMessage,@"isFatal": isFatal,@"jsAppVersion": jsAppVersion,@"errorStack": error};
     [NewRelic recordBreadcrumb:@"JS Errors" attributes:dict];
     [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];

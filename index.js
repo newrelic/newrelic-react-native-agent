@@ -141,6 +141,39 @@ class NewRelic {
   }
 
   /**
+   * FOR ANDROID ONLY.
+   * Enable or disable collection of event data.
+   * @param enabled {boolean} Boolean value for enabling analytics events.
+   */
+  analyticsEventEnabled(enabled) {
+      this.NRMAModularAgentWrapper.execute('analyticsEventEnabled', enabled);
+  }
+  
+  /**
+   * Enable or disable reporting successful HTTP requests to the MobileRequest event type.
+   * @param enabled {boolean} Boolean value for enabling successful HTTP requests.
+   */
+  networkRequestEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('networkRequestEnabled', enabled);
+  }
+
+  /**
+   * Enable or disable reporting network and HTTP request errors to the MobileRequestError event type.
+   * @param enabled {boolean} Boolean value for enabling network request errors.
+   */
+  networkErrorRequestEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('networkErrorRequestEnabled', enabled);
+  }
+
+  /**
+   * Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
+   * @param enabled {boolean} Boolean value for enabling HTTP response bodies.
+   */
+  httpRequestBodyCaptureEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('httpRequestBodyCaptureEnabled', enabled);
+  }
+  
+  /**
    * Creates and records a MobileBreadcrumb event
    * @param eventName {string} the name you want to give to the breadcrumb event.
    * @param attributes {Map<string, string|number>} a map that includes a list of attributes.
@@ -158,6 +191,113 @@ class NewRelic {
    */
   recordCustomEvent(eventType, eventName, attributes) {
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', eventType, eventName, attributes);
+  }
+
+   /**
+   * Throws a demo run-time exception to test New Relic crash reporting.
+   * @param message {string} Optional argument attached to the exception.
+   */
+  crashNow(message='') {
+    this.NRMAModularAgentWrapper.execute('crashNow', message);
+  }
+  
+  /**
+   * Returns the current session ID. 
+   * This method is useful for consolidating monitoring of app data (not just New Relic data) based on a single session definition and identifier.
+   * @return currentSessionId {Promise} A promise that returns the current session id.
+   */
+  async currentSessionId() {
+    return await this.NRMAModularAgentWrapper.execute('currentSessionId');
+  }
+
+  /**
+   * Records network failures.
+   * If a network request fails, use this method to record details about the failure.
+   * In most cases, place this call inside exception handlers.
+   * @param url {string} The URL of the request.
+   * @param httpMethod {string} The HTTP method used, such as GET or POST.
+   * @param startTime {number} The start time of the request in milliseconds since the epoch.
+   * @param endTime {number} The end time of the request in milliseconds since the epoch.
+   * @param failure {string} Name of the network failure. Possible values are 'Unknown', 'BadURL', 'TimedOut', 'CannotConnectToHost', 'DNSLookupFailed', 'BadServerResponse', 'SecureConnectionFailed'.
+   */
+  noticeNetworkFailure(url, httpMethod, startTime, endTime, failure) {
+    this.NRMAModularAgentWrapper.execute('noticeNetworkFailure', url, httpMethod, startTime, endTime, failure);
+  }
+
+  /**
+   * Records custom metrics (arbitrary numerical data).
+   * @param name {string} The name for the custom metric.
+   * @param category {string} The metric category name. 
+   * @param value {number} Optional. The value of the metric. Value should be a non-zero positive number. 
+   * @param countUnit {string} Optional (but requires value and valueUnit to be set). Unit of measurement for the metric count. Supported values are 'PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', or 'OPERATIONS'.
+   * @param valueUnit {string} Optional (but requires value and countUnit to be set). Unit of measurement for the metric value. Supported values are 'PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', or 'OPERATIONS'. 
+   */
+  recordMetric(name, category, value=-1, countUnit=null, valueUnit=null) {
+    this.NRMAModularAgentWrapper.execute('recordMetric', name, category, value, countUnit, valueUnit);
+  }
+
+
+  /**
+   * Removes all attributes from the session.
+   */
+  removeAllAttributes() {
+    this.NRMAModularAgentWrapper.execute('removeAllAttributes');
+  }
+
+  /**
+   * Records javascript errors for react-native.
+   */
+  recordError(e) {
+    if(e) {
+      if(!this.JSAppVersion) {
+        this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
+      }
+
+      var error;
+
+      if(e instanceof Error) {
+        error = e;
+      }
+
+      if(typeof e === 'string') {
+        error = new Error(e || '');
+      }
+
+      if(error !== undefined) {
+        this.NRMAModularAgentWrapper.execute(
+          "recordStack",
+          error.name,
+          error.message,
+          error.stack,
+          false,
+          this.JSAppVersion)
+      } else {
+        this.LOG.warn('undefined error name or message');
+      }
+    } else {
+      this.LOG.warn('error is required');
+    }
+  }
+
+  /***
+   * Sets the event harvest cycle length.
+   * Default is 600 seconds (10 minutes).
+   * Minimum value cannot be less than 60 seconds.
+   * Maximum value should not be greater than 600 seconds.
+   * @param maxBufferTimeInSeconds {number} The maximum time (in seconds) that the agent should store events in memory.
+   */
+  setMaxEventBufferTime(maxBufferTimeInSeconds) {
+    this.NRMAModularAgentWrapper.execute('setMaxEventBufferTime', maxBufferTimeInSeconds);
+  }
+
+  /**
+   * Sets the maximum size of the event pool stored in memory until the next harvest cycle.
+   * When the pool size limit is reached, the agent will start sampling events, discarding some new and old, until the pool of events is sent in the next harvest cycle.
+   * Default is a maximum of 1000 events per event harvest cycle.
+   * @param maxSize {number} The maximum number of events per harvest cycle.
+   */
+  setMaxEventPoolSize(maxSize) {
+    this.NRMAModularAgentWrapper.execute('setMaxEventPoolSize', maxSize);
   }
 
   /**
@@ -219,6 +359,18 @@ class NewRelic {
  */
   removeAttribute(attributeName) {
     this.NRMAModularAgentWrapper.execute('removeAttribute', attributeName, value);
+  }
+
+  /**
+   * Increments the count of an attribute with a specified name.
+   * When called, it overwrites its previous value and type each time.
+   * If attribute does not exist, it creates an attribute with a value of 1.
+   * The incremented attribute is shared by multiple Mobile event types.
+   * @param attributeName {string} Name of the Attribute.
+   * @param value {number} Optional argument that increments the attribute by this value.
+   */
+  incrementAttribute(attributeName, value=1) {
+    this.NRMAModularAgentWrapper.execute('incrementAttribute', attributeName, value);
   }
 
   /**

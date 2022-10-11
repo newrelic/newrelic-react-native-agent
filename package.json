@@ -1,6 +1,6 @@
 {
   "name": "newrelic-react-native-agent",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "A New Relic Mobile Agent for React Native",
   "main": "index.js",
   "scripts": {
@@ -40,7 +40,7 @@
   ],
   "author": "New Relic",
   "license": "New Relic",
-  "homepage": "https://github.com/newrelic/newrelic-react-native-agent#readme",
+  "homepage": "https://docs.newrelic.com/docs/mobile-monitoring/new-relic-monitoring-react-native/monitor-your-react-native-application",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

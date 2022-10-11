@@ -1,5 +1,20 @@
 # Changelog
 
+0.0.6
+
+## New in this release
+* Add methods that are currently available in the android and XCFramework agents.
+* Add `recordError` to record javascript errors for react-native.
+* Add methods to set agent configuration after the agent has started.
+
+
+## Fixed in this release
+* Fixed an issue where null errors in the global react native handler would cause errors on the XCFramework agent module.
+
+0.0.5
+
+Fixed issue where JS Errors are not recording for iOS apps when Error stack length is lesser than 4096
+
 0.0.4
 Fix Null Pointer Exception Crash
 
