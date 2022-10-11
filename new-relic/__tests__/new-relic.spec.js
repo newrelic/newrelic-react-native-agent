@@ -65,6 +65,30 @@ describe('New Relic', () => {
     expect(MockNRM.startAgent.mock.calls.length).toBe(6);
   });
 
+  it('should set the analytics event flag', () => {
+    NewRelic.analyticsEventEnabled(true);
+    NewRelic.analyticsEventEnabled(false);
+    expect(MockNRM.analyticsEventEnabled.mock.calls.length).toBe(2);
+  });
+
+  it('should set the network request flag', () => {
+    NewRelic.networkRequestEnabled(true);
+    NewRelic.networkRequestEnabled(false);
+    expect(MockNRM.networkRequestEnabled.mock.calls.length).toBe(2);
+  });
+
+  it('should set the network error request flag', () => {
+    NewRelic.networkErrorRequestEnabled(true);
+    NewRelic.networkErrorRequestEnabled(false);
+    expect(MockNRM.networkErrorRequestEnabled.mock.calls.length).toBe(2);
+  });
+
+  it('should set the network error request flag', () => {
+    NewRelic.httpRequestBodyCaptureEnabled(true);
+    NewRelic.httpRequestBodyCaptureEnabled(false);
+    expect(MockNRM.httpRequestBodyCaptureEnabled.mock.calls.length).toBe(2);
+  });
+
   it('should record a valid breadcrumb', () => {
     NewRelic.recordBreadcrumb('testName', { test: 123, valid: 'yes' });
     NewRelic.recordBreadcrumb(null, { test: 123, valid: 'no' });
@@ -101,6 +125,92 @@ describe('New Relic', () => {
     expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(0);
   });
 
+  it('should crash on call with a valid message', () => {
+    NewRelic.crashNow();
+    expect(MockNRM.crashNow.mock.calls.length).toBe(1);
+
+    NewRelic.crashNow('crash message');
+    expect(MockNRM.crashNow.mock.calls.length).toBe(2);
+  });
+
+  it('should return the current session id', () => {
+    NewRelic.currentSessionId();
+    expect(MockNRM.currentSessionId.mock.calls.length).toBe(1);
+  });
+
+  it('should notice network failure with correct params', () => {
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'Unknown');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'BadURL');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'CannotConnectToHost');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'DNSLookupFailed');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'BadServerResponse');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'SecureConnectionFailed');
+    expect(MockNRM.noticeNetworkFailure.mock.calls.length).toBe(6);
+  });
+
+  it('should not notice network failure with bad failure name', () => {
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "GET", Date.now(), Date.now(), '404');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "GET", Date.now(), Date.now(), 'randomname');
+    expect(MockNRM.noticeNetworkFailure.mock.calls.length).toBe(0);
+  });
+
+  it('should record metric with correct params', () => {
+    NewRelic.recordMetric('fakeName', 'fakeCategory');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 13);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 21, 'PERCENT', 'SECONDS');
+    expect(MockNRM.recordMetric.mock.calls.length).toBe(3);
+  });
+
+  it('should not record metric with bad params', () => {
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 2, 'SECONDS');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', -1, 'SECONDS', 'PERCENT');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 10, null, 'BYTES_PER_SECOND');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'MINUTES', 'SECONDS');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'PERCENT', 'HOURS');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'DAYS', 'HOURS');
+    expect(MockNRM.recordMetric.mock.calls.length).toBe(0);
+  });
+
+  it('should remove all attributes', () => {
+    NewRelic.removeAllAttributes();
+    expect(MockNRM.removeAllAttributes.mock.calls.length).toBe(1);
+  });
+
+  it('should record JS error with a given valid error', () => {
+    NewRelic.setJSAppVersion('new version 123');
+    
+    NewRelic.recordError(new TypeError);
+    NewRelic.recordError(new Error);
+    NewRelic.recordError(new EvalError);
+    NewRelic.recordError(new RangeError);
+    NewRelic.recordError(new ReferenceError);
+    NewRelic.recordError('fakeErrorName');
+
+    expect(MockNRM.recordStack.mock.calls.length).toBe(6);
+  });
+
+  it('should not record JS error with a bad error', () => {
+    NewRelic.setJSAppVersion('123');
+    
+    NewRelic.recordError(undefined);
+    NewRelic.recordError(null);
+    NewRelic.recordError(123);
+    NewRelic.recordError(true);
+    NewRelic.recordError('');
+
+    expect(MockNRM.recordStack.mock.calls.length).toBe(0);
+  });
+
+  it('should set max event buffer time', () => {
+    NewRelic.setMaxEventBufferTime(120);
+    expect(MockNRM.setMaxEventBufferTime.mock.calls.length).toBe(1);
+  });
+
+  it('should set max event pool size', () => {
+    NewRelic.setMaxEventPoolSize(2000);
+    expect(MockNRM.setMaxEventPoolSize.mock.calls.length).toBe(1);
+  });
+
   it('should set a valid Attribute', () => {
     NewRelic.setAttribute('eventType', 'eventName');
     NewRelic.setAttribute('eventType', 123);
@@ -125,6 +235,27 @@ describe('New Relic', () => {
     expect(MockNRM.setNumberAttribute.mock.calls.length).toBe(0);
     expect(MockNRM.setBoolAttribute.mock.calls.length).toBe(0);
   });
+
+  it('should increment attributes', () => {
+    NewRelic.incrementAttribute('eventType');
+    expect(MockNRM.incrementAttribute.mock.calls.length).toBe(1);
+
+    NewRelic.incrementAttribute('eventTypeWithValue', 100);
+    expect(MockNRM.incrementAttribute.mock.calls.length).toBe(2);
+  });
+
+  it('should not increment attributes with bad values', () => {
+    NewRelic.incrementAttribute(null, null);
+    NewRelic.incrementAttribute(null, 2);
+    NewRelic.incrementAttribute('yes', null);
+    NewRelic.incrementAttribute('', undefined);
+    NewRelic.incrementAttribute(null);
+    NewRelic.incrementAttribute(undefined);
+    NewRelic.incrementAttribute('bool', true);
+
+    expect(MockNRM.incrementAttribute.mock.calls.length).toBe(0);
+  });
+
 
   it('should set a valid js app version', () => {
     NewRelic.setJSAppVersion('new version 123');
