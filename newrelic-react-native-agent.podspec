@@ -1,3 +1,8 @@
+=begin
+  Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0 
+=end
+
 require 'json'
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 

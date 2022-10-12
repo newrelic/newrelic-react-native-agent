@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 
+
 # The working directory of the process that runs this script should be the root of the app, or passed in
 # the optional 'REACT_ROOTDIR' env var
 #

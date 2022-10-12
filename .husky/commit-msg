@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 
+
 if ! head -1 "$1" | grep -qE "^(feat|fix|chore|docs|test|style|refactor|perf|build|ci|revert)(\(.+?\))?: .{1,}$"; then
     echo "Aborting commit. Your commit message is invalid." >&2
     exit 1
