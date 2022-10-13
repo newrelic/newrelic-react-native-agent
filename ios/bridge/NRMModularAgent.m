@@ -267,7 +267,11 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
     NSRange needleRange = NSMakeRange(0,3994);
     NSString *error;
     if(errorStack != nil) {
-        error = [errorStack substringWithRange:needleRange];
+        if(errorStack.length > 3994) {
+            error = [errorStack substringWithRange:needleRange];
+        } else {
+            error = errorStack;
+        }
     } else {
         error = @"";
     }
