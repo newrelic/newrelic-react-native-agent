@@ -1,5 +1,9 @@
 # Changelog
 
+0.0.7
+## Fixed in this release
+* Fixed an issue where error stack trace length would cause crashing in iOS apps.
+
 0.0.6
 
 ## New in this release
