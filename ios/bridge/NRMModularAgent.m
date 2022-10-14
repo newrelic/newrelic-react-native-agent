@@ -263,7 +263,7 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
     if(errorName == nil || errorMessage == nil) {
         return;
     }
-    //Errorstack length may be more that attribute length limit 4096.
+    // Error stack length may not be more than attribute length limit 4096. Odd reporting happens if length is more than 3994 here.
     NSRange needleRange = NSMakeRange(0,3994);
     NSString *error;
     if(errorStack != nil) {
