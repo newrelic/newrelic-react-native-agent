@@ -105,7 +105,7 @@ class NewRelic {
   * Creates and records a MobileBreadcrumb for Current Screen
   */
   onStateChange = (state) => {
-    var currentScreenName = this.getCurrentScrren(state);
+    var currentScreenName = this.getCurrentScreen(state);
     var params = {
       'screenName': currentScreenName
     };
@@ -114,12 +114,12 @@ class NewRelic {
 
   }
 
-  getCurrentScrren(state) {
+  getCurrentScreen(state) {
 
     if (!state.routes[state.index].state) {
       return state.routes[state.index].name
     }
-    return this.getCurrentScrren(state.routes[state.index].state);
+    return this.getCurrentScreen(state.routes[state.index].state);
   }
 
   /**
