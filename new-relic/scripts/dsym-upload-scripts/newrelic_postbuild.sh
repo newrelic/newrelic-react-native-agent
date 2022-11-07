@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 
 
 #
 # Shell script to upload an iOS build's debug symbols to New Relic.

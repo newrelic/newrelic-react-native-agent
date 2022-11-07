@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0 
+ */
+
 import { ConfigPlugin, withPlugins, createRunOncePlugin } from '@expo/config-plugins';
 
 import { withApplyNewRelicPlugin, withBuildscriptDependency, withNetworkAcessPermission } from './android';
