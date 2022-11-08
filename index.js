@@ -75,7 +75,7 @@ class NewRelic {
     }
     const route = currentState.routes[currentState.index];
     if (route.routes) {
-      return getActiveRouteName(route);
+      return getCurrentRouteName(route);
     }
     return route.routeName;
   }
