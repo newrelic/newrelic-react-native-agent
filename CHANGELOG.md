@@ -1,5 +1,16 @@
 # Changelog
 
+0.0.8
+## New in this release
+
+* Added hot and cold app launch time. You can find more information here: [Android](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/configure-app-launch-time-android-apps) and [iOS](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/configuration/app-launch-times-ios-apps)
+
+
+## Fixed in this release
+
+* Fix for recursive call for react native navigation for <=v4
+* Removed jcenter from Android
+
 0.0.7
 ## Fixed in this release
 * Fixed an issue where error stack trace length would cause crashing in iOS apps.

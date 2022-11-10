@@ -363,7 +363,7 @@ class NewRelic {
  * @param attributeName {string} Name of the attribute.
  */
   removeAttribute(attributeName) {
-    this.NRMAModularAgentWrapper.execute('removeAttribute', attributeName, value);
+    this.NRMAModularAgentWrapper.execute('removeAttribute', attributeName);
   }
 
   /**
