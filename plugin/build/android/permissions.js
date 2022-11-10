@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0 
+ */
+
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withNetworkAcessPermission = void 0;

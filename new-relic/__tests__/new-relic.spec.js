@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0 
+ */
+
 import { Platform } from 'react-native';
 import NewRelic from '../../index';
 import MockNRM from '../../__mocks__/nrm-modular-agent';

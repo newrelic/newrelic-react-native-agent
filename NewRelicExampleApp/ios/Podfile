@@ -1,3 +1,8 @@
+=begin
+  Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0 
+=end
+
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 

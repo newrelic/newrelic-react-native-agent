@@ -1,5 +1,10 @@
 #!/bin/sh
 
+#
+# Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 
+#
+
 echo $PWD
 
 SRC_PATTERN="ios/bridge/"

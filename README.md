@@ -106,15 +106,16 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.8.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.9.0"
       }
     }
   ```
 
 3. Update `app/build.gradle`:
   ```groovy
-    apply plugin: "com.android.application"
-    apply plugin: 'newrelic' // <-- add this
+    plugins {
+      id 'newrelic'
+    }
   
   ```
 

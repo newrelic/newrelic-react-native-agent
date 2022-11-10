@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022-present New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0 
+ */
+
 import utils from './new-relic/nr-utils';
 import { LOG } from './new-relic/nr-logger';
 import { Platform } from 'react-native';
@@ -70,7 +75,7 @@ class NewRelic {
     }
     const route = currentState.routes[currentState.index];
     if (route.routes) {
-      return getActiveRouteName(route);
+      return this.getCurrentRouteName(route);
     }
     return route.routeName;
   }
@@ -100,7 +105,7 @@ class NewRelic {
   * Creates and records a MobileBreadcrumb for Current Screen
   */
   onStateChange = (state) => {
-    var currentScreenName = this.getCurrentScrren(state);
+    var currentScreenName = this.getCurrentScreen(state);
     var params = {
       'screenName': currentScreenName
     };
@@ -109,12 +114,12 @@ class NewRelic {
 
   }
 
-  getCurrentScrren(state) {
+  getCurrentScreen(state) {
 
     if (!state.routes[state.index].state) {
       return state.routes[state.index].name
     }
-    return this.getCurrentScrren(state.routes[state.index].state);
+    return this.getCurrentScreen(state.routes[state.index].state);
   }
 
   /**
@@ -358,7 +363,7 @@ class NewRelic {
  * @param attributeName {string} Name of the attribute.
  */
   removeAttribute(attributeName) {
-    this.NRMAModularAgentWrapper.execute('removeAttribute', attributeName, value);
+    this.NRMAModularAgentWrapper.execute('removeAttribute', attributeName);
   }
 
   /**
