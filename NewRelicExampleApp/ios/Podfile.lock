@@ -73,10 +73,10 @@ PODS:
   - fmt (6.2.1)
   - glog (0.3.5)
   - libevent (2.1.12)
-  - newrelic-react-native-agent (0.0.1):
-    - NewRelicAgent (= 7.3.6)
+  - newrelic-react-native-agent (0.0.8):
+    - NewRelicAgent (= 7.4.0)
     - React
-  - NewRelicAgent (7.3.6)
+  - NewRelicAgent (7.4.0)
   - OpenSSL-Universal (1.1.180)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
