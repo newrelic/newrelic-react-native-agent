@@ -1,13 +1,9 @@
-<!--
-    Copyright (c) 2022-present New Relic Corporation. All rights reserved.
-    SPDX-License-Identifier: Apache-2.0 
--->
-
 <resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
     </style>
 
 </resources>
