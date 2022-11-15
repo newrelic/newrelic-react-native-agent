@@ -1,9 +1,0 @@
-{
-    "appId" : 123,
-    "accountId" : 1,
-    "trustedAccountKey": 1234,
-    "licenseKey": {
-        "android":"AA8f0d153e428310876eac4255ba2abf6f75575c78-NRMA",
-        "ios":"AA8f0d153e428310876eac4255ba2abf6f75575c78-NRMA"
-    }
-}
