@@ -412,3 +412,18 @@ Currently there is no symbolication of Javascript errors. Please follow the step
 
 * To create a useful name, you might combine several attributes.
 ```
+
+## Testing
+### Jest Configuration
+By default, `node_modules` are ignored by transformers by Jest. To configure the newrelic-react-native-agent to work with Jest, you should add this package to [`transformIgnorePatterns`](https://jestjs.io/docs/configuration#transformignorepatterns-arraystring). We also provide some basic mocks for our API calls in `jestSetup.js`. Simply add this file to [`setupFiles`](https://jestjs.io/docs/configuration#setupfiles-array) in your Jest configuration. An example jest configuration would look like:
+```json
+  "jest": {
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!@react-native|react-native|newrelic-react-native-agent)"
+    ],
+    "setupFiles": [
+      "./node_modules/newrelic-react-native-agent/jestSetup.js"
+    ]
+  }
+```

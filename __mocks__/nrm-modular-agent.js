@@ -21,6 +21,7 @@ export default  {
   setStringAttribute: jest.fn(),
   setNumberAttribute: jest.fn(),
   setBoolAttribute: jest.fn(),
+  removeAttribute: jest.fn(),
   incrementAttribute: jest.fn(),
   setJSAppVersion: jest.fn(),
   setUserId: jest.fn(),
