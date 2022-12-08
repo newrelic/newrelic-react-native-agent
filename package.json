@@ -45,8 +45,9 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "react-native-promise-rejection-utils": "0.0.1",
-    "@expo/config-plugins": "^4.0.14"
+    "@expo/config-plugins": "^4.0.14",
+    "lodash.foreach": "^4.5.0",
+    "react-native-promise-rejection-utils": "0.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
