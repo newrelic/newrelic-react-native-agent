@@ -45,9 +45,9 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "commitizen": "^4.2.4",
-    "react-native-promise-rejection-utils": "0.0.1",
-    "@expo/config-plugins": "^4.0.14"
+    "@expo/config-plugins": "^4.0.14",
+    "lodash.foreach": "^4.5.0",
+    "react-native-promise-rejection-utils": "0.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
@@ -58,6 +58,7 @@
     "aws-sdk": "^2.1048.0",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^24.8.0",
+    "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "docdash": "^1.2.0",
     "edit-json-file": "^1.7.0",

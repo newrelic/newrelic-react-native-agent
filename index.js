@@ -8,7 +8,7 @@ import { LOG } from './new-relic/nr-logger';
 import { Platform } from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
-import * as _ from 'lodash';
+import forEach from 'lodash.foreach';
 
 import {
   getUnhandledPromiseRejectionTracker,
@@ -489,7 +489,7 @@ class NewRelic {
   send(name, args) {
     const nameStr = String(name);
     const argsStr = {};
-    _.forEach(args, (value, key) => {
+    forEach(args, (value, key) => {
       argsStr[String(key)] = String(value);
     });
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', 'consoleEvents', nameStr, argsStr);
