@@ -64,7 +64,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.NetworkErrorRequests);
             }
 
-            if ((Boolean) agentConfig.get("httpRequestBodyCaptureEnabled")) {
+            if ((Boolean) agentConfig.get("httpResponseBodyCaptureEnabled")) {
                 NewRelic.enableFeature(FeatureFlag.HttpResponseBodyCapture);
             } else {
                 NewRelic.disableFeature(FeatureFlag.HttpResponseBodyCapture);
@@ -162,7 +162,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void httpRequestBodyCaptureEnabled(boolean enabled) {
+    public void httpResponseBodyCaptureEnabled(boolean enabled) {
         if(enabled) {
             NewRelic.enableFeature(FeatureFlag.HttpResponseBodyCapture);
         } else {

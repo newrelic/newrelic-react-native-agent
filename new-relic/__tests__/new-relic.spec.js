@@ -89,9 +89,9 @@ describe('New Relic', () => {
   });
 
   it('should set the network error request flag', () => {
-    NewRelic.httpRequestBodyCaptureEnabled(true);
-    NewRelic.httpRequestBodyCaptureEnabled(false);
-    expect(MockNRM.httpRequestBodyCaptureEnabled.mock.calls.length).toBe(2);
+    NewRelic.httpResponseBodyCaptureEnabled(true);
+    NewRelic.httpResponseBodyCaptureEnabled(false);
+    expect(MockNRM.httpResponseBodyCaptureEnabled.mock.calls.length).toBe(2);
   });
 
   it('should record a valid breadcrumb', () => {

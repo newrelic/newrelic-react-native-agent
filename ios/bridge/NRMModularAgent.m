@@ -51,7 +51,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic disableFeatures:NRFeatureFlag_RequestErrorEvents];
     }
     
-    if([[agentConfig objectForKey:@"httpRequestBodyCaptureEnabled"]boolValue] == NO) {
+    if([[agentConfig objectForKey:@"httpResponseBodyCaptureEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
     }
     if([[agentConfig objectForKey:@"webViewInstrumentationEnabled"]boolValue] == NO) {
@@ -97,7 +97,7 @@ RCT_EXPORT_METHOD(networkErrorRequestEnabled:(BOOL) enabled) {
     }
 }
 
-RCT_EXPORT_METHOD(httpRequestBodyCaptureEnabled:(BOOL) enabled) {
+RCT_EXPORT_METHOD(httpResponseBodyCaptureEnabled:(BOOL) enabled) {
     if(enabled) {
         [NewRelic enableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
     } else {

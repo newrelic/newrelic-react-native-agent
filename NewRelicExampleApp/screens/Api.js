@@ -27,7 +27,7 @@ const ApiScreen = () => {
   const httpBodyHandler = () => {
     setHttpBodyFlagEnabled(previousState => !previousState);
     // alert(!httpBodyFlagEnabled);
-    NewRelic.httpRequestBodyCaptureEnabled(!httpBodyFlagEnabled);
+    NewRelic.httpResponseBodyCaptureEnabled(!httpBodyFlagEnabled);
   };
 
   const breadcrumbHandler = () => {
