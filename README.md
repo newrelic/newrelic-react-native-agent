@@ -78,7 +78,7 @@ import {Platform} from 'react-native';
     networkErrorRequestEnabled: true,
 
     // Optional:Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
-    httpRequestBodyCaptureEnabled: true,
+    httpResponseBodyCaptureEnabled: true,
 
    //Android Specific
    // Optional: Enable or disable agent logging.
@@ -375,10 +375,10 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.networkErrorRequestEnabled(true);
 ```
 
-### [httpRequestBodyCaptureEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-withHttpResponseBodyCaptureEnabled)(enabled: boolean) : void;
+### [httpResponseBodyCaptureEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-withHttpResponseBodyCaptureEnabled)(enabled: boolean) : void;
 > Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
 ```js
-    NewRelic.httpRequestBodyCaptureEnabled(true);
+    NewRelic.httpResponseBodyCaptureEnabled(true);
 ```
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?

@@ -38,7 +38,7 @@ class NewRelic {
       interactionTracingEnabled: true,
       networkRequestEnabled: true,
       networkErrorRequestEnabled: true,
-      httpRequestBodyCaptureEnabled: true,
+      httpResponseBodyCaptureEnabled: true,
       loggingEnabled: true,
       webViewInstrumentation: true
     };
@@ -174,8 +174,8 @@ class NewRelic {
    * Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
    * @param enabled {boolean} Boolean value for enabling HTTP response bodies.
    */
-  httpRequestBodyCaptureEnabled(enabled) {
-    this.NRMAModularAgentWrapper.execute('httpRequestBodyCaptureEnabled', enabled);
+  httpResponseBodyCaptureEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('httpResponseBodyCaptureEnabled', enabled);
   }
   
   /**

@@ -8,7 +8,7 @@ jest.mock('./index.js', () => ({
   analyticsEventEnabled: jest.fn(),
   networkRequestEnabled: jest.fn(),
   networkErrorRequestEnabled: jest.fn(),
-  httpRequestBodyCaptureEnabled: jest.fn(),
+  httpResponseBodyCaptureEnabled: jest.fn(),
   recordBreadcrumb: jest.fn(),
   recordCustomEvent: jest.fn(),
   crashNow: jest.fn(),

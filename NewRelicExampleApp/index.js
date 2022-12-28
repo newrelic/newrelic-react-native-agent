@@ -39,7 +39,7 @@ import {Platform} from 'react-native';
     networkErrorRequestEnabled: true,
 
     // Optional:Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
-    httpRequestBodyCaptureEnabled: true,
+    httpResponseBodyCaptureEnabled: true,
 
    //Android Specific
    // Optional: Enable or disable agent logging.
