@@ -9,7 +9,8 @@
 
 ## Fixed in this release
 
-* 
+* Reduced bundle size of agent
+* Fixed issue where pod hash would change on different builds 
 
 
 0.0.8

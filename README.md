@@ -109,7 +109,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.9.1"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.9.2"
       }
     }
   ```
@@ -311,8 +311,14 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     let sessionId = await NewRelic.currentSessionId();
 ```
 
-### [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void;
-> Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`
+### [noticeHttpTransaction](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-http-transaction/)(url: string, httpMethod: string, statusCode: number, startTime: number, endTime: number, bytesSent: number, bytesReceived: number, responseBody: string): void;
+> Tracks network requests manually. You can use this method to record HTTP transactions, with an option to also send a response body.
+```js
+    NewRelic.noticeHttpTransaction('https://github.com', 'GET', 200, Date.now(), Date.now()+1000, 100, 101, "response body");
+```
+
+### (DEPRECATED) [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
+> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`.
 ```js
     NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), 'BadURL');
 ```

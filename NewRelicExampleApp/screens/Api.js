@@ -48,13 +48,28 @@ const ApiScreen = () => {
       'OPERATIONS',
     );
   };
-  const networkFailureHandler = () => {
-    NewRelic.noticeNetworkFailure(
-      'https://fakewebsite.com',
+  const noticeHttpHandler = () => {
+    NewRelic.noticeHttpTransaction(   
+      'https://fakewebsite200.com',
       'GET',
+      200,
       Date.now(),
+      Date.now()+1000,
+      111,
+      222,
+      "fake body"
+    );
+  };
+  const networkFailureHandler = () => {
+    NewRelic.noticeHttpTransaction(   
+      'https://fakewebsite400.com',
+      'GET',
+      400,
       Date.now(),
-      'BadURL',
+      Date.now()+1000,
+      111,
+      222,
+      "fake body"
     );
   };
   const errorHandler = () => {
@@ -149,6 +164,7 @@ const ApiScreen = () => {
           <View style={styles.wrap}>
             <Button title="breadcrumb" onPress={breadcrumbHandler} />
             <Button title="metrics" onPress={metricHandler} />
+            <Button title="http request" onPress={noticeHttpHandler} />
             <Button title="network failure" onPress={networkFailureHandler} />
             <Button title="error" onPress={errorHandler} />
           </View>
