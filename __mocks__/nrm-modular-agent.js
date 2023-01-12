@@ -13,6 +13,7 @@ export default  {
   recordCustomEvent: jest.fn(),
   crashNow: jest.fn(),
   currentSessionId: jest.fn(),
+  noticeHttpTransaction: jest.fn(),
   noticeNetworkFailure: jest.fn(),
   recordMetric: jest.fn(),
   removeAllAttributes: jest.fn(),

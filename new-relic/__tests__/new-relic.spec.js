@@ -143,6 +143,13 @@ describe('New Relic', () => {
     expect(MockNRM.currentSessionId.mock.calls.length).toBe(1);
   });
 
+  it('should notice http transactions with correct params', () => {
+    NewRelic.noticeHttpTransaction("https://newrelic.com", "GET", 200, Date.now(), Date.now()+100, 100, 200, "fake body");
+    NewRelic.noticeHttpTransaction("https://newrelic.com", "POST", 200, Date.now(), Date.now()+100, 100, 200, "fake body");
+    NewRelic.noticeHttpTransaction("https://newrelic.com", "GET", 400, Date.now(), Date.now()+100, 100, 200, "fake body");
+    expect(MockNRM.noticeHttpTransaction.mock.calls.length).toBe(3);
+  });
+
   it('should notice network failure with correct params', () => {
     NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'Unknown');
     NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'BadURL');
