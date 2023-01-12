@@ -17,7 +17,7 @@ import {Platform} from 'react-native';
         appToken = '*******';
     } else {
         // appToken='';
-        appToken = '*******';
+        appToken = 'AAbce843c545b3b8d9209131267fb75ca2d8dea3ad-NRMA';
     }
 
  const agentConfiguration = {

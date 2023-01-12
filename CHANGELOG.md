@@ -1,5 +1,17 @@
 # Changelog
 
+0.0.9
+
+## New in this release
+
+* Updated Native Android Agent Version
+
+
+## Fixed in this release
+
+* 
+
+
 0.0.8
 ## New in this release
 
