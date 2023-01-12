@@ -84,7 +84,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
 
             NewRelic.withApplicationToken(appKey)
-                    .withApplicationFramework(ApplicationFramework.ReactNative, reactNativeVersion)
+                    .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
                     .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
                     .start(reactContext);
 

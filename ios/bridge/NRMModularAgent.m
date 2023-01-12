@@ -9,6 +9,7 @@
 
 @interface NewRelic (Private)
 + (bool) isAgentStarted:(SEL _Nonnull)callingMethod;
++ (void) setPlatformVersion:(NSString*)version;
 @end
 
 @implementation NRMModularAgent
@@ -63,8 +64,9 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     }
     
     [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_ReactNative];
+    [NewRelic setPlatformVersion:agentVersion];
     [NewRelic startWithApplicationToken: appKey];
-    
+
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
     
     resolve(@(TRUE));
@@ -126,6 +128,32 @@ RCT_EXPORT_METHOD(currentSessionId:(RCTPromiseResolveBlock)resolve
         [NewRelic recordHandledException:exception];
         reject([exception name], [exception reason], nil);
     }
+}
+
+RCT_EXPORT_METHOD(noticeHttpTransaction:(NSString *)url
+                  httpMethod:(NSString*)httpMethod
+                  statusCode:(NSNumber* _Nonnull)statusCode
+                  startTime:(double)startTime
+                  endTime:(double)endTime
+                  bytesSent:(NSNumber* _Nonnull)bytesSent
+                  bytesReceived:(NSNumber* _Nonnull)bytesReceived
+                  body:(NSString *)body) {
+    
+    NSURL *nsurl = [[NSURL alloc] initWithString:url];
+    NSData* data = [body dataUsingEncoding:NSUTF8StringEncoding];
+
+    [NewRelic noticeNetworkRequestForURL:nsurl
+                              httpMethod:httpMethod
+                               startTime:startTime
+                                 endTime:endTime
+                         responseHeaders:nil
+                              statusCode:(long)[statusCode integerValue]
+                               bytesSent:(long)[bytesSent integerValue]
+                           bytesReceived:(long)[bytesReceived integerValue]
+                            responseData:data
+                            traceHeaders:nil
+                               andParams:nil];
+    
 }
 
 RCT_EXPORT_METHOD(noticeNetworkFailure:(NSString *)url

@@ -216,6 +216,23 @@ class NewRelic {
   }
 
   /**
+   * Tracks network requests manually.
+   * You can use this method to record HTTP transactions, with an option to also send a response body.
+   * @param url {string} The URL of the request.
+   * @param httpMethod {string} The HTTP method used, such as GET or POST
+   * @param statusCode {number} The statusCode of the HTTP response, such as 200 for OK.
+   * @param startTime {number} The start time of the request in milliseconds since the epoch.
+   * @param endTime {number} The end time of the request in milliseconds since the epoch.
+   * @param bytesSent {number} The number of bytes sent in the request.
+   * @param bytesReceived {number} The number of bytes received in the response
+   * @param responseBody {string} The response body of the HTTP response. The response body will be truncated and included in an HTTP Error metric if the HTTP transaction is an error.
+   */
+  noticeHttpTransaction(url, httpMethod, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody) {
+    this.NRMAModularAgentWrapper.execute('noticeHttpTransaction', url, httpMethod, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody);
+  }
+
+  /**
+   * @deprecated since newrelic-react-native-agent v0.0.9. Use noticeHttpTransaction instead.
    * Records network failures.
    * If a network request fails, use this method to record details about the failure.
    * In most cases, place this call inside exception handlers.
