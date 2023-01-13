@@ -1,5 +1,8 @@
 [![Community Plus header](https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Community_Plus.png)](https://opensource.newrelic.com/oss-category/#community-plus)
 
+[![npm](https://img.shields.io/npm/v/newrelic-react-native-agent?color=blue)](https://www.npmjs.com/package/newrelic-react-native-agent)
+[![codecov](https://codecov.io/github/newrelic/newrelic-react-native-agent/branch/main/graph/badge.svg?token=J597PET0X4)](https://codecov.io/github/newrelic/newrelic-react-native-agent)
+
 # New Relic React Native Agent
 
 This agent uses native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
@@ -75,7 +78,7 @@ import {Platform} from 'react-native';
     networkErrorRequestEnabled: true,
 
     // Optional:Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
-    httpRequestBodyCaptureEnabled: true,
+    httpResponseBodyCaptureEnabled: true,
 
    //Android Specific
    // Optional: Enable or disable agent logging.
@@ -106,7 +109,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.9.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.9.2"
       }
     }
   ```
@@ -308,8 +311,14 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     let sessionId = await NewRelic.currentSessionId();
 ```
 
-### [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void;
-> Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`
+### [noticeHttpTransaction](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-http-transaction/)(url: string, httpMethod: string, statusCode: number, startTime: number, endTime: number, bytesSent: number, bytesReceived: number, responseBody: string): void;
+> Tracks network requests manually. You can use this method to record HTTP transactions, with an option to also send a response body.
+```js
+    NewRelic.noticeHttpTransaction('https://github.com', 'GET', 200, Date.now(), Date.now()+1000, 100, 101, "response body");
+```
+
+### (DEPRECATED) [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
+> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`.
 ```js
     NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), 'BadURL');
 ```
@@ -372,10 +381,10 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.networkErrorRequestEnabled(true);
 ```
 
-### [httpRequestBodyCaptureEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-withHttpResponseBodyCaptureEnabled)(enabled: boolean) : void;
+### [httpResponseBodyCaptureEnabled](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/android-agent-configuration-feature-flags/#ff-withHttpResponseBodyCaptureEnabled)(enabled: boolean) : void;
 > Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
 ```js
-    NewRelic.httpRequestBodyCaptureEnabled(true);
+    NewRelic.httpResponseBodyCaptureEnabled(true);
 ```
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
@@ -411,4 +420,19 @@ Currently there is no symbolication of Javascript errors. Please follow the step
 * name is a keyword used for displaying your events in the New Relic UI.
 
 * To create a useful name, you might combine several attributes.
+```
+
+## Testing
+### Jest Configuration
+By default, `node_modules` are ignored by transformers by Jest. To configure the newrelic-react-native-agent to work with Jest, you should add this package to [`transformIgnorePatterns`](https://jestjs.io/docs/configuration#transformignorepatterns-arraystring). We also provide some basic mocks for our API calls in `jestSetup.js`. Simply add this file to [`setupFiles`](https://jestjs.io/docs/configuration#setupfiles-array) in your Jest configuration. An example jest configuration would look like:
+```json
+  "jest": {
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!@react-native|react-native|newrelic-react-native-agent)"
+    ],
+    "setupFiles": [
+      "./node_modules/newrelic-react-native-agent/jestSetup.js"
+    ]
+  }
 ```

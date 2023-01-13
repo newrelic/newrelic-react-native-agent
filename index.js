@@ -8,7 +8,7 @@ import { LOG } from './new-relic/nr-logger';
 import { Platform } from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
-import * as _ from 'lodash';
+import forEach from 'lodash.foreach';
 
 import {
   getUnhandledPromiseRejectionTracker,
@@ -38,7 +38,7 @@ class NewRelic {
       interactionTracingEnabled: true,
       networkRequestEnabled: true,
       networkErrorRequestEnabled: true,
-      httpRequestBodyCaptureEnabled: true,
+      httpResponseBodyCaptureEnabled: true,
       loggingEnabled: true,
       webViewInstrumentation: true
     };
@@ -174,8 +174,8 @@ class NewRelic {
    * Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
    * @param enabled {boolean} Boolean value for enabling HTTP response bodies.
    */
-  httpRequestBodyCaptureEnabled(enabled) {
-    this.NRMAModularAgentWrapper.execute('httpRequestBodyCaptureEnabled', enabled);
+  httpResponseBodyCaptureEnabled(enabled) {
+    this.NRMAModularAgentWrapper.execute('httpResponseBodyCaptureEnabled', enabled);
   }
   
   /**
@@ -216,6 +216,23 @@ class NewRelic {
   }
 
   /**
+   * Tracks network requests manually.
+   * You can use this method to record HTTP transactions, with an option to also send a response body.
+   * @param url {string} The URL of the request.
+   * @param httpMethod {string} The HTTP method used, such as GET or POST
+   * @param statusCode {number} The statusCode of the HTTP response, such as 200 for OK.
+   * @param startTime {number} The start time of the request in milliseconds since the epoch.
+   * @param endTime {number} The end time of the request in milliseconds since the epoch.
+   * @param bytesSent {number} The number of bytes sent in the request.
+   * @param bytesReceived {number} The number of bytes received in the response
+   * @param responseBody {string} The response body of the HTTP response. The response body will be truncated and included in an HTTP Error metric if the HTTP transaction is an error.
+   */
+  noticeHttpTransaction(url, httpMethod, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody) {
+    this.NRMAModularAgentWrapper.execute('noticeHttpTransaction', url, httpMethod, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody);
+  }
+
+  /**
+   * @deprecated since newrelic-react-native-agent v0.0.9. Use noticeHttpTransaction instead.
    * Records network failures.
    * If a network request fails, use this method to record details about the failure.
    * In most cases, place this call inside exception handlers.
@@ -489,7 +506,7 @@ class NewRelic {
   send(name, args) {
     const nameStr = String(name);
     const argsStr = {};
-    _.forEach(args, (value, key) => {
+    forEach(args, (value, key) => {
       argsStr[String(key)] = String(value);
     });
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', 'consoleEvents', nameStr, argsStr);

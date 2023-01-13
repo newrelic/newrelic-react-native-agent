@@ -61,8 +61,8 @@ class NRMAModularAgentWrapper {
     NRMModularAgent.networkErrorRequestEnabled(enabled);
   };
 
-  httpRequestBodyCaptureEnabled = (enabled) => {
-    NRMModularAgent.httpRequestBodyCaptureEnabled(enabled);
+  httpResponseBodyCaptureEnabled = (enabled) => {
+    NRMModularAgent.httpResponseBodyCaptureEnabled(enabled);
   };
 
   recordBreadcrumb = (eventName, attributes) => {

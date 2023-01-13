@@ -89,9 +89,9 @@ describe('New Relic', () => {
   });
 
   it('should set the network error request flag', () => {
-    NewRelic.httpRequestBodyCaptureEnabled(true);
-    NewRelic.httpRequestBodyCaptureEnabled(false);
-    expect(MockNRM.httpRequestBodyCaptureEnabled.mock.calls.length).toBe(2);
+    NewRelic.httpResponseBodyCaptureEnabled(true);
+    NewRelic.httpResponseBodyCaptureEnabled(false);
+    expect(MockNRM.httpResponseBodyCaptureEnabled.mock.calls.length).toBe(2);
   });
 
   it('should record a valid breadcrumb', () => {
@@ -141,6 +141,13 @@ describe('New Relic', () => {
   it('should return the current session id', () => {
     NewRelic.currentSessionId();
     expect(MockNRM.currentSessionId.mock.calls.length).toBe(1);
+  });
+
+  it('should notice http transactions with correct params', () => {
+    NewRelic.noticeHttpTransaction("https://newrelic.com", "GET", 200, Date.now(), Date.now()+100, 100, 200, "fake body");
+    NewRelic.noticeHttpTransaction("https://newrelic.com", "POST", 200, Date.now(), Date.now()+100, 100, 200, "fake body");
+    NewRelic.noticeHttpTransaction("https://newrelic.com", "GET", 400, Date.now(), Date.now()+100, 100, 200, "fake body");
+    expect(MockNRM.noticeHttpTransaction.mock.calls.length).toBe(3);
   });
 
   it('should notice network failure with correct params', () => {

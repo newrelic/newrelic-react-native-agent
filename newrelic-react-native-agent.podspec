@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
     :text => File.open('LICENSE') {|io| io.read}
   }
 #   todo: we have to make sure the zip matches this name.
-  s.source         = { :http => 'file:' + __dir__ + '/ios/ios-bridge.zip' }
+  s.source         = { :http => 'file:' + '$PODS_TARGET_SRCROOT/../ios/ios-bridge.zip' }
   s.source_files = "ios/bridge/**/*.{h,m}"
   s.platform     = :ios, '9.0'
   s.requires_arc = true

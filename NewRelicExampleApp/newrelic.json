@@ -1,9 +1,0 @@
-{
-    "appId" : 123,
-    "accountId" : 1,
-    "trustedAccountKey": 1234,
-    "licenseKey": {
-        "android":"***********",
-        "ios":"***************"
-    }
-}

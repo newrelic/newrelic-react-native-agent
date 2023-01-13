@@ -1,5 +1,18 @@
 # Changelog
 
+0.0.9
+
+## New in this release
+
+* Updated Native Android Agent Version
+
+
+## Fixed in this release
+
+* Reduced bundle size of agent
+* Fixed issue where pod hash would change on different builds 
+
+
 0.0.8
 ## New in this release
 

@@ -37,7 +37,7 @@ jobs:
       - name: Checkout the release branch for testing
         uses: actions/checkout@v2
         with:
-          ref:  release_0.0.8
+          ref:  release_0.0.9
           # token: ${{ secrets.API_CLI_TOKEN }}
           # path: newrelic-actions  # This might have to exist within ".github"
 
@@ -60,7 +60,7 @@ jobs:
 
       - name: Publish as NPM package on new relic account(we need npm secret from new relic account)
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_AGENT_NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.MOBILE_AGENT_NPM_TOKEN}}
         run: npm publish
 
       - name: Capture logs if previous failure
