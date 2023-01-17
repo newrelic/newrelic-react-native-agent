@@ -181,9 +181,10 @@ class NewRelic {
   /**
    * Creates and records a MobileBreadcrumb event
    * @param eventName {string} the name you want to give to the breadcrumb event.
-   * @param attributes {Map<string, string|number>} a map that includes a list of attributes.
+   * @param attributes {Map<string, any>} a map that includes a list of attributes.
    */
   recordBreadcrumb(eventName, attributes) {
+    attributes = attributes instanceof Map ? Object.fromEntries(attributes):attributes;
     this.NRMAModularAgentWrapper.execute('recordBreadcrumb', eventName, attributes);
   }
 
@@ -192,9 +193,10 @@ class NewRelic {
    * The event includes a list of attributes, specified as a map.
    * @param eventType {string} The type of event.
    * @param eventName {string} Use this parameter to name the event.
-   * @param attributes {Map<string, string|number>} A map that includes a list of attributes.
+   * @param attributes {Map<string, any>} A map that includes a list of attributes.
    */
   recordCustomEvent(eventType, eventName, attributes) {
+    attributes = attributes instanceof Map ? Object.fromEntries(attributes):attributes;
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', eventType, eventName, attributes);
   }
 
