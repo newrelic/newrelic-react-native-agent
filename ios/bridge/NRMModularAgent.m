@@ -65,7 +65,15 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     
     [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_ReactNative];
     [NewRelic setPlatformVersion:agentVersion];
-    [NewRelic startWithApplicationToken: appKey];
+
+    if([agentConfig objectForKey:@"usingFedRAMPCollectorAddresses"] == nil ||
+        [[agentConfig objectForKey:@"usingFedRAMPCollectorAddresses"]boolValue] == NO) {
+            [NewRelic startWithApplicationToken: appKey];
+    } else {
+        [NewRelic startWithApplicationToken:@"{APP_TOKEN}"
+                        andCollectorAddress:@"gov-mobile-collector.newrelic.com"
+                   andCrashCollectorAddress:@"gov-mobile-crash.newrelic.com"];
+    }
 
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
     

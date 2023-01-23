@@ -86,7 +86,10 @@ import {Platform} from 'react-native';
 
     //iOS Specific
     // Optional:Enable/Disable automatic instrumentation of WebViews
-    webViewInstrumentation: true
+    webViewInstrumentation: true,
+
+    // Optional: Enable or disable using FedRAMP-compliant endpoints. Set to true only if you meet all FedRAMP obligations.  
+    useFedRAMPCollectorAddresses: false,
   };
 
 

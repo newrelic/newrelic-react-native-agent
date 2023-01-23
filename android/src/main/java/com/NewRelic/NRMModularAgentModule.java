@@ -82,11 +82,20 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.InteractionTracing);
             }
 
-
-            NewRelic.withApplicationToken(appKey)
+            if (!agentConfig.containsKey("usingFedRAMPCollectorAddresses") || 
+                (Boolean) agentConfig.get("usingFedRAMPCollectorAddresses") == false) {
+                NewRelic.withApplicationToken(appKey)
                     .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
                     .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
                     .start(reactContext);
+            } else {
+                NewRelic.withApplicationToken(appKey)
+                    .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
+                    .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
+                    .usingCollectorAddress("gov-mobile-collector.newrelic.com")
+                    .usingCrashCollectorAddress("gov-mobile-crash.newrelic.com")
+                    .start(reactContext);
+            }
 
             NewRelic.setAttribute("React Native Version", reactNativeVersion);
             StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Agent/" + agentVersion);
