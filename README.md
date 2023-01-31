@@ -47,7 +47,7 @@ Now open your `index.js` and add the following code to launch NewRelic (don't fo
 
 ```js
 import NewRelic from 'newrelic-react-native-agent';
-import * as appVesrion from './package.json';
+import * as appVersion from './package.json';
 import {Platform} from 'react-native';
 
     let appToken;
@@ -91,7 +91,7 @@ import {Platform} from 'react-native';
 
 
 NewRelic.startAgent(appToken,agentConfiguration);
-NewRelic.setJSAppVersion(appVesrion.version);
+NewRelic.setJSAppVersion(appVersion.version);
 AppRegistry.registerComponent(appName, () => App);
 
 ```
@@ -166,18 +166,19 @@ npx react-native run-android --variant=release
 
 Integration with Expo is possible in both bare workflow and [custom managed workflow](https://docs.expo.io/workflow/customizing/) via [config plugins](https://docs.expo.io/guides/config-plugins/).
 
-* [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): Please follow the above installation steps instead.
-* [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): After installing our package, add the config plugin to the plugins array of your `app.json` or `app.config.js`.
-
-```js
-{
-  "name": "my app",
-  "plugins": ["newrelic-react-native-agent"]
-}
-
-```
-
-After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
+* [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): 
+  * Please follow the above installation steps instead.
+* [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): 
+  * Install our package by running `npx expo install newrelic-react-native-agent`. You should see the plugin in `app.json` or `app.config.js`:
+   ```js
+    {
+      "name": "my app",
+      "plugins": ["newrelic-react-native-agent"]
+    }
+    ```
+  * Update `index.js` with the configurations steps above. 
+  * After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/) guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
+  * For Expo Go users, the agent will require using native code. Since Expo Go does not suport sending custom native code over-the-air, you can follow Expo's documentation on how to use ["Custom native code in Expo Go"](https://docs.expo.dev/bare/using-expo-client/).
 
 ## Routing Instrumentation
 
