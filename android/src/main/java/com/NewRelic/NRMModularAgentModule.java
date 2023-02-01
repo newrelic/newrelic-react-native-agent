@@ -83,6 +83,28 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
             }
 
 
+            boolean useDefaultCollectorAddress =
+                    agentConfig.get("collectorAddress") == null ||
+                    ((String) agentConfig.get("collectorAddress")).isEmpty();
+            boolean useDefaultCrashCollectorAddress =
+                    agentConfig.get("crashCollectorAddress") == null ||
+                    ((String) agentConfig.get("crashCollectorAddress")).isEmpty();
+
+            if(useDefaultCollectorAddress && useDefaultCrashCollectorAddress) {
+                NewRelic.withApplicationToken(appKey)
+                        .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
+                        .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
+                        .start(reactContext);
+            } else {
+                String collectorAddress = useDefaultCollectorAddress ? "mobile-collector.newrelic.com" : (String) agentConfig.get("collectorAddress");
+                String crashCollectorAddress = useDefaultCrashCollectorAddress ? "mobile-crash.newrelic.com" : (String) agentConfig.get("crashCollectorAddress");
+                NewRelic.withApplicationToken(appKey)
+                        .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
+                        .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
+                        .usingCollectorAddress(collectorAddress)
+                        .usingCrashCollectorAddress(crashCollectorAddress)
+                        .start(reactContext);
+            }
             NewRelic.withApplicationToken(appKey)
                     .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
                     .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))

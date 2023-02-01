@@ -86,7 +86,13 @@ import {Platform} from 'react-native';
 
     //iOS Specific
     // Optional:Enable/Disable automatic instrumentation of WebViews
-    webViewInstrumentation: true
+    webViewInstrumentation: true,
+
+    // Optional: Set a specific collector address for sending data. Omit this field for default address.
+    collectorAddress: "",
+
+    // Optional: Set a specific crash collector address for sending crashes. Omit this field for default address.
+    crashCollectorAddress: ""
   };
 
 
