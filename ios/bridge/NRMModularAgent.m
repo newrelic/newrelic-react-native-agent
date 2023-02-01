@@ -38,7 +38,6 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
                   config:(NSDictionary* _Nullable)agentConfig
                   startWithResolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject){
-    NSLog(@"NRMA calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
     
     if([[agentConfig objectForKey:@"crashReportingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_CrashReporting];
@@ -63,9 +62,22 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic disableFeatures:NRFeatureFlag_InteractionTracing];
     }
     
+    BOOL useDefaultCollectorAddress = [[agentConfig objectForKey:@"collectorAddress"] length] == 0;
+    BOOL useDefaultCrashCollectorAddress = [[agentConfig objectForKey:@"crashCollectorAddress"] length] == 0;
+    
     [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_ReactNative];
     [NewRelic setPlatformVersion:agentVersion];
-    [NewRelic startWithApplicationToken: appKey];
+    
+    if (useDefaultCollectorAddress && useDefaultCrashCollectorAddress) {
+        [NewRelic startWithApplicationToken: appKey];
+    } else {
+        NSString* collectorAddress = useDefaultCollectorAddress ? @"mobile-collector.newrelic.com" : [agentConfig objectForKey:@"collectorAddress"];
+        NSString* crashCollectorAddress = useDefaultCrashCollectorAddress ? @"mobile-crash.newrelic.com" : [agentConfig objectForKey:@"crashCollectorAddress"];
+        
+        [NewRelic startWithApplicationToken:appKey
+                        andCollectorAddress:collectorAddress
+                   andCrashCollectorAddress:crashCollectorAddress];
+    }
 
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
     

@@ -40,7 +40,9 @@ class NewRelic {
       networkErrorRequestEnabled: true,
       httpResponseBodyCaptureEnabled: true,
       loggingEnabled: true,
-      webViewInstrumentation: true
+      webViewInstrumentation: true,
+      collectorAddress: "",
+      crashCollectorAddress: "",
     };
   }
 
@@ -151,7 +153,8 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling analytics events.
    */
   analyticsEventEnabled(enabled) {
-      this.NRMAModularAgentWrapper.execute('analyticsEventEnabled', enabled);
+    this.agentConfiguration.analyticsEventEnabled = enabled;
+    this.NRMAModularAgentWrapper.execute('analyticsEventEnabled', enabled);
   }
   
   /**
@@ -159,6 +162,7 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling successful HTTP requests.
    */
   networkRequestEnabled(enabled) {
+    this.agentConfiguration.networkRequestEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('networkRequestEnabled', enabled);
   }
 
@@ -167,6 +171,7 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling network request errors.
    */
   networkErrorRequestEnabled(enabled) {
+    this.agentConfiguration.networkErrorRequestEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('networkErrorRequestEnabled', enabled);
   }
 
@@ -175,6 +180,7 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling HTTP response bodies.
    */
   httpResponseBodyCaptureEnabled(enabled) {
+    this.agentConfiguration.httpResponseBodyCaptureEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('httpResponseBodyCaptureEnabled', enabled);
   }
   
