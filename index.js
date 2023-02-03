@@ -461,13 +461,16 @@ class NewRelic {
 
     if (!this.state.didAddPromiseRejection) {
       setUnhandledPromiseRejectionTracker((id, error) => {
-
-        this.NRMAModularAgentWrapper.execute('recordStack',
-          error.name,
-          error.message,
-          error.stack,
-          false,
-          this.JSAppVersion);
+        if(error != undefined) {
+          this.NRMAModularAgentWrapper.execute('recordStack',
+            error.name,
+            error.message,
+            error.stack,
+            false,
+            this.JSAppVersion);
+        } else {
+          this.recordBreadcrumb("Possible Unhandled Promise Rejection", {id: id})
+        }
 
         if (prevTracker !== undefined) {
           prevTracker(id, error)
