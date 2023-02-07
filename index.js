@@ -9,6 +9,7 @@ import { Platform } from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
 import forEach from 'lodash.foreach';
+import decycle from './new-relic/cycle';
 
 import {
   getUnhandledPromiseRejectionTracker,
@@ -507,22 +508,7 @@ class NewRelic {
   }
 
   sendConsole(type, args) {
-
-    // Remove circular structures from the args so we can convert to JSON
-    const getCircularReplacer = () => {
-      const seen = new WeakSet();
-      return (key, value) => {
-        if (typeof value === "object" && value !== null) {
-          if (seen.has(value)) {
-            return;
-          }
-          seen.add(value);
-        }
-        return value;
-      };
-    };
-    
-    const argsStr = JSON.stringify(args, getCircularReplacer());
+    const argsStr = JSON.stringify(JSON.decycle(args));
     this.send('JSConsole', { consoleType: type, args: argsStr });
   }
 
