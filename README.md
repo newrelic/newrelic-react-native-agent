@@ -47,7 +47,7 @@ Now open your `index.js` and add the following code to launch NewRelic (don't fo
 
 ```js
 import NewRelic from 'newrelic-react-native-agent';
-import * as appVesrion from './package.json';
+import * as appVersion from './package.json';
 import {Platform} from 'react-native';
 
     let appToken;
@@ -80,18 +80,27 @@ import {Platform} from 'react-native';
     // Optional:Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
     httpResponseBodyCaptureEnabled: true,
 
-   //Android Specific
-   // Optional: Enable or disable agent logging.
+    // Optional:Enable or disable agent logging.
     loggingEnabled: true,
 
-    //iOS Specific
+    // Optional:Specifies the log level. Omit this field for the default log level.
+    // Options include: ERROR (least verbose), WARNING, INFO, VERBOSE, AUDIT (most verbose).
+    logLevel: NewRelic.LogLevel.INFO,
+
+    // iOS Specific
     // Optional:Enable/Disable automatic instrumentation of WebViews
-    webViewInstrumentation: true
+    webViewInstrumentation: true,
+
+    // Optional:Set a specific collector address for sending data. Omit this field for default address.
+    collectorAddress: "",
+
+    // Optional:Set a specific crash collector address for sending crashes. Omit this field for default address.
+    crashCollectorAddress: ""
   };
 
 
 NewRelic.startAgent(appToken,agentConfiguration);
-NewRelic.setJSAppVersion(appVesrion.version);
+NewRelic.setJSAppVersion(appVersion.version);
 AppRegistry.registerComponent(appName, () => App);
 
 ```
@@ -166,18 +175,19 @@ npx react-native run-android --variant=release
 
 Integration with Expo is possible in both bare workflow and [custom managed workflow](https://docs.expo.io/workflow/customizing/) via [config plugins](https://docs.expo.io/guides/config-plugins/).
 
-* [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): Please follow the above installation steps instead.
-* [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): After installing our package, add the config plugin to the plugins array of your `app.json` or `app.config.js`.
-
-```js
-{
-  "name": "my app",
-  "plugins": ["newrelic-react-native-agent"]
-}
-
-```
-
-After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/)guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
+* [Bare Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): 
+  * Please follow the above installation steps instead.
+* [Managed Workflow](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow): 
+  * Install our package by running `npx expo install newrelic-react-native-agent`. You should see the plugin in `app.json` or `app.config.js`:
+   ```js
+    {
+      "name": "my app",
+      "plugins": ["newrelic-react-native-agent"]
+    }
+    ```
+  * Update `index.js` with the configurations steps above. 
+  * After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/) guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
+  * For Expo Go users, the agent will require using native code. Since Expo Go does not suport sending custom native code over-the-air, you can follow Expo's documentation on how to use ["Custom native code in Expo Go"](https://docs.expo.dev/bare/using-expo-client/).
 
 ## Routing Instrumentation
 
@@ -283,14 +293,14 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
      NewRelic.setUserId("RN12934");
   ```
 
-### [recordBreadcrumb](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordbreadcrumb)(name: string, attributes?: {[key: string]: boolean | number | string}): void;
+### [recordBreadcrumb](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordbreadcrumb)(name: string, attributes?: {[key: string]: any}): void;
 > Track app activity/screen that may be helpful for troubleshooting crashes.
 
   ```js
      NewRelic.recordBreadcrumb("shoe", {"shoeColor": "blue","shoesize": 9,"shoeLaces": true});
   ```
 
-### [recordCustomEvent](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordcustomevent-android-sdk-api)(eventType: string, eventName?: string, attributes?: {[key: string]: boolean | number | string}): void;
+### [recordCustomEvent](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordcustomevent-android-sdk-api)(eventType: string, eventName?: string, attributes?: {[key: string]: any}): void;
 > Creates and records a custom event for use in New Relic Insights.
 
   ```js
@@ -318,17 +328,17 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 ```
 
 ### (DEPRECATED) [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
-> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`.
+> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
 ```js
-    NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), 'BadURL');
+    NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), NewRelic.NetworkFailure.BadURL);
 ```
 
 ### [recordMetric](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordmetric-android-sdk-api)(name: string, category: string, value?: number, countUnit?: string, valueUnit?: string): void;
-> Records custom metrics (arbitrary numerical data), where countUnit is the measurement unit of the metric count and valueUnit is the measurement unit for the metric value. If using countUnit or valueUnit, then all of value, countUnit, and valueUnit must all be set. Supported measurements for countUnit and valueUnit are: `PERCENT`, `BYTES`, `SECONDS`, `BYTES_PER_SECOND`, `OPERATIONS`
+> Records custom metrics (arbitrary numerical data), where countUnit is the measurement unit of the metric count and valueUnit is the measurement unit for the metric value. If using countUnit or valueUnit, then all of value, countUnit, and valueUnit must all be set.
 ```js
     NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory');
     NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 12);
-    NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 13, 'PERCENT', 'SECONDS');
+    NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 13, NewRelic.MetricUnit.PERCENT, NewRelic.MetricUnit.SECONDS);
 ```
 
 ### [removeAllAttributes](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/remove-all-attributes)(): void;

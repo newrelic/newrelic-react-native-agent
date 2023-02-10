@@ -70,28 +70,76 @@ describe('New Relic', () => {
     expect(MockNRM.startAgent.mock.calls.length).toBe(6);
   });
 
+  it('should have correct default configuration settings', () => {
+    expect(NewRelic.agentConfiguration.analyticsEventEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.crashReportingEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.interactionTracingEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.networkRequestEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.loggingEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.logLevel).toBe(NewRelic.LogLevel.INFO);
+    expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(true);
+    expect(NewRelic.agentConfiguration.collectorAddress).toBe("");
+    expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("");
+  });
+
+  it('should change default agent configuration when configuration is passed into the start call', () => {
+    const customerConfiguration = {
+      analyticsEventEnabled: false,
+      crashReportingEnabled: false,
+      interactionTracingEnabled: false,
+      networkRequestEnabled: false,
+      networkErrorRequestEnabled: false,
+      httpResponseBodyCaptureEnabled: false,
+      loggingEnabled: false,
+      logLevel: "AUDIT",
+      webViewInstrumentation: false,
+      collectorAddress: "gov-mobile-collector.newrelic.com",
+      crashCollectorAddress: "gov-mobile-crash.newrelic.com"
+    };
+
+    NewRelic.startAgent("12345", customerConfiguration);
+
+    expect(NewRelic.agentConfiguration.analyticsEventEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.crashReportingEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.interactionTracingEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.networkRequestEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.loggingEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.logLevel).toBe("AUDIT");
+    expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(false);
+    expect(NewRelic.agentConfiguration.collectorAddress).toBe("gov-mobile-collector.newrelic.com");
+    expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("gov-mobile-crash.newrelic.com");
+  });
+
   it('should set the analytics event flag', () => {
     NewRelic.analyticsEventEnabled(true);
     NewRelic.analyticsEventEnabled(false);
     expect(MockNRM.analyticsEventEnabled.mock.calls.length).toBe(2);
+    expect(NewRelic.agentConfiguration.analyticsEventEnabled).toBe(false);
   });
 
   it('should set the network request flag', () => {
     NewRelic.networkRequestEnabled(true);
     NewRelic.networkRequestEnabled(false);
     expect(MockNRM.networkRequestEnabled.mock.calls.length).toBe(2);
+    expect(NewRelic.agentConfiguration.networkRequestEnabled).toBe(false);
   });
 
   it('should set the network error request flag', () => {
     NewRelic.networkErrorRequestEnabled(true);
     NewRelic.networkErrorRequestEnabled(false);
     expect(MockNRM.networkErrorRequestEnabled.mock.calls.length).toBe(2);
+    expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(false);
   });
 
-  it('should set the network error request flag', () => {
+  it('should set the http response body flag', () => {
     NewRelic.httpResponseBodyCaptureEnabled(true);
     NewRelic.httpResponseBodyCaptureEnabled(false);
     expect(MockNRM.httpResponseBodyCaptureEnabled.mock.calls.length).toBe(2);
+    expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(false);
   });
 
   it('should record a valid breadcrumb', () => {
@@ -151,12 +199,12 @@ describe('New Relic', () => {
   });
 
   it('should notice network failure with correct params', () => {
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'Unknown');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'BadURL');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'CannotConnectToHost');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'DNSLookupFailed');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'BadServerResponse');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'SecureConnectionFailed');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.Unknown);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.BadURL);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.CannotConnectToHost);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.DNSLookupFailed);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.BadServerResponse);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.SecureConnectionFailed);
     expect(MockNRM.noticeNetworkFailure.mock.calls.length).toBe(6);
   });
 
@@ -168,18 +216,18 @@ describe('New Relic', () => {
 
   it('should record metric with correct params', () => {
     NewRelic.recordMetric('fakeName', 'fakeCategory');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 13);
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 21, 'PERCENT', 'SECONDS');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 13)
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 21, NewRelic.MetricUnit.PERCENT, NewRelic.MetricUnit.SECONDS);
     expect(MockNRM.recordMetric.mock.calls.length).toBe(3);
   });
 
   it('should not record metric with bad params', () => {
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 2, 'SECONDS');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', -1, 'SECONDS', 'PERCENT');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 10, null, 'BYTES_PER_SECOND');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'MINUTES', 'SECONDS');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'PERCENT', 'HOURS');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'DAYS', 'HOURS');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 2, NewRelic.MetricUnit.SECONDS);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', -1, NewRelic.MetricUnit.SECONDS, NewRelic.MetricUnit.PERCENT);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 10, null, NewRelic.MetricUnit.BYTES_PER_SECOND);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, NewRelic.MetricUnit.MINUTES, NewRelic.MetricUnit.SECONDS);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, NewRelic.MetricUnit.PERCENT, NewRelic.MetricUnit.HOURS);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, "DAYS", "HOURS");
     expect(MockNRM.recordMetric.mock.calls.length).toBe(0);
   });
 
@@ -333,17 +381,19 @@ describe('New Relic', () => {
   });
 
   it('sends console.log to record custom Events', () => {
+    // Each agent start call is 2 custom event calls (5 actual calls prior to this test) = 10
     NewRelic.startAgent("12345");
     console.log('hello');
-    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(12);
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(15);
   });
 
   it('sends console.warn to record custom Events', () => {
+    // Each agent start call is 2 custom event calls (12 actual calls prior to this test) + 1 console log test = 25 
     NewRelic.startAgent("12345");
     console.log('hello');
     console.warn('hello');
     console.error('hello');
-    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(25);
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(30);
   });
 
   it('sends breadcrumb for navigation if it is not first screen', () => {

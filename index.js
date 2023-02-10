@@ -9,6 +9,7 @@ import { Platform } from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
 import forEach from 'lodash.foreach';
+import decycle from './new-relic/cycle';
 
 import {
   getUnhandledPromiseRejectionTracker,
@@ -40,8 +41,38 @@ class NewRelic {
       networkErrorRequestEnabled: true,
       httpResponseBodyCaptureEnabled: true,
       loggingEnabled: true,
-      webViewInstrumentation: true
+      logLevel: this.LogLevel.INFO,
+      webViewInstrumentation: true,
+      collectorAddress: "",
+      crashCollectorAddress: "",
     };
+  }
+
+  LogLevel = {
+    // ERROR is least verbose and AUDIT is most verbose
+    ERROR: "ERROR",
+    WARNING: "WARNING",
+    INFO: "INFO",
+    VERBOSE: "VERBOSE",
+    AUDIT: "AUDIT"
+  };
+
+  NetworkFailure = {
+    Unknown: 'Unknown',
+    BadURL: 'BadURL',
+    TimedOut: 'TimedOut',
+    CannotConnectToHost: 'CannotConnectToHost', 
+    DNSLookupFailed: 'DNSLookupFailed',
+    BadServerResponse: 'BadServerResponse',
+    SecureConnectionFailed: 'SecureConnectionFailed'
+  }
+
+  MetricUnit = {
+    PERCENT: 'PERCENT',
+    BYTES: 'BYTES',
+    SECONDS: 'SECONDS', 
+    BYTES_PER_SECOND: 'BYTES_PER_SECOND',
+    OPERATIONS: 'OPERATIONS'
   }
 
   /**
@@ -151,7 +182,8 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling analytics events.
    */
   analyticsEventEnabled(enabled) {
-      this.NRMAModularAgentWrapper.execute('analyticsEventEnabled', enabled);
+    this.agentConfiguration.analyticsEventEnabled = enabled;
+    this.NRMAModularAgentWrapper.execute('analyticsEventEnabled', enabled);
   }
   
   /**
@@ -159,6 +191,7 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling successful HTTP requests.
    */
   networkRequestEnabled(enabled) {
+    this.agentConfiguration.networkRequestEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('networkRequestEnabled', enabled);
   }
 
@@ -167,6 +200,7 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling network request errors.
    */
   networkErrorRequestEnabled(enabled) {
+    this.agentConfiguration.networkErrorRequestEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('networkErrorRequestEnabled', enabled);
   }
 
@@ -175,15 +209,17 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling HTTP response bodies.
    */
   httpResponseBodyCaptureEnabled(enabled) {
+    this.agentConfiguration.httpResponseBodyCaptureEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('httpResponseBodyCaptureEnabled', enabled);
   }
   
   /**
    * Creates and records a MobileBreadcrumb event
    * @param eventName {string} the name you want to give to the breadcrumb event.
-   * @param attributes {Map<string, string|number>} a map that includes a list of attributes.
+   * @param attributes {Map<string, any>} a map that includes a list of attributes.
    */
   recordBreadcrumb(eventName, attributes) {
+    attributes = attributes instanceof Map ? Object.fromEntries(attributes):attributes;
     this.NRMAModularAgentWrapper.execute('recordBreadcrumb', eventName, attributes);
   }
 
@@ -192,9 +228,10 @@ class NewRelic {
    * The event includes a list of attributes, specified as a map.
    * @param eventType {string} The type of event.
    * @param eventName {string} Use this parameter to name the event.
-   * @param attributes {Map<string, string|number>} A map that includes a list of attributes.
+   * @param attributes {Map<string, any>} A map that includes a list of attributes.
    */
   recordCustomEvent(eventType, eventName, attributes) {
+    attributes = attributes instanceof Map ? Object.fromEntries(attributes):attributes;
     this.NRMAModularAgentWrapper.execute('recordCustomEvent', eventType, eventName, attributes);
   }
 
@@ -240,7 +277,7 @@ class NewRelic {
    * @param httpMethod {string} The HTTP method used, such as GET or POST.
    * @param startTime {number} The start time of the request in milliseconds since the epoch.
    * @param endTime {number} The end time of the request in milliseconds since the epoch.
-   * @param failure {string} Name of the network failure. Possible values are 'Unknown', 'BadURL', 'TimedOut', 'CannotConnectToHost', 'DNSLookupFailed', 'BadServerResponse', 'SecureConnectionFailed'.
+   * @param failure {string} Name of the network failure. Possible values are in NewRelic.NetworkFailure.
    */
   noticeNetworkFailure(url, httpMethod, startTime, endTime, failure) {
     this.NRMAModularAgentWrapper.execute('noticeNetworkFailure', url, httpMethod, startTime, endTime, failure);
@@ -251,8 +288,8 @@ class NewRelic {
    * @param name {string} The name for the custom metric.
    * @param category {string} The metric category name. 
    * @param value {number} Optional. The value of the metric. Value should be a non-zero positive number. 
-   * @param countUnit {string} Optional (but requires value and valueUnit to be set). Unit of measurement for the metric count. Supported values are 'PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', or 'OPERATIONS'.
-   * @param valueUnit {string} Optional (but requires value and countUnit to be set). Unit of measurement for the metric value. Supported values are 'PERCENT', 'BYTES', 'SECONDS', 'BYTES_PER_SECOND', or 'OPERATIONS'. 
+   * @param countUnit {string} Optional (but requires value and valueUnit to be set). Unit of measurement for the metric count. Supported values are in NewRelic.MetricUnit.
+   * @param valueUnit {string} Optional (but requires value and countUnit to be set). Unit of measurement for the metric value. Supported values are in NewRelic.MetricUnit. 
    */
   recordMetric(name, category, value=-1, countUnit=null, valueUnit=null) {
     this.NRMAModularAgentWrapper.execute('recordMetric', name, category, value, countUnit, valueUnit);
@@ -453,13 +490,16 @@ class NewRelic {
 
     if (!this.state.didAddPromiseRejection) {
       setUnhandledPromiseRejectionTracker((id, error) => {
-
-        this.NRMAModularAgentWrapper.execute('recordStack',
-          error.name,
-          error.message,
-          error.stack,
-          false,
-          this.JSAppVersion);
+        if(error != undefined) {
+          this.NRMAModularAgentWrapper.execute('recordStack',
+            error.name,
+            error.message,
+            error.stack,
+            false,
+            this.JSAppVersion);
+        } else {
+          this.recordBreadcrumb("Possible Unhandled Promise Rejection", {id: id})
+        }
 
         if (prevTracker !== undefined) {
           prevTracker(id, error)
@@ -496,11 +536,8 @@ class NewRelic {
   }
 
   sendConsole(type, args) {
-    const argsStr = JSON.stringify(args);
+    const argsStr = JSON.stringify(JSON.decycle(args));
     this.send('JSConsole', { consoleType: type, args: argsStr });
-    // if (type === 'error') {
-    //   this.NRMAModularAgentWrapper.execute('consoleEvents','[JSConsole:Error] ' + argsStr); 
-    // }
   }
 
   send(name, args) {

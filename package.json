@@ -1,9 +1,13 @@
 {
   "name": "newrelic-react-native-agent",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "A New Relic Mobile Agent for React Native",
-  "main": "index.js",
+  "main": "./index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rimraf ./dist",
+    "prepack": "npm run build",
     "prepare:ios": "node ./scripts/prepare-ios.js",
     "build:pack-ios-bridge": "./modular-build/utils/pack-ios-bridge.sh",
     "use:npmReadme": "mv 'README.md' 'git.README.md' && mv 'npm.README.md' 'README.md'",
@@ -54,7 +58,7 @@
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
     "@types/jest": "^24.9.1",
-    "@types/node": "^17.0.8",
+    "@types/node": "^18.11.18",
     "ansi-regex": ">=5.0.1",
     "aws-sdk": "^2.1048.0",
     "babel-eslint": "^8.2.6",
@@ -76,6 +80,7 @@
     "node-notifier": ">=8.0.1",
     "react-native": "^0.70.6",
     "shelljs": "^0.8.4",
+    "typescript": "^4.9.4",
     "unzipper": "^0.10.11"
   },
   "config": {

@@ -38,7 +38,6 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
                   config:(NSDictionary* _Nullable)agentConfig
                   startWithResolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject){
-    NSLog(@"NRMA calling start agent for RN bridge is deprecated. The agent automatically starts on creation.");
     
     if([[agentConfig objectForKey:@"crashReportingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_CrashReporting];
@@ -55,7 +54,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     if([[agentConfig objectForKey:@"httpResponseBodyCaptureEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
     }
-    if([[agentConfig objectForKey:@"webViewInstrumentationEnabled"]boolValue] == NO) {
+    if([[agentConfig objectForKey:@"webViewInstrumentation"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_WebViewInstrumentation];
     }
     
@@ -63,9 +62,50 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic disableFeatures:NRFeatureFlag_InteractionTracing];
     }
     
+    //Default is NRLogLevelWarning
+    NRLogLevels logLevel = NRLogLevelWarning;
+    NSDictionary *logDict = @{
+        @"ERROR": [NSNumber numberWithInt:NRLogLevelError],
+        @"WARNING": [NSNumber numberWithInt:NRLogLevelWarning],
+        @"INFO": [NSNumber numberWithInt:NRLogLevelInfo],
+        @"VERBOSE": [NSNumber numberWithInt:NRLogLevelVerbose],
+        @"AUDIT": [NSNumber numberWithInt:NRLogLevelAudit],
+    };
+
+    
+    if ([[agentConfig objectForKey:@"logLevel"] length] != 0) {
+        NSString* configLogLevel = [agentConfig objectForKey:@"logLevel"];
+        if(configLogLevel != nil) {
+            configLogLevel = [configLogLevel uppercaseString];
+            NSNumber* newLogLevel = [logDict valueForKey:configLogLevel];
+            if(newLogLevel != nil) {
+                logLevel = [newLogLevel intValue];
+            }
+        }
+    }
+    
+    if([[agentConfig objectForKey:@"loggingEnabled"]boolValue] == NO) {
+        logLevel = NRLogLevelNone;
+    }
+    
+    [NRLogger setLogLevels:logLevel];
+    
+    BOOL useDefaultCollectorAddress = [[agentConfig objectForKey:@"collectorAddress"] length] == 0;
+    BOOL useDefaultCrashCollectorAddress = [[agentConfig objectForKey:@"crashCollectorAddress"] length] == 0;
+    
     [NewRelic setPlatform:(NRMAApplicationPlatform)NRMAPlatform_ReactNative];
     [NewRelic setPlatformVersion:agentVersion];
-    [NewRelic startWithApplicationToken: appKey];
+    
+    if (useDefaultCollectorAddress && useDefaultCrashCollectorAddress) {
+        [NewRelic startWithApplicationToken: appKey];
+    } else {
+        NSString* collectorAddress = useDefaultCollectorAddress ? @"mobile-collector.newrelic.com" : [agentConfig objectForKey:@"collectorAddress"];
+        NSString* crashCollectorAddress = useDefaultCrashCollectorAddress ? @"mobile-crash.newrelic.com" : [agentConfig objectForKey:@"crashCollectorAddress"];
+        
+        [NewRelic startWithApplicationToken:appKey
+                        andCollectorAddress:collectorAddress
+                   andCrashCollectorAddress:crashCollectorAddress];
+    }
 
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
     

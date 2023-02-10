@@ -17,6 +17,7 @@ import com.facebook.react.bridge.Callback;
 import com.newrelic.agent.android.FeatureFlag;
 import com.newrelic.agent.android.NewRelic;
 import com.newrelic.agent.android.ApplicationFramework;
+import com.newrelic.agent.android.logging.AgentLog;
 import com.newrelic.agent.android.stats.StatsEngine;
 import com.newrelic.agent.android.metric.MetricUnit;
 import com.newrelic.agent.android.util.NetworkFailure;
@@ -82,11 +83,49 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.InteractionTracing);
             }
 
+            Map<String, Integer> strToLogLevel = new HashMap<>();
+            strToLogLevel.put("ERROR", AgentLog.ERROR);
+            strToLogLevel.put("WARNING", AgentLog.WARNING);
+            strToLogLevel.put("INFO", AgentLog.INFO);
+            strToLogLevel.put("VERBOSE", AgentLog.VERBOSE);
+            strToLogLevel.put("AUDIT", AgentLog.AUDIT);
 
-            NewRelic.withApplicationToken(appKey)
-                    .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
-                    .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
-                    .start(reactContext);
+            // INFO is default log level
+            int logLevel = AgentLog.INFO;
+            if (agentConfig.get("logLevel") != null) {
+                String configLogLevel = (String) agentConfig.get("logLevel");
+                if(configLogLevel != null) {
+                    configLogLevel = configLogLevel.toUpperCase();
+                    if(strToLogLevel.containsKey(configLogLevel)) {
+                        logLevel = strToLogLevel.get(configLogLevel);
+                    }
+                }
+            }
+
+            boolean useDefaultCollectorAddress =
+                    agentConfig.get("collectorAddress") == null ||
+                    ((String) agentConfig.get("collectorAddress")).isEmpty();
+            boolean useDefaultCrashCollectorAddress =
+                    agentConfig.get("crashCollectorAddress") == null ||
+                    ((String) agentConfig.get("crashCollectorAddress")).isEmpty();
+
+            if(useDefaultCollectorAddress && useDefaultCrashCollectorAddress) {
+                NewRelic.withApplicationToken(appKey)
+                        .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
+                        .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
+                        .withLogLevel(logLevel)
+                        .start(reactContext);
+            } else {
+                String collectorAddress = useDefaultCollectorAddress ? "mobile-collector.newrelic.com" : (String) agentConfig.get("collectorAddress");
+                String crashCollectorAddress = useDefaultCrashCollectorAddress ? "mobile-crash.newrelic.com" : (String) agentConfig.get("crashCollectorAddress");
+                NewRelic.withApplicationToken(appKey)
+                        .withApplicationFramework(ApplicationFramework.ReactNative, agentVersion)
+                        .withLoggingEnabled((Boolean) agentConfig.get("loggingEnabled"))
+                        .withLogLevel(logLevel)
+                        .usingCollectorAddress(collectorAddress)
+                        .usingCrashCollectorAddress(crashCollectorAddress)
+                        .start(reactContext);
+            }
 
             NewRelic.setAttribute("React Native Version", reactNativeVersion);
             StatsEngine.get().inc("Supportability/Mobile/Android/ReactNative/Agent/" + agentVersion);
