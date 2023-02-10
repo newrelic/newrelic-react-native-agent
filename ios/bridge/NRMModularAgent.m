@@ -54,7 +54,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     if([[agentConfig objectForKey:@"httpResponseBodyCaptureEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
     }
-    if([[agentConfig objectForKey:@"webViewInstrumentationEnabled"]boolValue] == NO) {
+    if([[agentConfig objectForKey:@"webViewInstrumentation"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_WebViewInstrumentation];
     }
     
