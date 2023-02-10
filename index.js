@@ -41,6 +41,7 @@ class NewRelic {
       networkErrorRequestEnabled: true,
       httpResponseBodyCaptureEnabled: true,
       loggingEnabled: true,
+      logLevel: "INFO",
       webViewInstrumentation: true,
       collectorAddress: "",
       crashCollectorAddress: "",

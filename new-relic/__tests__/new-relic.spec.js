@@ -78,6 +78,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.loggingEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.logLevel).toBe("INFO");
     expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(true);
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("");
@@ -92,6 +93,7 @@ describe('New Relic', () => {
       networkErrorRequestEnabled: false,
       httpResponseBodyCaptureEnabled: false,
       loggingEnabled: false,
+      logLevel: "AUDIT",
       webViewInstrumentation: false,
       collectorAddress: "gov-mobile-collector.newrelic.com",
       crashCollectorAddress: "gov-mobile-crash.newrelic.com"
@@ -106,6 +108,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.loggingEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.logLevel).toBe("AUDIT");
     expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(false);
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("gov-mobile-collector.newrelic.com");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("gov-mobile-crash.newrelic.com");

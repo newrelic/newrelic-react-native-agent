@@ -80,18 +80,21 @@ import {Platform} from 'react-native';
     // Optional:Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
     httpResponseBodyCaptureEnabled: true,
 
-   //Android Specific
-   // Optional: Enable or disable agent logging.
+    // Optional:Enable or disable agent logging.
     loggingEnabled: true,
 
-    //iOS Specific
+    // Optional:Specifies the log level. Omit this field for the default log level.
+    // Options include: ERROR (least verbose), WARNING, INFO, VERBOSE, AUDIT (most verbose).
+    logLevel: "INFO",
+
+    // iOS Specific
     // Optional:Enable/Disable automatic instrumentation of WebViews
     webViewInstrumentation: true,
 
-    // Optional: Set a specific collector address for sending data. Omit this field for default address.
+    // Optional:Set a specific collector address for sending data. Omit this field for default address.
     collectorAddress: "",
 
-    // Optional: Set a specific crash collector address for sending crashes. Omit this field for default address.
+    // Optional:Set a specific crash collector address for sending crashes. Omit this field for default address.
     crashCollectorAddress: ""
   };
 
