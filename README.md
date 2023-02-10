@@ -80,18 +80,21 @@ import {Platform} from 'react-native';
     // Optional:Enable or disable capture of HTTP response bodies for HTTP error traces, and MobileRequestError events.
     httpResponseBodyCaptureEnabled: true,
 
-   //Android Specific
-   // Optional: Enable or disable agent logging.
+    // Optional:Enable or disable agent logging.
     loggingEnabled: true,
 
-    //iOS Specific
+    // Optional:Specifies the log level. Omit this field for the default log level.
+    // Options include: ERROR (least verbose), WARNING, INFO, VERBOSE, AUDIT (most verbose).
+    logLevel: NewRelic.LogLevel.INFO,
+
+    // iOS Specific
     // Optional:Enable/Disable automatic instrumentation of WebViews
     webViewInstrumentation: true,
 
-    // Optional: Set a specific collector address for sending data. Omit this field for default address.
+    // Optional:Set a specific collector address for sending data. Omit this field for default address.
     collectorAddress: "",
 
-    // Optional: Set a specific crash collector address for sending crashes. Omit this field for default address.
+    // Optional:Set a specific crash collector address for sending crashes. Omit this field for default address.
     crashCollectorAddress: ""
   };
 
@@ -325,17 +328,17 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 ```
 
 ### (DEPRECATED) [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
-> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks. Supported failures are: `Unknown`, `BadURL`, `TimedOut`, `CannotConnectToHost`, `DNSLookupFailed`, `BadServerResponse`, `SecureConnectionFailed`.
+> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
 ```js
-    NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), 'BadURL');
+    NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), NewRelic.NetworkFailure.BadURL);
 ```
 
 ### [recordMetric](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/recordmetric-android-sdk-api)(name: string, category: string, value?: number, countUnit?: string, valueUnit?: string): void;
-> Records custom metrics (arbitrary numerical data), where countUnit is the measurement unit of the metric count and valueUnit is the measurement unit for the metric value. If using countUnit or valueUnit, then all of value, countUnit, and valueUnit must all be set. Supported measurements for countUnit and valueUnit are: `PERCENT`, `BYTES`, `SECONDS`, `BYTES_PER_SECOND`, `OPERATIONS`
+> Records custom metrics (arbitrary numerical data), where countUnit is the measurement unit of the metric count and valueUnit is the measurement unit for the metric value. If using countUnit or valueUnit, then all of value, countUnit, and valueUnit must all be set.
 ```js
     NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory');
     NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 12);
-    NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 13, 'PERCENT', 'SECONDS');
+    NewRelic.recordMetric('RNCustomMetricName', 'RNCustomMetricCategory', 13, NewRelic.MetricUnit.PERCENT, NewRelic.MetricUnit.SECONDS);
 ```
 
 ### [removeAllAttributes](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/remove-all-attributes)(): void;

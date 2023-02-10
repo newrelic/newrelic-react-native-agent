@@ -78,6 +78,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.loggingEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.logLevel).toBe(NewRelic.LogLevel.INFO);
     expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(true);
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("");
@@ -92,6 +93,7 @@ describe('New Relic', () => {
       networkErrorRequestEnabled: false,
       httpResponseBodyCaptureEnabled: false,
       loggingEnabled: false,
+      logLevel: "AUDIT",
       webViewInstrumentation: false,
       collectorAddress: "gov-mobile-collector.newrelic.com",
       crashCollectorAddress: "gov-mobile-crash.newrelic.com"
@@ -106,6 +108,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.loggingEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.logLevel).toBe("AUDIT");
     expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(false);
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("gov-mobile-collector.newrelic.com");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("gov-mobile-crash.newrelic.com");
@@ -196,12 +199,12 @@ describe('New Relic', () => {
   });
 
   it('should notice network failure with correct params', () => {
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'Unknown');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'BadURL');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'CannotConnectToHost');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'DNSLookupFailed');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'BadServerResponse');
-    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), 'SecureConnectionFailed');
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.Unknown);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.BadURL);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.CannotConnectToHost);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.DNSLookupFailed);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.BadServerResponse);
+    NewRelic.noticeNetworkFailure("https://newrelic.com", "POST", Date.now(), Date.now(), NewRelic.NetworkFailure.SecureConnectionFailed);
     expect(MockNRM.noticeNetworkFailure.mock.calls.length).toBe(6);
   });
 
@@ -213,18 +216,18 @@ describe('New Relic', () => {
 
   it('should record metric with correct params', () => {
     NewRelic.recordMetric('fakeName', 'fakeCategory');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 13);
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 21, 'PERCENT', 'SECONDS');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 13)
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 21, NewRelic.MetricUnit.PERCENT, NewRelic.MetricUnit.SECONDS);
     expect(MockNRM.recordMetric.mock.calls.length).toBe(3);
   });
 
   it('should not record metric with bad params', () => {
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 2, 'SECONDS');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', -1, 'SECONDS', 'PERCENT');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 10, null, 'BYTES_PER_SECOND');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'MINUTES', 'SECONDS');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'PERCENT', 'HOURS');
-    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, 'DAYS', 'HOURS');
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 2, NewRelic.MetricUnit.SECONDS);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', -1, NewRelic.MetricUnit.SECONDS, NewRelic.MetricUnit.PERCENT);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 10, null, NewRelic.MetricUnit.BYTES_PER_SECOND);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, NewRelic.MetricUnit.MINUTES, NewRelic.MetricUnit.SECONDS);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, NewRelic.MetricUnit.PERCENT, NewRelic.MetricUnit.HOURS);
+    NewRelic.recordMetric('fakeName', 'fakeCategory', 3, "DAYS", "HOURS");
     expect(MockNRM.recordMetric.mock.calls.length).toBe(0);
   });
 

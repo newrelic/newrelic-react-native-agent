@@ -54,13 +54,41 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     if([[agentConfig objectForKey:@"httpResponseBodyCaptureEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
     }
-    if([[agentConfig objectForKey:@"webViewInstrumentationEnabled"]boolValue] == NO) {
+    if([[agentConfig objectForKey:@"webViewInstrumentation"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_WebViewInstrumentation];
     }
     
     if([[agentConfig objectForKey:@"interactionTracingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_InteractionTracing];
     }
+    
+    //Default is NRLogLevelWarning
+    NRLogLevels logLevel = NRLogLevelWarning;
+    NSDictionary *logDict = @{
+        @"ERROR": [NSNumber numberWithInt:NRLogLevelError],
+        @"WARNING": [NSNumber numberWithInt:NRLogLevelWarning],
+        @"INFO": [NSNumber numberWithInt:NRLogLevelInfo],
+        @"VERBOSE": [NSNumber numberWithInt:NRLogLevelVerbose],
+        @"AUDIT": [NSNumber numberWithInt:NRLogLevelAudit],
+    };
+
+    
+    if ([[agentConfig objectForKey:@"logLevel"] length] != 0) {
+        NSString* configLogLevel = [agentConfig objectForKey:@"logLevel"];
+        if(configLogLevel != nil) {
+            configLogLevel = [configLogLevel uppercaseString];
+            NSNumber* newLogLevel = [logDict valueForKey:configLogLevel];
+            if(newLogLevel != nil) {
+                logLevel = [newLogLevel intValue];
+            }
+        }
+    }
+    
+    if([[agentConfig objectForKey:@"loggingEnabled"]boolValue] == NO) {
+        logLevel = NRLogLevelNone;
+    }
+    
+    [NRLogger setLogLevels:logLevel];
     
     BOOL useDefaultCollectorAddress = [[agentConfig objectForKey:@"collectorAddress"] length] == 0;
     BOOL useDefaultCrashCollectorAddress = [[agentConfig objectForKey:@"crashCollectorAddress"] length] == 0;
