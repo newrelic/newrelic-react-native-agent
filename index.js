@@ -9,7 +9,7 @@ import { Platform } from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
 import forEach from 'lodash.foreach';
-import decycle from './new-relic/cycle';
+import getCircularReplacer from './new-relic/circular-replacer';
 
 import {
   getUnhandledPromiseRejectionTracker,
@@ -536,7 +536,7 @@ class NewRelic {
   }
 
   sendConsole(type, args) {
-    const argsStr = JSON.stringify(JSON.decycle(args));
+    const argsStr = JSON.stringify(args, getCircularReplacer());
     this.send('JSConsole', { consoleType: type, args: argsStr });
   }
 
