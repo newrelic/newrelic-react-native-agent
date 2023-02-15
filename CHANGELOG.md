@@ -1,5 +1,10 @@
 # Changelog
 
+1.0.1
+
+# Fixed in this release
+* Cyclical structures are now removed when sent to the console, preventing large circular structures from causing an out-of-memory issue on Android.
+
 1.0.0
 
 # New in this release
