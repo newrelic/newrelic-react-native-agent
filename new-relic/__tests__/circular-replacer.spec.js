@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0 
  */
 
-import decycle from '../cycle';
+import getCircularReplacer from '../circular-replacer';
 
-describe('JSON stringify decycle', () => {
-
-  it('should decycle circular structures for stringify', () => {
+describe('Circular replacer', () => {
+  it('should remove circular structures when stringified', () => {
     function CircularCreator() {
       this.abc = "Hello";
       this.circular = this;
@@ -20,34 +19,36 @@ describe('JSON stringify decycle', () => {
     
     const circular = new CircularCreator();
     expect(function() { JSON.stringify(circular) }).toThrowError(TypeError);
-    expect(function() { JSON.stringify(JSON.decycle(circular)) }).not.toThrowError();
+    expect(function() { JSON.stringify(circular, getCircularReplacer) }).not.toThrowError();
 
-    let jsonStr = JSON.stringify(JSON.decycle(circular));
+    let jsonStr = JSON.stringify(circular, getCircularReplacer());
 
-    expect(jsonStr).toContain("ref");
     expect(jsonStr).toContain("\"abc\":\"Hello\"");
+    expect(jsonStr).not.toContain("circular");
+    expect(jsonStr).not.toContain("circular2");
     expect(jsonStr).toContain("\"test\":\"world\"");
     expect(jsonStr).toContain("\"num\":123");
     expect(jsonStr).toContain("\"bool\":false");
     expect(jsonStr).toContain("\"xyz\":\"Hello\"");
   });
 
-  it('should work for non-cyclical objects', () => {
+  it('should not affect regular objects when stringified', () => {
     let obj = {
       abc: 123,
       def: false,
-      ghi: 'testing crockford decycle'
+      ghi: 'testing circular replacer'
     }
 
     expect(function() { JSON.stringify(obj) }).not.toThrowError();
-    expect(function() {JSON.stringify(JSON.decycle(obj))} ).not.toThrowError();
-    expect(JSON.stringify(JSON.decycle(obj))).toContain("\"abc\":123");
-    expect(JSON.stringify(JSON.decycle(obj))).toContain("\"def\":false");
-    expect(JSON.stringify(JSON.decycle(obj))).toContain("\"ghi\":\"testing crockford decycle\"");
+    expect(function() {JSON.stringify(obj, getCircularReplacer()) }).not.toThrowError();
 
+    let jsonStr = JSON.stringify(obj, getCircularReplacer());
+    expect(jsonStr).toContain("\"abc\":123");
+    expect(jsonStr).toContain("\"def\":false");
+    expect(jsonStr).toContain("\"ghi\":\"testing circular replacer\"");
   });
 
-  it('should work for arrays', () => {
+  it('should work for circular arrays', () => {
     let arr = [];
     let prev = null;
     for(var i = 0; i < 10; ++i) {
@@ -56,10 +57,12 @@ describe('JSON stringify decycle', () => {
       }
     }
     arr[0].prev = arr[9];
+    
+    let jsonStr = JSON.stringify(arr, getCircularReplacer());
 
     expect(function() { JSON.stringify(arr) }).toThrowError();
-    expect(function() { JSON.stringify(JSON.decycle(arr))}).not.toThrowError();
-    expect(JSON.stringify(JSON.decycle(arr))).toContain("ref");
+    expect(function() { JSON.stringify(arr, getCircularReplacer()) }).not.toThrowError();
+    expect(jsonStr).toContain("\"prev\":{");
   });
 
 });
