@@ -124,12 +124,15 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
   ```
 
 3. Update `app/build.gradle`:
-  ```groovy
-    plugins {
-      id 'newrelic'
-    }
-  
-  ```
+```groovy
+plugins {
+  id 'newrelic'
+}  
+```
+For legacy plugin application:
+```groovy
+apply plugin: 'newrelic'
+```
 
 4. Make sure your app requests INTERNET and ACCESS_NETWORK_STATE permissions by adding these lines to your `AndroidManifest.xml`
   ```
