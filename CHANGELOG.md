@@ -1,5 +1,14 @@
 # Changelog
 
+1.1.0
+
+# New in this release
+* Upgrade native Android agent to v6.10.0
+* Upgrade native iOS agent to v7.4.3
+
+# Fixed in this release
+* Fixed an issue that caused conflicts with network monitoring in FlipperKit.
+
 1.0.1
 
 # Fixed in this release
