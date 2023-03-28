@@ -49,7 +49,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@expo/config-plugins": "^5.0.4",
+    "@expo/config-plugins": "^6.0.1",
     "lodash.foreach": "^4.5.0",
     "react-native-promise-rejection-utils": "0.0.1"
   },
