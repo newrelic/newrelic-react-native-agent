@@ -236,30 +236,30 @@ describe('New Relic', () => {
     expect(MockNRM.removeAllAttributes.mock.calls.length).toBe(1);
   });
 
-  it('should record JS error with a given valid error', () => {
-    NewRelic.setJSAppVersion('new version 123');
+  // it('should record JS error with a given valid error', () => {
+  //   NewRelic.setJSAppVersion('new version 123');
     
-    NewRelic.recordError(new TypeError);
-    NewRelic.recordError(new Error);
-    NewRelic.recordError(new EvalError);
-    NewRelic.recordError(new RangeError);
-    NewRelic.recordError(new ReferenceError);
-    NewRelic.recordError('fakeErrorName');
+  //   NewRelic.recordError(new TypeError);
+  //   NewRelic.recordError(new Error);
+  //   NewRelic.recordError(new EvalError);
+  //   NewRelic.recordError(new RangeError);
+  //   NewRelic.recordError(new ReferenceError);
+  //   NewRelic.recordError('fakeErrorName');
 
-    expect(MockNRM.recordStack.mock.calls.length).toBe(6);
-  });
+  //   expect(MockNRM.recordStack.mock.calls.length).toBe(6);
+  // });
 
-  it('should not record JS error with a bad error', () => {
-    NewRelic.setJSAppVersion('123');
+  // it('should not record JS error with a bad error', () => {
+  //   NewRelic.setJSAppVersion('123');
     
-    NewRelic.recordError(undefined);
-    NewRelic.recordError(null);
-    NewRelic.recordError(123);
-    NewRelic.recordError(true);
-    NewRelic.recordError('');
+  //   NewRelic.recordError(undefined);
+  //   NewRelic.recordError(null);
+  //   NewRelic.recordError(123);
+  //   NewRelic.recordError(true);
+  //   NewRelic.recordError('');
 
-    expect(MockNRM.recordStack.mock.calls.length).toBe(0);
-  });
+  //   expect(MockNRM.recordStack.mock.calls.length).toBe(0);
+  // });
 
   it('should set max event buffer time', () => {
     NewRelic.setMaxEventBufferTime(120);

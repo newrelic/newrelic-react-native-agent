@@ -353,5 +353,38 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
     [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];
 }
 
+RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nullable)exceptionDictionary) {
+    if (exceptionDictionary == nil) {
+        NSLog(@"[NRMA] Null dictionary given to recordHandledException");
+        return;
+    }
+    NSMutableDictionary* attributes = [NSMutableDictionary new];
+    attributes[@"name"] = exceptionDictionary[@"name"];
+    attributes[@"reason"] = exceptionDictionary[@"message"];
+    attributes[@"fatal"] = exceptionDictionary[@"isFatal"];
+    attributes[@"cause"] = exceptionDictionary[@"message"];
+    attributes[@"JSAppVersion"] = exceptionDictionary[@"JSAppVersion"];
+    
+    NSMutableDictionary* stackFramesDict = exceptionDictionary[@"stackFrames"];
+    if(stackFramesDict == nil) {
+        NSLog(@"[NRMA] No stack frames given to recordHandledException");
+        return;
+    }
+    NSMutableArray* stackFramesArr = [NSMutableArray new];
+    for (int i = 0; i < [stackFramesDict count]; ++i) {
+        NSMutableDictionary* currStackFrame = stackFramesDict[@(i).stringValue];
+        NSMutableDictionary* stackTraceElement = [NSMutableDictionary new];
+        stackTraceElement[@"file"] = currStackFrame[@"fileName"] ? currStackFrame[@"fileName"] : @"";
+        stackTraceElement[@"line"] = currStackFrame[@"lineNumber"] ? currStackFrame[@"lineNumber"] : 0;
+        stackTraceElement[@"method"] = currStackFrame[@"functionName"] ? currStackFrame[@"functionName"] : @"";
+        stackTraceElement[@"class"] = @"";
+        [stackFramesArr addObject:stackTraceElement];
+    }
+    
+    attributes[@"stackTraceElements"] = stackFramesArr;
+    [NewRelic recordHandledExceptionWithStackTrace:attributes];
+    
+}
+
 @end
 

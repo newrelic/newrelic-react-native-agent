@@ -7,6 +7,7 @@ import { NativeModules } from 'react-native';
 import utils from './nr-utils';
 import { LOG } from './nr-logger';
 import { Attribute, BreadCrumb, NewRelicEvent } from './models';
+import { ErrorStackParser } from 'error-stack-parser';
 
 const { NRMModularAgent } = NativeModules;
 
@@ -223,6 +224,18 @@ class NRMAModularAgentWrapper {
     if(NRMAModularAgentWrapper.isAgentStarted) {
      NRMModularAgent.setInteractionName(name);
     }
+  }
+
+  recordHandledException = (error, JSAppVersion) => {
+    let stackFramesArr = ErrorStackParser.parse(error);
+    let exceptionDictionary = {
+      name: error.name,
+      message: error.message,
+      stackFrames: Object.assign({}, stackFramesArr),
+      isFatal: false,
+      JSAppVersion: JSAppVersion
+    }
+    NRMModularAgent.recordHandledException(exceptionDictionary);
   }
 
 }

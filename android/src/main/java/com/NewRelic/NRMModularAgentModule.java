@@ -23,7 +23,9 @@ import com.newrelic.agent.android.metric.MetricUnit;
 import com.newrelic.agent.android.util.NetworkFailure;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NRMModularAgentModule extends ReactContextBaseJavaModule {
@@ -391,6 +393,42 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
         } catch (IllegalArgumentException e) {
             Log.w("NRMA", e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void recordHandledException(ReadableMap exceptionDictionary) {
+        if(exceptionDictionary == null) {
+            Log.w("NRMA", "Null dictionary given to recordHandledException");
+        }
+        Map<String, Object> exceptionMap = exceptionDictionary.toHashMap();
+        if(!exceptionMap.containsKey("stackFrames")) {
+            Log.w("NRMA", "No stack frames in recordHandledException");
+            return;
+        }
+        Map<String, Object> stackFramesMap = (Map<String, Object>) exceptionMap.get("stackFrames");
+        NewRelicReactNativeException exception = new NewRelicReactNativeException(
+                (String) exceptionMap.get("message"),
+                generateStackTraceElements(stackFramesMap));
+        exceptionMap.remove("stackFrames");
+        NewRelic.recordHandledException(exception, exceptionMap);
+    }
+
+    private StackTraceElement[] generateStackTraceElements(Map<String, Object> stackFrameMap) {
+        try {
+            List<StackTraceElement> stackTraceList = new ArrayList<>();
+            for(int i = 0; i < stackFrameMap.size(); ++i) {
+                Map<String, Object> element = (Map<String, Object>) stackFrameMap.get(Integer.toString(i));
+                String functionName = (String) element.getOrDefault("functionName", "");
+                String fileName = (String) element.getOrDefault("fileName", "");
+                int lineNumber = element.get("lineNumber") != null ? ((Double) element.get("lineNumber")).intValue() : 0;
+                StackTraceElement stackTraceElement = new StackTraceElement("N/A", functionName, fileName, lineNumber);
+                stackTraceList.add(stackTraceElement);
+            }
+            return stackTraceList.toArray(new StackTraceElement[0]);
+        } catch(Exception e) {
+            NewRelic.recordHandledException(e);
+            return null;
         }
     }
 }

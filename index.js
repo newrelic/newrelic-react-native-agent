@@ -323,13 +323,15 @@ class NewRelic {
       }
 
       if(error !== undefined) {
-        this.NRMAModularAgentWrapper.execute(
-          "recordStack",
-          error.name,
-          error.message,
-          error.stack,
-          false,
-          this.JSAppVersion)
+        // this.NRMAModularAgentWrapper.execute(
+        //   "recordStack",
+        //   error.name,
+        //   error.message,
+        //   error.stack,
+        //   false,
+        //   this.JSAppVersion)
+
+        this.NRMAModularAgentWrapper.execute("recordHandledException", error, this.JSAppVersion)
       } else {
         this.LOG.warn('undefined error name or message');
       }
