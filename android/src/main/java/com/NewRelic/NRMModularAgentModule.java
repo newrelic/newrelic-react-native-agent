@@ -401,7 +401,12 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
         if(exceptionDictionary == null) {
             Log.w("NRMA", "Null dictionary given to recordHandledException");
         }
+
         Map<String, Object> exceptionMap = exceptionDictionary.toHashMap();
+        // Remove these attributes to avoid conflict with existing attributes
+        exceptionMap.remove("app");
+        exceptionMap.remove("platform");
+
         if(!exceptionMap.containsKey("stackFrames")) {
             Log.w("NRMA", "No stack frames in recordHandledException");
             return;
@@ -421,8 +426,8 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 Map<String, Object> element = (Map<String, Object>) stackFrameMap.get(Integer.toString(i));
                 String functionName = (String) element.getOrDefault("functionName", "");
                 String fileName = (String) element.getOrDefault("fileName", "");
-                int lineNumber = element.get("lineNumber") != null ? ((Double) element.get("lineNumber")).intValue() : 0;
-                StackTraceElement stackTraceElement = new StackTraceElement("N/A", functionName, fileName, lineNumber);
+                int lineNumber = element.get("lineNumber") != null ? ((Double) element.get("lineNumber")).intValue() : 1;
+                StackTraceElement stackTraceElement = new StackTraceElement(" ", functionName, fileName, lineNumber);
                 stackTraceList.add(stackTraceElement);
             }
             return stackTraceList.toArray(new StackTraceElement[0]);

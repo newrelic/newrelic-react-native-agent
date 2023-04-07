@@ -35,6 +35,7 @@ export default  {
   onNavigationStateChange:jest.fn(),
   componentDidAppearListener:jest.fn(),
   onStateChange:jest.fn(),
+  recordHandledException:jest.fn(),
 
   isAgentStarted: (name, callback) => {
     callback(true);

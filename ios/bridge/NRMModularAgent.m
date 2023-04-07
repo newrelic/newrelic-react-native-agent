@@ -364,6 +364,10 @@ RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nullable)exceptionDicti
     attributes[@"fatal"] = exceptionDictionary[@"isFatal"];
     attributes[@"cause"] = exceptionDictionary[@"message"];
     attributes[@"JSAppVersion"] = exceptionDictionary[@"JSAppVersion"];
+    attributes[@"minify"] = exceptionDictionary[@"minify"];
+    attributes[@"dev"] = exceptionDictionary[@"dev"];
+    attributes[@"runModule"] = exceptionDictionary[@"runModule"];
+    attributes[@"modulesOnly"] = exceptionDictionary[@"modulesOnly"];
     
     NSMutableDictionary* stackFramesDict = exceptionDictionary[@"stackFrames"];
     if(stackFramesDict == nil) {
@@ -374,10 +378,10 @@ RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nullable)exceptionDicti
     for (int i = 0; i < [stackFramesDict count]; ++i) {
         NSMutableDictionary* currStackFrame = stackFramesDict[@(i).stringValue];
         NSMutableDictionary* stackTraceElement = [NSMutableDictionary new];
-        stackTraceElement[@"file"] = currStackFrame[@"fileName"] ? currStackFrame[@"fileName"] : @"";
+        stackTraceElement[@"file"] = currStackFrame[@"fileName"] ? currStackFrame[@"fileName"] : @" ";
         stackTraceElement[@"line"] = currStackFrame[@"lineNumber"] ? currStackFrame[@"lineNumber"] : 0;
-        stackTraceElement[@"method"] = currStackFrame[@"functionName"] ? currStackFrame[@"functionName"] : @"";
-        stackTraceElement[@"class"] = @"";
+        stackTraceElement[@"method"] = currStackFrame[@"functionName"] ? currStackFrame[@"functionName"] : @" ";
+        stackTraceElement[@"class"] = @" ";
         [stackFramesArr addObject:stackTraceElement];
     }
     
