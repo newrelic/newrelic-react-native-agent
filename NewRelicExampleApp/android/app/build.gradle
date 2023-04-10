@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "newrelic"
+apply plugin: "com.facebook.react"
 
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -257,7 +258,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation 'com.newrelic.agent.android:android-agent:6.9.0'
+    implementation 'com.newrelic.agent.android:android-agent:6.10.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
