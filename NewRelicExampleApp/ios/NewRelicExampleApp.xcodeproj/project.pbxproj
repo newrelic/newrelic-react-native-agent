@@ -46,6 +46,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-NewRelicExampleApp-NewRelicExampleAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewRelicExampleApp-NewRelicExampleAppTests.release.xcconfig"; path = "Target Support Files/Pods-NewRelicExampleApp-NewRelicExampleAppTests/Pods-NewRelicExampleApp-NewRelicExampleAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F47F077C291EC04600A84FF3 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
+		F4E2C43E29E48A3400A7C0A0 /* hermes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = hermes.xcframework; path = "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F4E2C43E29E48A3400A7C0A0 /* hermes.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-NewRelicExampleApp.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-NewRelicExampleApp-NewRelicExampleAppTests.a */,
