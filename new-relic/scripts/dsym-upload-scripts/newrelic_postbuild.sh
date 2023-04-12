@@ -12,16 +12,14 @@
 # 1. In Xcode, select your project in the navigator, then click on the application target.
 # 2. Select the Build Phases tab in the settings editor.
 # 3. Click the + icon above Target Dependencies and choose New Run Script Build Phase.
-# 4. Add the following two lines of code to the new phase,
+# 4. Add the following lines of code to the new phase,
 #     removing the '#' at the start of each line and pasting in the
 #     application token from your New Relic dashboard for the app in question.
 #
-#SCRIPT=`/usr/bin/find "${SRCROOT}" -name newrelic_postbuild.sh | head -n 1`
-#/bin/sh "${SCRIPT}" "PUT_NEW_RELIC_APP_TOKEN_HERE"
+# ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
 #
-# Optional:
-# DSYM_UPLOAD_URL - define this environment variable to override the New Relic server hostname
-# let ENABLE_SIMULATOR_DSYM_UPLOAD=1 # Uncomment to allow dSYM upload when building to simulator
+# SCRIPT=`/usr/bin/find "${SRCROOT}" "${ARTIFACT_DIR}" -type f -name run-symbol-tool | head -n 1`
+# /bin/sh "${SCRIPT}" "APP_TOKEN"
 
 
 echo "New Relic: Starting dSYM upload script"
