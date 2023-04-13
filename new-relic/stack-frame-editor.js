@@ -18,13 +18,12 @@ export default class StackFrameEditor {
     for(const stackFrame of stackFramesArr) {
       // This should only be done once since it will be the same for other filenames in the stack trace
       if(!hasReadProperties) {
-        if(RegExp(this.fileNameRegex, 'g').test(stackFrame.fileName)) {
+        if(RegExp(this.fileNameRegex, 'g').test(stackFrame.file)) {
           hasReadProperties = true;
-          properties = this.readPropertiesFromFileName(stackFrame.fileName);
+          properties = this.readPropertiesFromFileName(stackFrame.file);
         }
-        this.readPropertiesFromFileName(stackFrame.fileName);
       }
-      stackFrame.fileName = stackFrame.fileName.replace(this.fileNameRegex, '');
+      stackFrame.file = stackFrame.file.replace(this.fileNameRegex, '');
     }
     return properties;
   }

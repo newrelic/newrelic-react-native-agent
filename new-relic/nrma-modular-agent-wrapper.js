@@ -7,7 +7,6 @@ import { NativeModules } from 'react-native';
 import utils from './nr-utils';
 import { LOG } from './nr-logger';
 import { Attribute, BreadCrumb, NewRelicEvent } from './models';
-import ErrorStackParser  from 'error-stack-parser';
 import StackFrameEditor from './stack-frame-editor';
 
 const { NRMModularAgent } = NativeModules;
@@ -227,17 +226,25 @@ class NRMAModularAgentWrapper {
     }
   }
 
-  recordHandledException = (error, JSAppVersion) => {
-    let stackFramesArr = ErrorStackParser.parse(error);
-    let fileNameProperties = StackFrameEditor.parseFileNames(stackFramesArr);
+  recordHandledException = async (error, JSAppVersion) => {
+    const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack');
+    const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace');
+    
+    let parsedStack = parseErrorStack(error.stack);
+    // const symbolicatedStack = await symbolicateStackTrace(parsedStack);
+    const symbolicatedStack = undefined;
+    console.log("here");
+    let stack = (symbolicatedStack === undefined) ? parsedStack.stack : symbolicatedStack.stack;
+    let fileNameProperties = StackFrameEditor.parseFileNames(stack);
     let exceptionDictionary = {
       name: error.name,
       message: error.message,
-      stackFrames: Object.assign({}, stackFramesArr),
+      stackFrames: Object.assign({}, stack),
       isFatal: false,
       JSAppVersion: JSAppVersion,
       ...fileNameProperties
     }
+    console.log("2");
     NRMModularAgent.recordHandledException(exceptionDictionary);
   }
 

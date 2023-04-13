@@ -23,11 +23,12 @@
     "build:plugin": "rimraf plugin/build && tsc --build plugin"
   },
   "jest": {
+    "preset": "react-native",
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!react-native-promise-rejection-utils)"
+      "node_modules/(?!(@?react-native|react-native-promise-rejection-utils)/)"
     ],
     "moduleFileExtensions": [
       "ts",
@@ -50,7 +51,6 @@
   },
   "dependencies": {
     "@expo/config-plugins": "^6.0.1",
-    "error-stack-parser": "^2.1.4",
     "lodash.foreach": "^4.5.0",
     "react-native-promise-rejection-utils": "0.0.1"
   },

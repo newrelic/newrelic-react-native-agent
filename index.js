@@ -306,7 +306,7 @@ class NewRelic {
   /**
    * Records javascript errors for react-native.
    */
-  recordError(e) {
+  async recordError(e) {
     if(e) {
       if(!this.JSAppVersion) {
         this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
