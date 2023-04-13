@@ -226,25 +226,37 @@ class NRMAModularAgentWrapper {
     }
   }
 
-  recordHandledException = async (error, JSAppVersion) => {
+  recordHandledException = async (error, JSAppVersion, isFatal) => {
     const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack');
     const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace');
     
-    let parsedStack = parseErrorStack(error.stack);
-    // const symbolicatedStack = await symbolicateStackTrace(parsedStack);
-    const symbolicatedStack = undefined;
-    console.log("here");
-    let stack = (symbolicatedStack === undefined) ? parsedStack.stack : symbolicatedStack.stack;
+    let parsedStack;
+    try {
+      parsedStack = parseErrorStack(error.stack);
+    } catch {
+      // React Native <=0.63 takes an error instead of a string
+      parsedStack = parseErrorStack(error);
+    }
+
+    let stack;
+
+    try {
+      let symbolicatedStack = await symbolicateStackTrace(parsedStack);
+      stack = symbolicatedStack.stack;
+    } catch (e) {
+      // Unable to symbolicate stack in release mode
+      stack = parsedStack;
+    }
+
     let fileNameProperties = StackFrameEditor.parseFileNames(stack);
     let exceptionDictionary = {
       name: error.name,
       message: error.message,
       stackFrames: Object.assign({}, stack),
-      isFatal: false,
+      isFatal: isFatal,
       JSAppVersion: JSAppVersion,
       ...fileNameProperties
     }
-    console.log("2");
     NRMModularAgent.recordHandledException(exceptionDictionary);
   }
 

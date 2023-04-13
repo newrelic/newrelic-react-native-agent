@@ -305,8 +305,12 @@ class NewRelic {
 
   /**
    * Records javascript errors for react-native.
+   * @param e {Error} A JavaScript error.
    */
   async recordError(e) {
+    await this.recordError(e, false);
+  }
+  async recordError(e, isFatal) {
     if(e) {
       if(!this.JSAppVersion) {
         this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
@@ -323,15 +327,7 @@ class NewRelic {
       }
 
       if(error !== undefined) {
-        // this.NRMAModularAgentWrapper.execute(
-        //   "recordStack",
-        //   error.name,
-        //   error.message,
-        //   error.stack,
-        //   false,
-        //   this.JSAppVersion)
-
-        this.NRMAModularAgentWrapper.execute("recordHandledException", error, this.JSAppVersion)
+        this.NRMAModularAgentWrapper.execute("recordHandledException", error, this.JSAppVersion, isFatal)
       } else {
         this.LOG.warn('undefined error name or message');
       }
@@ -467,16 +463,11 @@ class NewRelic {
   addNewRelicErrorHandler() {
     if (global && global.ErrorUtils && !this.state.didAddErrorHandler) {
       const previousHandler = global.ErrorUtils.getGlobalHandler();
-      global.ErrorUtils.setGlobalHandler((error, isFatal) => {
+      global.ErrorUtils.setGlobalHandler(async (error, isFatal) => {
         if (!this.JSAppVersion) {
           this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
         }
-        this.NRMAModularAgentWrapper.execute('recordStack',
-          error.name,
-          error.message,
-          error.stack,
-          isFatal,
-          this.JSAppVersion);
+        await this.recordError(error, isFatal);
         previousHandler(error, isFatal);
       });
       // prevent us from adding the error handler multiple times.
@@ -491,14 +482,9 @@ class NewRelic {
     const prevTracker = getUnhandledPromiseRejectionTracker();
 
     if (!this.state.didAddPromiseRejection) {
-      setUnhandledPromiseRejectionTracker((id, error) => {
+      setUnhandledPromiseRejectionTracker(async (id, error) => {
         if(error != undefined) {
-          this.NRMAModularAgentWrapper.execute('recordStack',
-            error.name,
-            error.message,
-            error.stack,
-            false,
-            this.JSAppVersion);
+          await this.recordError(error);
         } else {
           this.recordBreadcrumb("Possible Unhandled Promise Rejection", {id: id})
         }

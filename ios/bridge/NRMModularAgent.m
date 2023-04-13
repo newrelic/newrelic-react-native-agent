@@ -378,9 +378,9 @@ RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nullable)exceptionDicti
     for (int i = 0; i < [stackFramesDict count]; ++i) {
         NSMutableDictionary* currStackFrame = stackFramesDict[@(i).stringValue];
         NSMutableDictionary* stackTraceElement = [NSMutableDictionary new];
-        stackTraceElement[@"file"] = currStackFrame[@"file"] ? currStackFrame[@"file"] : @" ";
-        stackTraceElement[@"line"] = currStackFrame[@"lineNumber"] ? currStackFrame[@"lineNumber"] : 0;
-        stackTraceElement[@"method"] = currStackFrame[@"methodName"] ? currStackFrame[@"methodName"] : @" ";
+        stackTraceElement[@"file"] = (currStackFrame[@"file"] && currStackFrame[@"file"] != [NSNull null]) ? currStackFrame[@"file"] : @" ";
+        stackTraceElement[@"line"] = (currStackFrame[@"lineNumber"] && currStackFrame[@"lineNumber"] != [NSNull null]) ? currStackFrame[@"lineNumber"] : 0;
+        stackTraceElement[@"method"] = (currStackFrame[@"methodName"] && currStackFrame[@"methodName"] != [NSNull null]) ? currStackFrame[@"methodName"] : @" ";
         stackTraceElement[@"class"] = @" ";
         [stackFramesArr addObject:stackTraceElement];
     }
