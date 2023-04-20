@@ -353,6 +353,10 @@ RCT_EXPORT_METHOD(recordStack:(NSString* _Nullable) errorName
     [NewRelic recordCustomEvent:@"JS Errors" attributes:dict];
 }
 
+RCT_EXPORT_METHOD(shutdown) {
+    [NewRelic shutdown];
+}
+
 RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nullable)exceptionDictionary) {
     if (exceptionDictionary == nil) {
         NSLog(@"[NRMA] Null dictionary given to recordHandledException");

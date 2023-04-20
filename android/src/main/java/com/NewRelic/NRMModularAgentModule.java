@@ -397,6 +397,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void shutdown() {
+        NewRelic.shutdown();
+    }
+
+    @ReactMethod
     public void recordHandledException(ReadableMap exceptionDictionary) {
         if(exceptionDictionary == null) {
             Log.w("NRMA", "Null dictionary given to recordHandledException");

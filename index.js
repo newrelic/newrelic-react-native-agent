@@ -452,6 +452,12 @@ class NewRelic {
     }
   }
 
+  /**
+   * Shut down the agent within the current application lifecycle during runtime.
+   */
+  shutdown() {
+    this.NRMAModularAgentWrapper.execute('shutdown');
+  }
 
   /**
    * @private
