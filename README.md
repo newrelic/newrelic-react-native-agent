@@ -402,6 +402,16 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
+### React Native Agent v1.2.0 and above:
+JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for every JavaScript error recorded. 
+
+You can also build a dashboard for these errors using this query:
+
+```sql
+SELECT * FROM MobileHandledException SINCE 24 hours ago
+```
+
+### React Native Agent v1.1.0 and below: 
 There is no section for JavaScript errors, but you can see JavaScript errors in custom events and also query them in NRQL explorer.
 
 <img width="1753" alt="Screen Shot 2022-02-10 at 12 41 11 PM" src="https://user-images.githubusercontent.com/89222514/153474861-87213e70-c3fb-4e14-aee7-a6a3fb482f73.png">
@@ -414,7 +424,7 @@ You can also build dashboard for errors using this query:
 
  ## Symbolicating a stack trace
 
-Currently there is no symbolication of Javascript errors. Please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
 
 ### Symbolication for Javascript errors are coming in future releases.
 
