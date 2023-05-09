@@ -43,11 +43,11 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic disableFeatures:NRFeatureFlag_CrashReporting];
     }
     
-     if ([[agentConfig objectForKey:@"networkRequestEnabled"]boolValue] == NO){
+    if ([[agentConfig objectForKey:@"networkRequestEnabled"]boolValue] == NO){
         [NewRelic disableFeatures:NRFeatureFlag_NetworkRequestEvents];
     }
 
-     if ([[agentConfig objectForKey:@"networkErrorRequestEnabled"]boolValue] == NO){
+    if ([[agentConfig objectForKey:@"networkErrorRequestEnabled"]boolValue] == NO){
         [NewRelic disableFeatures:NRFeatureFlag_RequestErrorEvents];
     }
     
