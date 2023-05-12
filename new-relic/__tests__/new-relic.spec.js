@@ -436,4 +436,11 @@ describe('New Relic', () => {
     expect(MockNRM.recordBreadcrumb.mock.calls.length).toBe(1);
   });
 
+  it('should shutdown when called', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.shutdown();
+    expect(MockNRM.shutdown.mock.calls.length).toBe(1);
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(false);
+  });
+
 });

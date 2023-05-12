@@ -36,6 +36,7 @@ export default  {
   componentDidAppearListener:jest.fn(),
   onStateChange:jest.fn(),
   recordHandledException:jest.fn(),
+  shutdown:jest.fn(),
 
   isAgentStarted: (name, callback) => {
     callback(true);
