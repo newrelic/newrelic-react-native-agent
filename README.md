@@ -92,10 +92,10 @@ import {Platform} from 'react-native';
     webViewInstrumentation: true,
 
     // Optional:Set a specific collector address for sending data. Omit this field for default address.
-    collectorAddress: "",
+    //collectorAddress: "",
 
     // Optional:Set a specific crash collector address for sending crashes. Omit this field for default address.
-    crashCollectorAddress: ""
+    //crashCollectorAddress: ""
   };
 
 
@@ -118,7 +118,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.11.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.11.1"
       }
     }
   ```
