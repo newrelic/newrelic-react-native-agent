@@ -23,7 +23,9 @@ import com.newrelic.agent.android.metric.MetricUnit;
 import com.newrelic.agent.android.util.NetworkFailure;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NRMModularAgentModule extends ReactContextBaseJavaModule {
@@ -85,7 +87,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
-            strToLogLevel.put("WARNING", AgentLog.WARNING);
+            strToLogLevel.put("WARNING", AgentLog.WARN);
             strToLogLevel.put("INFO", AgentLog.INFO);
             strToLogLevel.put("VERBOSE", AgentLog.VERBOSE);
             strToLogLevel.put("AUDIT", AgentLog.AUDIT);
@@ -391,6 +393,52 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
         } catch (IllegalArgumentException e) {
             Log.w("NRMA", e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void shutdown() {
+        NewRelic.shutdown();
+    }
+
+    @ReactMethod
+    public void recordHandledException(ReadableMap exceptionDictionary) {
+        if(exceptionDictionary == null) {
+            Log.w("NRMA", "Null dictionary given to recordHandledException");
+        }
+
+        Map<String, Object> exceptionMap = exceptionDictionary.toHashMap();
+        // Remove these attributes to avoid conflict with existing attributes
+        exceptionMap.remove("app");
+        exceptionMap.remove("platform");
+
+        if(!exceptionMap.containsKey("stackFrames")) {
+            Log.w("NRMA", "No stack frames in recordHandledException");
+            return;
+        }
+        Map<String, Object> stackFramesMap = (Map<String, Object>) exceptionMap.get("stackFrames");
+        NewRelicReactNativeException exception = new NewRelicReactNativeException(
+                (String) exceptionMap.get("message"),
+                generateStackTraceElements(stackFramesMap));
+        exceptionMap.remove("stackFrames");
+        NewRelic.recordHandledException(exception, exceptionMap);
+    }
+
+    private StackTraceElement[] generateStackTraceElements(Map<String, Object> stackFrameMap) {
+        try {
+            List<StackTraceElement> stackTraceList = new ArrayList<>();
+            for(int i = 0; i < stackFrameMap.size(); ++i) {
+                Map<String, Object> element = (Map<String, Object>) stackFrameMap.get(Integer.toString(i));
+                String methodName = (String) element.getOrDefault("methodName", "");
+                String fileName = (String) element.getOrDefault("file", "");
+                int lineNumber = element.get("lineNumber") != null ? ((Double) element.get("lineNumber")).intValue() : 1;
+                StackTraceElement stackTraceElement = new StackTraceElement(" ", methodName, fileName, lineNumber);
+                stackTraceList.add(stackTraceElement);
+            }
+            return stackTraceList.toArray(new StackTraceElement[0]);
+        } catch(Exception e) {
+            NewRelic.recordHandledException(e);
+            return null;
         }
     }
 }

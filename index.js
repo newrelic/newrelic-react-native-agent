@@ -182,7 +182,6 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling analytics events.
    */
   analyticsEventEnabled(enabled) {
-    this.agentConfiguration.analyticsEventEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('analyticsEventEnabled', enabled);
   }
   
@@ -191,7 +190,6 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling successful HTTP requests.
    */
   networkRequestEnabled(enabled) {
-    this.agentConfiguration.networkRequestEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('networkRequestEnabled', enabled);
   }
 
@@ -200,7 +198,6 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling network request errors.
    */
   networkErrorRequestEnabled(enabled) {
-    this.agentConfiguration.networkErrorRequestEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('networkErrorRequestEnabled', enabled);
   }
 
@@ -209,7 +206,6 @@ class NewRelic {
    * @param enabled {boolean} Boolean value for enabling HTTP response bodies.
    */
   httpResponseBodyCaptureEnabled(enabled) {
-    this.agentConfiguration.httpResponseBodyCaptureEnabled = enabled;
     this.NRMAModularAgentWrapper.execute('httpResponseBodyCaptureEnabled', enabled);
   }
   
@@ -269,7 +265,6 @@ class NewRelic {
   }
 
   /**
-   * @deprecated since newrelic-react-native-agent v0.0.9. Use noticeHttpTransaction instead.
    * Records network failures.
    * If a network request fails, use this method to record details about the failure.
    * In most cases, place this call inside exception handlers.
@@ -305,8 +300,12 @@ class NewRelic {
 
   /**
    * Records javascript errors for react-native.
+   * @param e {Error} A JavaScript error.
    */
-  recordError(e) {
+  async recordError(e) {
+    await this.recordError(e, false);
+  }
+  async recordError(e, isFatal) {
     if(e) {
       if(!this.JSAppVersion) {
         this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
@@ -323,13 +322,7 @@ class NewRelic {
       }
 
       if(error !== undefined) {
-        this.NRMAModularAgentWrapper.execute(
-          "recordStack",
-          error.name,
-          error.message,
-          error.stack,
-          false,
-          this.JSAppVersion)
+        this.NRMAModularAgentWrapper.execute("recordHandledException", error, this.JSAppVersion, isFatal)
       } else {
         this.LOG.warn('undefined error name or message');
       }
@@ -458,6 +451,12 @@ class NewRelic {
     }
   }
 
+  /**
+   * Shut down the agent within the current application lifecycle during runtime.
+   */
+  shutdown() {
+    this.NRMAModularAgentWrapper.execute('shutdown');
+  }
 
   /**
    * @private
@@ -465,16 +464,11 @@ class NewRelic {
   addNewRelicErrorHandler() {
     if (global && global.ErrorUtils && !this.state.didAddErrorHandler) {
       const previousHandler = global.ErrorUtils.getGlobalHandler();
-      global.ErrorUtils.setGlobalHandler((error, isFatal) => {
+      global.ErrorUtils.setGlobalHandler(async (error, isFatal) => {
         if (!this.JSAppVersion) {
           this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
         }
-        this.NRMAModularAgentWrapper.execute('recordStack',
-          error.name,
-          error.message,
-          error.stack,
-          isFatal,
-          this.JSAppVersion);
+        await this.recordError(error, isFatal);
         previousHandler(error, isFatal);
       });
       // prevent us from adding the error handler multiple times.
@@ -489,14 +483,9 @@ class NewRelic {
     const prevTracker = getUnhandledPromiseRejectionTracker();
 
     if (!this.state.didAddPromiseRejection) {
-      setUnhandledPromiseRejectionTracker((id, error) => {
+      setUnhandledPromiseRejectionTracker(async (id, error) => {
         if(error != undefined) {
-          this.NRMAModularAgentWrapper.execute('recordStack',
-            error.name,
-            error.message,
-            error.stack,
-            false,
-            this.JSAppVersion);
+          await this.recordError(error);
         } else {
           this.recordBreadcrumb("Possible Unhandled Promise Rejection", {id: id})
         }

@@ -7,6 +7,7 @@ import { NativeModules } from 'react-native';
 import utils from './nr-utils';
 import { LOG } from './nr-logger';
 import { Attribute, BreadCrumb, NewRelicEvent } from './models';
+import StackFrameEditor from './stack-frame-editor';
 
 const { NRMModularAgent } = NativeModules;
 
@@ -223,6 +224,47 @@ class NRMAModularAgentWrapper {
     if(NRMAModularAgentWrapper.isAgentStarted) {
      NRMModularAgent.setInteractionName(name);
     }
+  }
+
+  shutdown = () => {
+    if(NRMAModularAgentWrapper.isAgentStarted) {
+      NRMModularAgent.shutdown();
+      NRMAModularAgentWrapper.isAgentStarted = false;
+    }
+  }
+
+  recordHandledException = async (error, JSAppVersion, isFatal) => {
+    const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack');
+    const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace');
+    
+    let parsedStack;
+    try {
+      parsedStack = parseErrorStack(error.stack);
+    } catch {
+      // React Native <=0.63 takes an error instead of a string
+      parsedStack = parseErrorStack(error);
+    }
+
+    let stack;
+
+    try {
+      let symbolicatedStack = await symbolicateStackTrace(parsedStack);
+      stack = symbolicatedStack.stack;
+    } catch (e) {
+      // Unable to symbolicate stack in release mode
+      stack = parsedStack;
+    }
+
+    let fileNameProperties = StackFrameEditor.parseFileNames(stack);
+    let exceptionDictionary = {
+      name: error.name,
+      message: error.message,
+      stackFrames: Object.assign({}, stack),
+      isFatal: isFatal,
+      JSAppVersion: JSAppVersion,
+      ...fileNameProperties
+    }
+    NRMModularAgent.recordHandledException(exceptionDictionary);
   }
 
 }

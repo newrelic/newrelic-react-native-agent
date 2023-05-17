@@ -28,6 +28,6 @@ jest.mock('./index.js', () => ({
   incrementAttribute: jest.fn(),
   setJSAppVersion: jest.fn(),
   setUserId: jest.fn(),
-  recordError: jest.fn(),
-  sendConsole: jest.fn()
+  sendConsole: jest.fn(),
+  shutdown: jest.fn(),
 }));

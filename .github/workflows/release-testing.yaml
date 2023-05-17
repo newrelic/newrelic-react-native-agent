@@ -11,11 +11,12 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
-      name:
+      confirmation:
         # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
+        description: 'Are you sure you want to release?'
+        type: boolean
         # Default value if no value is explicitly provided
-        default: 'World'
+        default: false
         # Input has to be provided for the workflow to run
         required: true
 
@@ -37,7 +38,7 @@ jobs:
       - name: Checkout the release branch for testing
         uses: actions/checkout@v2
         with:
-          ref:  release_1.1.0
+          ref:  main
           # token: ${{ secrets.API_CLI_TOKEN }}
           # path: newrelic-actions  # This might have to exist within ".github"
 

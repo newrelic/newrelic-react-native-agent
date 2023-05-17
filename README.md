@@ -92,10 +92,10 @@ import {Platform} from 'react-native';
     webViewInstrumentation: true,
 
     // Optional:Set a specific collector address for sending data. Omit this field for default address.
-    collectorAddress: "",
+    //collectorAddress: "",
 
     // Optional:Set a specific crash collector address for sending crashes. Omit this field for default address.
-    crashCollectorAddress: ""
+    //crashCollectorAddress: ""
   };
 
 
@@ -118,7 +118,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.10.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.11.1"
       }
     }
   ```
@@ -330,8 +330,8 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.noticeHttpTransaction('https://github.com', 'GET', 200, Date.now(), Date.now()+1000, 100, 101, "response body");
 ```
 
-### (DEPRECATED) [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
-> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
+### [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
+> Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
 ```js
     NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), NewRelic.NetworkFailure.BadURL);
 ```
@@ -400,8 +400,24 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.httpResponseBodyCaptureEnabled(true);
 ```
 
+### [shutdown](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/shut-down/)() : void;
+> Shut down the agent within the current application lifecycle during runtime.
+```js
+    NewRelic.shutdown();
+```
+
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
+### React Native Agent v1.2.0 and above:
+JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for each JavaScript error recorded. 
+
+You can also build a dashboard for these errors using this query:
+
+```sql
+SELECT * FROM MobileHandledException SINCE 24 hours ago
+```
+
+### React Native Agent v1.1.0 and below: 
 There is no section for JavaScript errors, but you can see JavaScript errors in custom events and also query them in NRQL explorer.
 
 <img width="1753" alt="Screen Shot 2022-02-10 at 12 41 11 PM" src="https://user-images.githubusercontent.com/89222514/153474861-87213e70-c3fb-4e14-aee7-a6a3fb482f73.png">
@@ -414,7 +430,7 @@ You can also build dashboard for errors using this query:
 
  ## Symbolicating a stack trace
 
-Currently there is no symbolication of Javascript errors. Please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
 
 ### Symbolication for Javascript errors are coming in future releases.
 
@@ -433,6 +449,51 @@ Currently there is no symbolication of Javascript errors. Please follow the step
 * name is a keyword used for displaying your events in the New Relic UI.
 
 * To create a useful name, you might combine several attributes.
+```
+
+## Uploading dSYM files
+
+Our iOS agent includes a Swift script intended to be run from a build script in your target's build phases in XCode. The script automatically uploads dSYM files in the background (or converts your dSYM to the New Relic map file format), and then performs a background upload of the files needed for crash symbolication to New Relic.
+
+To invoke this script during an XCode build:
+1. In Xcode, select your project in the navigator, then click on the application target.
+1. Select the Build Phases tab in the settings editor.
+1. Click the + icon above Target Dependencies and choose New Run Script Build Phase. Ensure the new build script is the very last build script.
+1. Add the following lines of code to the new phase and replace `APP_TOKEN` with your iOS application token.
+    1. If there is a checkbox below Run script that says "Run script: Based on Dependency analysis" please make sure it is not checked.
+
+### React Native agent 0.0.8 or higher
+```
+ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
+
+SCRIPT=`/usr/bin/find "${SRCROOT}" "${ARTIFACT_DIR}" -type f -name run-symbol-tool | head -n 1`
+/bin/sh "${SCRIPT}" "APP_TOKEN"
+```
+### React Native agent 0.0.7 or lower
+```
+SCRIPT=`/usr/bin/find "${SRCROOT}" -name newrelic_postbuild.sh | head -n 1`
+
+if [ -z "${SCRIPT}"]; then
+ ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
+ SCRIPT=`/usr/bin/find "${ARTIFACT_DIR}" -name newrelic_postbuild.sh | head -n 1`
+fi
+
+/bin/sh "${SCRIPT}" "APP_TOKEN"
+```
+
+#### Note: The automatic script requires bitcode to be disabled. You should clean and rebuild your app after adding the script. 
+
+### Missing dSYMs
+The automatic script will create an `upload_dsym_results.log` file in your project's iOS directory, which contains information about any failures that occur during symbol upload.
+
+If dSYM files are missing, you may need to check Xcode build settings to ensure the file is being generated. Frameworks which are built locally have separate build settings and may need to be updated as well.
+
+Build settings:
+```
+Debug Information Format : Dwarf with dSYM File
+Deployment Postprocessing: Yes
+Strip Linked Product: Yes
+Strip Debug Symbols During Copy : Yes
 ```
 
 ## Testing
