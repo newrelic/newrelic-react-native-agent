@@ -400,10 +400,16 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.httpResponseBodyCaptureEnabled(true);
 ```
 
+### [shutdown](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/shut-down/)() : void;
+> Shut down the agent within the current application lifecycle during runtime.
+```js
+    NewRelic.shutdown();
+```
+
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
 ### React Native Agent v1.2.0 and above:
-JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for every JavaScript error recorded. 
+JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for each JavaScript error recorded. 
 
 You can also build a dashboard for these errors using this query:
 
