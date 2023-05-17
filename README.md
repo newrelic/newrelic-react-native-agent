@@ -330,8 +330,8 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.noticeHttpTransaction('https://github.com', 'GET', 200, Date.now(), Date.now()+1000, 100, 101, "response body");
 ```
 
-### (DEPRECATED) [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
-> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
+### [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
+> Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
 ```js
     NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), NewRelic.NetworkFailure.BadURL);
 ```
