@@ -45,6 +45,7 @@ class NewRelic {
       webViewInstrumentation: true,
       collectorAddress: "",
       crashCollectorAddress: "",
+      fedRampEnabled: false
     };
   }
 
@@ -265,7 +266,6 @@ class NewRelic {
   }
 
   /**
-   * @deprecated since newrelic-react-native-agent v0.0.9. Use noticeHttpTransaction instead.
    * Records network failures.
    * If a network request fails, use this method to record details about the failure.
    * In most cases, place this call inside exception handlers.

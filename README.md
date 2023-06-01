@@ -92,10 +92,13 @@ import {Platform} from 'react-native';
     webViewInstrumentation: true,
 
     // Optional:Set a specific collector address for sending data. Omit this field for default address.
-    collectorAddress: "",
+    //collectorAddress: "",
 
     // Optional:Set a specific crash collector address for sending crashes. Omit this field for default address.
-    crashCollectorAddress: ""
+    //crashCollectorAddress: "",
+
+    // Optional:Enable or disable reporting data using different endpoints for US government clients.
+    //fedRampEnabled: false
   };
 
 
@@ -118,7 +121,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.11.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.11.1"
       }
     }
   ```
@@ -330,8 +333,8 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.noticeHttpTransaction('https://github.com', 'GET', 200, Date.now(), Date.now()+1000, 100, 101, "response body");
 ```
 
-### (DEPRECATED) [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
-> (This method is now deprecated. Use noticeHttpTransaction instead.) Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
+### [noticeNetworkFailure](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/notice-network-failure)(url: string, httpMethod: string, startTime: number, endTime: number, failure: string): void; 
+> Records network failures. If a network request fails, use this method to record details about the failures. In most cases, place this call inside exception handlers, such as catch blocks.
 ```js
     NewRelic.noticeNetworkFailure('https://github.com', 'GET', Date.now(), Date.now(), NewRelic.NetworkFailure.BadURL);
 ```
@@ -400,10 +403,16 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.httpResponseBodyCaptureEnabled(true);
 ```
 
+### [shutdown](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/android-sdk-api/shut-down/)() : void;
+> Shut down the agent within the current application lifecycle during runtime.
+```js
+    NewRelic.shutdown();
+```
+
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
 ### React Native Agent v1.2.0 and above:
-JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for every JavaScript error recorded. 
+JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for each JavaScript error recorded. 
 
 You can also build a dashboard for these errors using this query:
 
