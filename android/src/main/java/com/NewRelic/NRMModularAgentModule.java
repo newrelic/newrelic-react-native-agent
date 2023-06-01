@@ -85,6 +85,12 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.InteractionTracing);
             }
 
+            if ((Boolean) agentConfig.get("fedRampEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.FedRampEnabled);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.FedRampEnabled);
+            }
+
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
             strToLogLevel.put("WARNING", AgentLog.WARN);

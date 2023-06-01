@@ -39,7 +39,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
                   startWithResolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject){
     
-    if([[agentConfig objectForKey:@"crashReportingEnabled"]boolValue] == NO) {
+    if ([[agentConfig objectForKey:@"crashReportingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_CrashReporting];
     }
     
@@ -51,16 +51,21 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic disableFeatures:NRFeatureFlag_RequestErrorEvents];
     }
     
-    if([[agentConfig objectForKey:@"httpResponseBodyCaptureEnabled"]boolValue] == NO) {
+    if ([[agentConfig objectForKey:@"httpResponseBodyCaptureEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_HttpResponseBodyCapture];
     }
-    if([[agentConfig objectForKey:@"webViewInstrumentation"]boolValue] == NO) {
+
+    if ([[agentConfig objectForKey:@"webViewInstrumentation"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_WebViewInstrumentation];
     }
     
-    if([[agentConfig objectForKey:@"interactionTracingEnabled"]boolValue] == NO) {
+    if ([[agentConfig objectForKey:@"interactionTracingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_InteractionTracing];
     }
+    
+    if ([[agentConfig objectForKey:@"fedRampEnabled"]boolValue] == YES) {
+        [NewRelic enableFeatures:NRFeatureFlag_FedRampEnabled];
+    } 
     
     //Default is NRLogLevelWarning
     NRLogLevels logLevel = NRLogLevelWarning;
@@ -84,7 +89,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         }
     }
     
-    if([[agentConfig objectForKey:@"loggingEnabled"]boolValue] == NO) {
+    if ([[agentConfig objectForKey:@"loggingEnabled"]boolValue] == NO) {
         logLevel = NRLogLevelNone;
     }
     
