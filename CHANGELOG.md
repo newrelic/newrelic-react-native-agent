@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1
+
+### New in this release
+* Upgrade native iOS agent to v7.4.5
+* Added FedRAMP configuration flag on agent start.
+
 ## 1.2.0
 
 ### New in this release
