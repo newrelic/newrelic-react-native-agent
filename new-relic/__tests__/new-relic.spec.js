@@ -82,6 +82,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(true);
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("");
+    expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(false);
   });
 
   it('should change default agent configuration when configuration is passed into the start call', () => {
@@ -96,7 +97,8 @@ describe('New Relic', () => {
       logLevel: "AUDIT",
       webViewInstrumentation: false,
       collectorAddress: "gov-mobile-collector.newrelic.com",
-      crashCollectorAddress: "gov-mobile-crash.newrelic.com"
+      crashCollectorAddress: "gov-mobile-crash.newrelic.com",
+      fedRampEnabled: true
     };
 
     NewRelic.startAgent("12345", customerConfiguration);
@@ -112,6 +114,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.webViewInstrumentation).toBe(false);
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("gov-mobile-collector.newrelic.com");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("gov-mobile-crash.newrelic.com");
+    expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(true);
   });
 
   it('should set the analytics event flag', () => {

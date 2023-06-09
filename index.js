@@ -45,6 +45,7 @@ class NewRelic {
       webViewInstrumentation: true,
       collectorAddress: "",
       crashCollectorAddress: "",
+      fedRampEnabled: false
     };
   }
 
