@@ -1,0 +1,266 @@
+{
+  "status": "ok",
+  "totalResults": 35,
+  "articles": [
+    {
+      "source": {
+        "id": "cnn",
+        "name": "CNN"
+      },
+      "author": "Sandee LaMotte",
+      "title": "Obesity changes the brain, with ‘no sign of reversibility,’ expert says - CNN",
+      "description": "The brains of people considered medically obese didn’t recognize signs of fullness or satisfaction after being fed certain nutrients, a new study found. Those brain changes persisted after weight loss.",
+      "url": "https://www.cnn.com/2023/06/12/health/obesity-changes-brain-wellness/index.html",
+      "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230612101729-02-obesity-changes-brain-wellness-stock.jpg?c=16x9&q=w_800,c_fill",
+      "publishedAt": "2023-06-12T16:25:00Z",
+      "content": "Obesity may damage the brains ability to recognize the sensation of fullness and be satisfied after eating fats and sugars, a new study found.\r\nFurther, those brain changes may last even after people… [+6398 chars]"
+    },
+    {
+      "source": {
+        "id": "financial-times",
+        "name": "Financial Times"
+      },
+      "author": "Anna Nicolaou",
+      "title": "Fox sends cease-and-desist letter to Tucker Carlson over Twitter show - Financial Times",
+      "description": "Conservative TV star was fired in April after company settled Dominion voting machine lawsuit",
+      "url": "https://www.ft.com/content/75fc4371-9ce9-4be4-bcd2-88238335818e",
+      "urlToImage": "https://www.ft.com/__origami/service/image/v2/images/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fce92ea23-42a0-4e8b-9ce8-b983543399bf.jpg?source=next-opengraph&fit=scale-down&width=900",
+      "publishedAt": "2023-06-12T15:32:08Z",
+      "content": "Fox has sent Tucker Carlson a cease and desist letter over videos he is posting to Twitter, according to his lawyer, in an escalation of tensions between the rightwing media star and his former emplo… [+1822 chars]"
+    },
+    {
+      "source": {
+        "id": "cbs-news",
+        "name": "CBS News"
+      },
+      "author": "Cara Korte",
+      "title": "Ozempic side effects could lead to hospitalization — and doctors warn that long-term impacts remain unknown - CBS News",
+      "description": "Shedding pounds isn't the only change patients might experience.",
+      "url": "https://www.cbsnews.com/news/ozempic-side-effects-weight-loss-drugs-wegovy-mounjaro-doctors-warn/",
+      "urlToImage": "https://assets3.cbsnewsstatic.com/hub/i/r/2023/05/03/d470addf-134d-41f4-b119-72d0c5d43e62/thumbnail/1200x630/189d27f6b9fcacac2665eecad0576530/ozempic.jpg",
+      "publishedAt": "2023-06-12T15:22:00Z",
+      "content": "Drugs like Ozempic, Mounjaro and Wegovy are extremely effective for weight loss. But shedding pounds isn't the only change patients might experience. \r\nTirzepatide — sold under the brand name Mounjar… [+5051 chars]"
+    },
+    {
+      "source": {
+        "id": "cnn",
+        "name": "CNN"
+      },
+      "author": "Marianne Garvey",
+      "title": "‘Kimberly Akimbo’ takes home Tony for best musical - CNN",
+      "description": "“Kimberly Akimbo” won the Tony Award for best musical Sunday night.",
+      "url": "https://www.cnn.com/2023/06/12/entertainment/kimberly-akimbo-tony-awards-for-best-musical/index.html",
+      "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230612160134-kimberly-akimbo-061123.jpg?c=16x9&q=w_800,c_fill",
+      "publishedAt": "2023-06-12T15:18:00Z",
+      "content": "Kimberly Akimbo won the Tony Award for best musical Sunday night.\r\nThe show is about a teenage girl coping with a genetic condition and dealing with her dysfunctional family. The musical won five awa… [+675 chars]"
+    },
+    {
+      "source": {
+        "id": "cnn",
+        "name": "CNN"
+      },
+      "author": "",
+      "title": "Giant rubber duck returns to Hong Kong - with a friend - CNN",
+      "description": "The giant bath toys were reunited after one half of the duo was briefly deinflated by organizers due to hot weather.",
+      "url": "https://www.cnn.com/videos/style/2023/06/12/giant-ducks-hong-kong-return-cprog-lon-orig-cw.cnn",
+      "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230609012339-01-hk-rubber-ducks-052523.jpg?c=16x9&q=w_800,c_fill",
+      "publishedAt": "2023-06-12T15:01:14Z",
+      "content": null
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "Variety"
+      },
+      "author": "Selome Hailu",
+      "title": "‘They Wanted Me to Drink Their Saliva’: Pedro Pascal and Steven Yeun on Zombies and Road Rage - Variety",
+      "description": "Adapted from the video game of the same name, HBO’s “The Last of Us” finds Pedro Pascal’s Joel in a post-apocalyptic landscape not unlike “The Walking Dead,” the zombie series that gave Steven Yeun…",
+      "url": "https://variety.com/2023/tv/features/pedro-pascal-steven-yeun-the-last-of-us-beef-road-rage-interview-1235632116/",
+      "urlToImage": "https://variety.com/wp-content/uploads/2023/06/Variety-Actors-on-Actors-Full-Pascal-Yeun.jpg?crop=0px%2C10px%2C960px%2C539px&resize=1000%2C563",
+      "publishedAt": "2023-06-12T15:00:27Z",
+      "content": "Adapted from the video game of the same name, HBO’s “The Last of Us” finds Pedro Pascal’s Joel in a post-apocalyptic landscape not unlike “The Walking Dead,” the zombie series that gave Steven Yeun h… [+10434 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "BBC News"
+      },
+      "author": "https://www.facebook.com/bbcnews",
+      "title": "Hunter Valley: Ten people killed in wedding bus crash in Australia - BBC",
+      "description": "The bus was returning from a wedding in the Hunter Valley, north of Sydney, when it overturned.",
+      "url": "https://www.bbc.com/news/world-australia-65874374",
+      "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/5736/production/_130062322_306d8fda49265ba127d96a162bedd15cb9387b9f.jpg",
+      "publishedAt": "2023-06-12T14:57:41Z",
+      "content": "At least 10 people have died and 15 others are in hospital after a wedding bus crashed in an Australian wine region north of Sydney, officials say.\r\nThe passengers were returning from a wedding at a … [+2691 chars]"
+    },
+    {
+      "source": {
+        "id": "cnn",
+        "name": "CNN"
+      },
+      "author": "Camila Bernal,Cheri Mossburg",
+      "title": "New details emerge about the alleged search history of the Utah mom charged with her husband's murder - CNN",
+      "description": "“What is a lethal dose of fentanyl” is one of many phone searches that investigators say were made by Kouri Richins, a Utah widow accused of killing her husband before she authored a children’s book about grief.",
+      "url": "https://www.cnn.com/2023/06/12/us/utah-mom-husband-killing-court-documents/index.html",
+      "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230509175813-02-richins-charged-death.jpg?c=16x9&q=w_800,c_fill",
+      "publishedAt": "2023-06-12T14:52:00Z",
+      "content": "What is a lethal dose of fentanyl is one of many phone searches that investigators say were made by Kouri Richins, a Utah widow accused of killing her husband before she authored a childrens book abo… [+5907 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "Sports Illustrated"
+      },
+      "author": "Albert Breer",
+      "title": "Robert Saleh Explains How Aaron Rodgers Has Already Raised the Bar for the Jets - Sports Illustrated",
+      "description": "The coach says OTAs couldn’t have gone any better, as he talks about his new quarterback’s deep ball, love language, leadership style and more.",
+      "url": "https://www.si.com/nfl/2023/06/12/robert-saleh-aaron-rodgers-jets-otas-raise-bar",
+      "urlToImage": "https://www.si.com/.image/ar_1.91%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cg_xy_center%2Cq_auto:good%2Cw_1200%2Cx_1237%2Cy_617/MTk4NjE0MzMzODQyNzkzOTIz/nfl-jets-training-camp-aaron-rodgers-robert-saleh.jpg",
+      "publishedAt": "2023-06-12T14:51:09Z",
+      "content": "The wow moments have been in ample supply in North Jersey. Jets coach Robert Saleh, in fact, got two more just last week.\r\nThe first one came Monday, at one of the team’s final OTA practices before b… [+16490 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "Rolling Stone"
+      },
+      "author": "Larisha Paul",
+      "title": "BTS 10th Anniversary Celebration Turn Seoul Bridges and Landmarks Purple - Rolling Stone",
+      "description": "The group will celebrate its tenth anniversary with a festival in the capital",
+      "url": "https://www.rollingstone.com/music/music-news/bts-anniversary-celebrations-turn-seoul-bridges-and-landmarks-purple-1234769089/",
+      "urlToImage": "https://www.rollingstone.com/wp-content/uploads/2023/06/BTS_FESTA-Enhanced.jpg?w=1600&h=900&crop=1",
+      "publishedAt": "2023-06-12T14:43:34Z",
+      "content": "BTS are Seoul’s pride and joy, and the capital is showing its appreciation as the group celebrates 10 years together. Coinciding with their special anniversary festival, which will be held on June 17… [+1727 chars]"
+    },
+    {
+      "source": {
+        "id": "associated-press",
+        "name": "Associated Press"
+      },
+      "author": "Matt O'brien",
+      "title": "Microsoft stakes Xbox video game sales on long-awaited space adventure Starfield - The Associated Press",
+      "description": "One small step for an intrepid crew of 24th century space explorers could be a giant leap — or flop — for Microsoft when the Xbox-maker launches its long-awaited video game Starfield. Players must fend off pirates, navigate strange moons, build outposts and f…",
+      "url": "https://apnews.com/article/xbox-starfield-gaming-consoles-nintendo-playstation-33e2de63fa94fb6e20c9585433c9fac5",
+      "urlToImage": "https://storage.googleapis.com/afs-prod/media/e90b29e8da9a4a0ab3de64d55ea99b13/3000.webp",
+      "publishedAt": "2023-06-12T14:21:56Z",
+      "content": "One small step for an intrepid crew of 24th century space explorers could be a giant leap or flop for Microsoft when the Xbox-maker launches its long-awaited video game Starfield.\r\nPlayers must fend … [+3130 chars]"
+    },
+    {
+      "source": {
+        "id": "the-washington-post",
+        "name": "The Washington Post"
+      },
+      "author": "Naomi Schanen",
+      "title": "Philippines evacuates thousands as Mayon volcano spews lava - The Washington Post",
+      "description": "Mount Mayon in the Philippines’ Albay province is spouting lava and sulfuric gas. Authorities told tens of thousands of people to prepare to evacuate.",
+      "url": "https://www.washingtonpost.com/world/2023/06/12/philippines-mount-mayon-volcano-evacuation/",
+      "urlToImage": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://d1i4t8bqe7zgj6.cloudfront.net/06-12-2023/t_520c63c6851b4cd48ed87485fdd5d3d4_name_VIXDDNN2EYRBE5F3POKNHUXEIM.jpg&w=1440",
+      "publishedAt": "2023-06-12T14:08:50Z",
+      "content": "Comment on this story\r\nComment\r\nThe most active volcano in the Philippines, Mount Mayon, is spewing lava and sulfuric gas, raising fears of an explosion and prompting thousands of residents to flee.\r… [+1441 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "NASA"
+      },
+      "author": null,
+      "title": "NASA's Webb Proves Galaxies Transformed the Early Universe - NASA",
+      "description": "In the early universe, the gas between stars and galaxies was opaque – energetic starlight could not penetrate it. But 1 billion years after the big bang, the gas had become completely transparent. Why? New data from NASA’s James Webb Space Telescope has pinp…",
+      "url": "https://www.nasa.gov/feature/goddard/2023/nasa-s-webb-proves-galaxies-transformed-the-early-universe",
+      "urlToImage": "http://www.nasa.gov/sites/default/files/thumbnails/image/stsci-01h1cv2fh3kw1w8a4zvq6mdhht.png",
+      "publishedAt": "2023-06-12T14:06:15Z",
+      "content": null
+    },
+    {
+      "source": {
+        "id": "usa-today",
+        "name": "USA Today"
+      },
+      "author": "Francisco Guzman",
+      "title": "Busch Light Peach: Busch Light releases peach flavored beer - USA TODAY",
+      "description": "Busch Light is releasing a limited-edition peach flavored beer in time for summer: Busch Light Peach.",
+      "url": "https://www.usatoday.com/story/money/food/2023/06/12/busch-light-peach/70312445007/",
+      "urlToImage": "https://www.usatoday.com/gcdn/presto/2023/06/12/USAT/c060dc59-1cfd-4f7e-b27b-4e9130c0fd9f-Peach_Case_and_Can_16x9.jpeg?crop=3660,2059,x0,y0&width=3200&height=1801&format=pjpg&auto=webp",
+      "publishedAt": "2023-06-12T14:03:12Z",
+      "content": "Busch Light is releasing a limited-edition alcoholic beverage in time for summer: Busch Light Peach. \r\nThe new peach lager, which has a 4.1% ABV, is the latest flavor released by the brand following … [+1185 chars]"
+    },
+    {
+      "source": {
+        "id": "cnn",
+        "name": "CNN"
+      },
+      "author": "Brian Fung",
+      "title": "Thousands of Reddit communities go dark to protest company’s controversial new policy - CNN",
+      "description": "Thousands of Reddit forums are going dark Monday in one of the largest user-driven protests ever to hit the social media platform.",
+      "url": "https://www.cnn.com/2023/06/12/tech/reddit-blackout/index.html",
+      "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230308164121-reddit-user-stock.jpg?c=16x9&q=w_800,c_fill",
+      "publishedAt": "2023-06-12T13:36:00Z",
+      "content": "Thousands of Reddit forumsare going darkMonday in one of the largest user-driven protests ever to hit the social media platform. \r\nThe voluntary blackouts, which restrict groups content from being pu… [+5594 chars]"
+    },
+    {
+      "source": {
+        "id": "reuters",
+        "name": "Reuters"
+      },
+      "author": null,
+      "title": "Silvio Berlusconi: former Italian prime minister has died at 86 - Reuters",
+      "description": "<a href=\"/world/europe/billionaire-berlusconi-brought-burlesque-italian-politics-2023-06-12/\">Silvio Berlusconi</a>, the billionaire media mogul and former Italian prime minister who transformed the nation's politics with polarising policies and often alarmed…",
+      "url": "https://www.reuters.com/world/europe/former-italian-pm-silvio-berlusconi-has-died-italian-media-2023-06-12/",
+      "urlToImage": "https://www.reuters.com/resizer/w8QJQOTdgBlPeODVDRZ_CkSY_jk=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/BXCNSTM6KNLNDKI22L35IBTN7Q.jpg",
+      "publishedAt": "2023-06-12T13:11:00Z",
+      "content": "MILAN, June 12 (Reuters) - Silvio Berlusconi, the billionaire media mogul and former Italian prime minister who transformed the nation's politics with polarising policies and often alarmed his allies… [+4763 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "YouTube"
+      },
+      "author": null,
+      "title": "Ukrainian counteroffensive against Russia underway - CBS Mornings",
+      "description": "Ukraine's counteroffensive against Russia is officially underway Monday. It includes new fighting near the eastern city of Bakhmut, which Russia took over in...",
+      "url": "https://www.youtube.com/watch?v=9ereJZ9T0fg",
+      "urlToImage": "https://i.ytimg.com/vi/9ereJZ9T0fg/maxresdefault.jpg",
+      "publishedAt": "2023-06-12T13:08:10Z",
+      "content": null
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "CNBC"
+      },
+      "author": "Kif Leswing",
+      "title": "The 15-inch MacBook Air offers superb battery life and portability at an aggressive price - CNBC",
+      "description": "It's probably the best laptop for most people if you like the MacOS operating system and plan to use it for everyday tasks.",
+      "url": "https://www.cnbc.com/2023/06/12/apple-macbook-air-15-inch-wins-on-battery-life-portability-price.html",
+      "urlToImage": "https://image.cnbcfm.com/api/v1/image/107254736-1686521510454-MacBookAir15-0508.jpeg?v=1686574801&w=1920&h=1080",
+      "publishedAt": "2023-06-12T13:00:01Z",
+      "content": "Apple announced a 15-inch MacBook Air last week. It hits store shelves on Tuesday and costs $1,299 for the base model or as much as $,2499 with upgraded RAM and storage.\r\nThe MacBook Air has come in … [+4872 chars]"
+    },
+    {
+      "source": {
+        "id": "usa-today",
+        "name": "USA Today"
+      },
+      "author": "Francisco Guzman",
+      "title": "Dead fish on Texas Gulf Coast: Why thousands of menhaden washed ashore - USA TODAY",
+      "description": "Thousands of dead fish washed up on beaches along the Texas Gulf Coast as officials warned the public to stay away from the water.",
+      "url": "https://www.usatoday.com/story/news/nation/2023/06/12/texas-gulf-coast-dead-fish/70312349007/",
+      "urlToImage": "https://www.usatoday.com/gcdn/presto/2023/06/12/USAT/b1966231-e9eb-4480-845f-1a16a5e9ab7d-fish.jpg?crop=2047,1152,x0,y189&width=2047&height=1152&format=pjpg&auto=webp",
+      "publishedAt": "2023-06-12T12:28:51Z",
+      "content": "Thousands of dead fish washed up on beaches along the Texas Gulf Coast as officials warned the public to stay away from the water because of high levels of bacteria. \r\nThe fish, which were mostly men… [+2450 chars]"
+    },
+    {
+      "source": {
+        "id": "al-jazeera-english",
+        "name": "Al Jazeera English"
+      },
+      "author": "Al Jazeera",
+      "title": "More than 40 killed in IDP camp attack in DR Congo’s Ituri - Al Jazeera English",
+      "description": "CODECO fighters blamed for the attack on camp housing internally displaced persons in Ituri province.",
+      "url": "https://www.aljazeera.com/news/2023/6/12/dozens-killed-in-idp-camp-attack-in-dr-congo",
+      "urlToImage": "https://www.aljazeera.com/wp-content/uploads/2021/11/WEBMAP_DRCONGO-ITURI-PRONVINCE_1000x562.jpg?resize=1200%2C675",
+      "publishedAt": "2023-06-12T12:11:15Z",
+      "content": "More than 40 people have been killed in an attack on a camp for internally displaced persons (IDP) in northeastern Democratic Republic of the Congo (DRC), according to local officials and activists.\r… [+2125 chars]"
+    }
+  ]
+}
