@@ -2,10 +2,10 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 import NewRelic from 'newrelic-react-native-agent';
 import App from './App';
-import {name as appName} from './app.json';
+import { name as appName } from './app.json';
 import * as appVersion from './package.json';
 
 let appToken;
