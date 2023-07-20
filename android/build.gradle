@@ -47,6 +47,7 @@ if (findProject(':@newrelic-react-native-agent')) {
 
 
 android {
+    namespace "com.NewRelic"
     compileSdkVersion 31
 
     defaultConfig {
