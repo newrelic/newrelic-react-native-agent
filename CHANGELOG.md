@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0
+
+### New in this release
+* Upgraded native Android agent to v7.0.0
+* Added support for React Native 0.72.0
+* Included support for Expo 49
+
 ## 1.2.1
 
 ### New in this release
