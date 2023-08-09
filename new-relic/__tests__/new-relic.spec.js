@@ -83,6 +83,8 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("");
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(true);
+
   });
 
   it('should change default agent configuration when configuration is passed into the start call', () => {

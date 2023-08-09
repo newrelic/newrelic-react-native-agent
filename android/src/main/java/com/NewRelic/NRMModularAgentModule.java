@@ -91,6 +91,12 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.FedRampEnabled);
             }
 
+            if ((Boolean) agentConfig.get("nativeCrashReportingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.NativeReporting);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.NativeReporting);
+            }
+
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
             strToLogLevel.put("WARNING", AgentLog.WARN);
