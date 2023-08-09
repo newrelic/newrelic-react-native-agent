@@ -459,6 +459,7 @@ The agent supports symbolication of JavaScript errors in debug mode only. Symbol
 Our iOS agent includes a Swift script intended to be run from a build script in your target's build phases in XCode. The script automatically uploads dSYM files in the background (or converts your dSYM to the New Relic map file format), and then performs a background upload of the files needed for crash symbolication to New Relic.
 
 To invoke this script during an XCode build:
+1. Copy the dsym-upload-tools folder from this repository: https://github.com/newrelic/newrelic-ios-agent-spm, to your projects SRCROOT folder first. 
 1. In Xcode, select your project in the navigator, then click on the application target.
 1. Select the Build Phases tab in the settings editor.
 1. Click the + icon above Target Dependencies and choose New Run Script Build Phase. Ensure the new build script is the very last build script.
@@ -467,8 +468,7 @@ To invoke this script during an XCode build:
 
 ### React Native agent 0.0.8 or higher
 ```
-ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
-
+ARTIFACT_DIR="${BUILD_DIR%Build/*}"
 SCRIPT=`/usr/bin/find "${SRCROOT}" "${ARTIFACT_DIR}" -type f -name run-symbol-tool | head -n 1`
 /bin/sh "${SCRIPT}" "APP_TOKEN"
 ```
