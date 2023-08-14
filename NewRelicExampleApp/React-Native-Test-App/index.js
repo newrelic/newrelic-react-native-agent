@@ -23,6 +23,10 @@ const agentConfiguration = {
   // Optional:Enable or disable collection of event data.
   analyticsEventEnabled: true,
 
+  // Android Specific
+  // Optional:Enable or disable collection of native c/c++ crash.
+  nativeCrashReportingEnabled: true,
+
   // Optional:Enable or disable crash reporting.
   crashReportingEnabled: true,
 
