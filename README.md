@@ -502,6 +502,10 @@ Deployment Postprocessing: Yes
 Strip Linked Product: Yes
 Strip Debug Symbols During Copy : Yes
 ```
+### Configure app launch times
+
+To measure app launch time, you can refer to the following documentation for both [Android](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/configure-app-launch-time-android-apps/) and [iOS](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/configuration/app-launch-times-ios-apps/) platforms.
+
 
 ## Testing
 ### Jest Configuration
