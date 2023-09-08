@@ -44,7 +44,7 @@
     "react-native"
   ],
   "author": "New Relic",
-  "license": "New Relic",
+  "license": "Apache-2.0",
   "homepage": "https://github.com/newrelic/newrelic-react-native-agent",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
