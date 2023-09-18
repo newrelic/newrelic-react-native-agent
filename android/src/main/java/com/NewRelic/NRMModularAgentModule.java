@@ -441,8 +441,22 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
             List<StackTraceElement> stackTraceList = new ArrayList<>();
             for(int i = 0; i < stackFrameMap.size(); ++i) {
                 Map<String, Object> element = (Map<String, Object>) stackFrameMap.get(Integer.toString(i));
-                String methodName = (String) element.getOrDefault("methodName", "");
-                String fileName = (String) element.getOrDefault("file", "");
+                String methodName = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    methodName = (String) element.getOrDefault("methodName", "");
+                } else {
+                    if (element.containsKey("methodName")) {
+                        methodName = (String)element.get("methodName");
+                    }
+                }
+                String fileName = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    fileName = (String) element.getOrDefault("file", "");
+                } else {
+                    if (element.containsKey("file")) {
+                        fileName = (String)element.get("file");
+                    }
+                }
                 int lineNumber = element.get("lineNumber") != null ? ((Double) element.get("lineNumber")).intValue() : 1;
                 StackTraceElement stackTraceElement = new StackTraceElement(" ", methodName, fileName, lineNumber);
                 stackTraceList.add(stackTraceElement);
