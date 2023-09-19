@@ -1,3 +1,4 @@
+import com.android.Version
 import io.invertase.gradle.common.PackageJson
 
 
@@ -50,7 +51,11 @@ if (findProject(':@newrelic-react-native-agent')) {
 
 
 android {
-    namespace "com.NewRelic"
+    def agpVersion = Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+    if (agpVersion >= 7) {
+        namespace "com.NewRelic"
+    }
+
 
     defaultConfig {
         minSdkVersion 21
@@ -61,6 +66,13 @@ android {
 
     lintOptions {
         abortOnError true
+    }
+
+    if (agpVersion < 8) {
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_11
+            targetCompatibility JavaVersion.VERSION_11
+        }
     }
 
     // enable for better logging on these warnings:
