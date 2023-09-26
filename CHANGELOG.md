@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.3
+
+### New in this release
+* Updated the native Android agent to version 7.1.0.
+* Addressed an issue that prevented app building due to missing compilesdk.
+
 ## 1.3.2
 
 ### New in this release

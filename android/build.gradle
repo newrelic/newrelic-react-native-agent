@@ -3,15 +3,17 @@ import io.invertase.gradle.common.PackageJson
 
 
 buildscript {
-   
-    repositories {
-        mavenCentral()
-        google()
-    }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+    if (project == rootProject) {
+        repositories {
+            mavenCentral()
+            google()
+        }
 
+        dependencies {
+            classpath 'com.android.tools.build:gradle:7.4.2'
+
+        }
     }
 
 }
@@ -56,6 +58,7 @@ android {
         namespace "com.NewRelic"
     }
 
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 21
