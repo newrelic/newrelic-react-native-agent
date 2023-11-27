@@ -92,11 +92,11 @@
   },
   "sdkVersions": {
     "ios": {
-      "newrelic": "7.4.6"
+      "newrelic": "7.4.8"
     },
     "android": {
-      "newrelic": "7.1.0",
-      "ndk": "1.0.3"
+      "newrelic": "7.2.0",
+      "ndk": "1.0.4"
     }
   }
 }
