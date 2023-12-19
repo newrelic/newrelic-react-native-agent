@@ -13,7 +13,7 @@ import {Platform} from 'react-native';
 let appToken;
 
 if (Platform.OS === 'ios') {
-  appToken = 'placeholder';
+  appToken = 'AAa413614341452f701db5d23e4574ff22fd30bf8b-NRMA';
 } else {
   appToken = 'placeholder';
 }
@@ -65,5 +65,6 @@ const agentConfiguration = {
 
 NewRelic.startAgent(appToken, agentConfiguration);
 NewRelic.setJSAppVersion(appVersion.version);
+NewRelic.addHTTPHeadersTrackingFor(["Car","Music"]);
 
 AppRegistry.registerComponent(appName, () => App);

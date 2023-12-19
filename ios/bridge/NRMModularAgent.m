@@ -367,6 +367,10 @@ RCT_EXPORT_METHOD(shutdown) {
     [NewRelic shutdown];
 }
 
+RCT_EXPORT_METHOD(addHTTPHeadersTrackingFor:(NSArray<NSString*>*_Nonnull) headers) {
+    [NewRelic addHTTPHeaderTrackingFor:headers];
+}
+
 RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nullable)exceptionDictionary) {
     if (exceptionDictionary == nil) {
         NSLog(@"[NRMA] Null dictionary given to recordHandledException");

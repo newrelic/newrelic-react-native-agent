@@ -7,7 +7,11 @@ const TestScreen = () => {
   const [facts, setFacts] = useState('');
   async function fetchFacts() {
     const interactionID = newRelic.startInteraction('catFactInteraction');
-    const results = await fetch(url);
+    const results = await fetch(url,{
+      headers: {
+        "Car": "Toyota",
+      }
+    });
     const response = await results.json();
     Alert.alert(response.fact);
     newRelic.endInteraction('catFactInteraction');

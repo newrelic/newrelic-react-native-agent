@@ -448,4 +448,10 @@ describe('New Relic', () => {
     expect(NRMAModularAgentWrapper.isAgentStarted).toBe(false);
   });
 
+  it('should addHTTPHeadersTrackingFor when called', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.addHTTPHeadersTrackingFor(["Car","Music"]);
+    expect(MockNRM.addHTTPHeadersTrackingFor.mock.calls.length).toBe(1);
+  });
+
 });
