@@ -125,7 +125,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.1.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.2.0"
       }
     }
   ```
@@ -412,6 +412,11 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 ```js
     NewRelic.shutdown();
 ```
+### [shutdown](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile/mobile-sdk/add-tracked-headers/)() : void;
+> This API allows you to add any header field strings to a list that gets recorded as attributes with networking request events. After header fields have been added using this function, if the headers are in a network call they will be included in networking events in NR1. 
+```js
+   NewRelic.addHTTPHeadersTrackingFor(["Car","Music"]);
+```
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
@@ -437,7 +442,7 @@ You can also build dashboard for errors using this query:
 
  ## Symbolicating a stack trace
 
-The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/0.64/symbolication).
+The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/symbolication).
 
 ### Symbolication for Javascript errors are coming in future releases.
 
@@ -470,7 +475,19 @@ To invoke this script during an XCode build:
 1. Add the following lines of code to the new phase and replace `APP_TOKEN` with your iOS application token.
     1. If there is a checkbox below Run script that says "Run script: Based on Dependency analysis" please make sure it is not checked.
 
+
+### React Native agent 1.3.1 or higher
+
+With the ios agent 7.4.6 release, the XCFramework no longer includes the dsym-upload-tools. You can find the dsym-upload-tools in the dsym-upload-tools folder of the https://github.com/newrelic/newrelic-ios-agent-spm Swift Package Manager repository. Please copy the dsym-upload-tools directory into your application source code directory by copying the XCFramework into your project or using Cocoapods if you're integrating the New Relic iOS Agent. Use the run script below in your Xcode build phases to perform symbol upload steps during app builds in Xcode.
+
+```
+ARTIFACT_DIR="${BUILD_DIR%Build/*}"
+SCRIPT=`/usr/bin/find "${SRCROOT}" "${ARTIFACT_DIR}" -type f -name run-symbol-tool | head -n 1`
+/bin/sh "${SCRIPT}" "APP_TOKEN"
+```
+
 ### React Native agent 0.0.8 or higher
+
 ```
 ARTIFACT_DIR="${BUILD_DIR%Build/*}"
 SCRIPT=`/usr/bin/find "${SRCROOT}" "${ARTIFACT_DIR}" -type f -name run-symbol-tool | head -n 1`

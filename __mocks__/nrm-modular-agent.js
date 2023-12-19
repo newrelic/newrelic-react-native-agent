@@ -37,6 +37,7 @@ export default  {
   onStateChange:jest.fn(),
   recordHandledException:jest.fn(),
   shutdown:jest.fn(),
+  addHTTPHeadersTrackingFor:jest.fn(),
 
   isAgentStarted: (name, callback) => {
     callback(true);

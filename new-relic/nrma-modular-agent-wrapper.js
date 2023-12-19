@@ -185,6 +185,10 @@ class NRMAModularAgentWrapper {
     NRMModularAgent.setJSAppVersion(version);
   };
 
+  addHTTPHeadersTrackingFor = (headers) => {
+    NRMModularAgent.addHTTPHeadersTrackingFor(headers);
+  };
+
   setUserId = (userId) => {
     NRMModularAgent.setUserId(userId);
   };

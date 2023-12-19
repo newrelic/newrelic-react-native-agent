@@ -11,9 +11,11 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableType;
 import com.newrelic.agent.android.FeatureFlag;
 import com.newrelic.agent.android.NewRelic;
 import com.newrelic.agent.android.ApplicationFramework;
@@ -27,6 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
 
 public class NRMModularAgentModule extends ReactContextBaseJavaModule {
 
@@ -39,6 +44,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @Override
+    @Nonnull
     public String getName() {
         return "NRMModularAgent";
     }
@@ -148,7 +154,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     Map<String, Object> mapToAttributes(ReadableMap readableMap) {
-        Map<String, Object> attributeMap = new HashMap<String, Object>();
+        Map<String, Object> attributeMap = new HashMap<>();
         ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
 
         while (iterator.hasNextKey()) {
@@ -175,6 +181,19 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
             }
         }
         return attributeMap;
+    }
+
+    List<String> mapToList(ReadableArray readableArray) {
+        List<String> attributeArray = new ArrayList<>();
+
+        for (int i = 0; i < readableArray.size(); i++) {
+            ReadableType type = readableArray.getType(i);
+
+            if(type == ReadableType.String) {
+                attributeArray.add(readableArray.getString(i));
+            }
+        }
+        return attributeArray;
     }
 
     @ReactMethod
@@ -228,6 +247,12 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     public void recordCustomEvent(String eventType, String eventName, ReadableMap readableMap) {
         NewRelic.recordCustomEvent(eventType, eventName, mapToAttributes(readableMap));
     }
+
+    @ReactMethod
+    public void addHTTPHeadersTrackingFor(ReadableArray readableArray) {
+        NewRelic.addHTTPHeadersTrackingFor(mapToList(readableArray));
+    }
+
 
     @ReactMethod
     public void crashNow(String message) {
@@ -442,22 +467,10 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
             for(int i = 0; i < stackFrameMap.size(); ++i) {
                 Map<String, Object> element = (Map<String, Object>) stackFrameMap.get(Integer.toString(i));
                 String methodName = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    methodName = (String) element.getOrDefault("methodName", "");
-                } else {
-                    if (element.containsKey("methodName")) {
-                        methodName = (String)element.get("methodName");
-                    }
-                }
-                String fileName = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    fileName = (String) element.getOrDefault("file", "");
-                } else {
-                    if (element.containsKey("file")) {
-                        fileName = (String)element.get("file");
-                    }
-                }
-                int lineNumber = element.get("lineNumber") != null ? ((Double) element.get("lineNumber")).intValue() : 1;
+                methodName = (String) element.getOrDefault("methodName", "");
+                String fileName;
+                fileName = (String) element.getOrDefault("file", "");
+                int lineNumber = element.get("lineNumber") != null ? ((Double) Objects.requireNonNull(element.get("lineNumber"))).intValue() : 1;
                 StackTraceElement stackTraceElement = new StackTraceElement(" ", methodName, fileName, lineNumber);
                 stackTraceList.add(stackTraceElement);
             }
