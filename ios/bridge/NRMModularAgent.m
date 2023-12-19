@@ -299,6 +299,11 @@ RCT_EXPORT_METHOD(recordCustomEvent:(NSString* _Nonnull) eventType eventName:(NS
     [NewRelic recordCustomEvent:eventType name:eventName attributes:attributes];
 }
 
+RCT_EXPORT_METHOD(addHTTPHeadersTrackingFor:(NSArray<NSString*> _Nonnull) headers) {
+    // todo: Not sure if we need to check the validity of these arguments at all..
+    [NewRelic addHTTPHeadersTrackingFor:headers];
+}
+
 /**
  * Track a method as an interaction
  */

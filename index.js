@@ -266,6 +266,15 @@ class NewRelic {
     this.NRMAModularAgentWrapper.execute('noticeHttpTransaction', url, httpMethod, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody);
   }
 
+    /**
+   * Add Headers as Attributes in Http Requests, for use in New Relic Insights.
+   * The method includes a list of headers, specified as a map.
+   * @param headers {Map<string, any>} A map that includes a list of headers.
+   */
+    addHTTPHeadersTrackingFor(headers) {
+      this.NRMAModularAgentWrapper.execute('addHTTPHeadersTrackingFor', headers);
+    }
+
   /**
    * Records network failures.
    * If a network request fails, use this method to record details about the failure.
