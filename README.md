@@ -437,7 +437,7 @@ You can also build dashboard for errors using this query:
 
  ## Symbolicating a stack trace
 
-The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/symbolication).
+The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/debugging-release-builds).
 
 ### Symbolication for Javascript errors are coming in future releases.
 
