@@ -102,7 +102,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     [NewRelic setPlatformVersion:agentVersion];
     
     if (useDefaultCollectorAddress && useDefaultCrashCollectorAddress) {
-        [NewRelic startWithApplicationToken: appKey];
+        //[NewRelic startWithApplicationToken: appKey];
     } else {
         NSString* collectorAddress = useDefaultCollectorAddress ? @"mobile-collector.newrelic.com" : [agentConfig objectForKey:@"collectorAddress"];
         NSString* crashCollectorAddress = useDefaultCrashCollectorAddress ? @"mobile-crash.newrelic.com" : [agentConfig objectForKey:@"crashCollectorAddress"];
