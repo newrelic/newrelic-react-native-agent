@@ -97,6 +97,13 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.FedRampEnabled);
             }
 
+            // Add condition for offlineStorage flag
+            if ((Boolean) agentConfig.get("offlineStorageEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.OfflineStorage);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.OfflineStorage);
+            }
+  
             if ((Boolean) agentConfig.get("nativeCrashReportingEnabled")) {
                 NewRelic.enableFeature(FeatureFlag.NativeReporting);
             } else {
@@ -316,6 +323,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setMaxEventBufferTime(int maxEventBufferTimeInSeconds) {
         NewRelic.setMaxEventBufferTime(maxEventBufferTimeInSeconds);
+    }
+
+    @ReactMethod
+    public void setMaxOfflineStorageSize(int megaBytes) {
+       NewRelic.setMaxOfflineStorageSize(megaBytes);
     }
 
     @ReactMethod
