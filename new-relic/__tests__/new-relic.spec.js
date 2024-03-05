@@ -84,6 +84,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("");
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(true);
 
   });
 
@@ -100,7 +101,9 @@ describe('New Relic', () => {
       webViewInstrumentation: false,
       collectorAddress: "gov-mobile-collector.newrelic.com",
       crashCollectorAddress: "gov-mobile-crash.newrelic.com",
-      fedRampEnabled: true
+      fedRampEnabled: true,
+      nativeCrashReportingEnabled:false,
+      offlineStorageEnabled:false
     };
 
     NewRelic.startAgent("12345", customerConfiguration);
@@ -117,6 +120,9 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.collectorAddress).toBe("gov-mobile-collector.newrelic.com");
     expect(NewRelic.agentConfiguration.crashCollectorAddress).toBe("gov-mobile-crash.newrelic.com");
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(false);
+
   });
 
   it('should set the analytics event flag', () => {
@@ -274,6 +280,21 @@ describe('New Relic', () => {
   it('should set max event pool size', () => {
     NewRelic.setMaxEventPoolSize(2000);
     expect(MockNRM.setMaxEventPoolSize.mock.calls.length).toBe(1);
+  });
+
+  it('should set max offline storage size', () => {
+    NewRelic.setMaxOfflineStorageSize(100);
+    expect(MockNRM.setMaxOfflineStorageSize.mock.calls.length).toBe(1);
+    expect(MockNRM.setMaxOfflineStorageSize.mock.calls[0][0]).toBe(100);
+  });
+
+  it('should not set max offline storage size with invalid size', () => {
+    NewRelic.setMaxOfflineStorageSize(null);
+    NewRelic.setMaxOfflineStorageSize('100');
+    NewRelic.setMaxOfflineStorageSize(true);
+    NewRelic.setMaxOfflineStorageSize(-100);
+
+    expect(MockNRM.setMaxOfflineStorageSize.mock.calls.length).toBe(4);
   });
 
   it('should set a valid Attribute', () => {

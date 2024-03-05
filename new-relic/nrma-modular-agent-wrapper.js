@@ -137,6 +137,11 @@ class NRMAModularAgentWrapper {
   setMaxEventPoolSize = (maxSize) => {
     NRMModularAgent.setMaxEventPoolSize(maxSize);
   };
+  
+  setMaxOfflineStorageSize = (megaBytes) => {
+    NRMModularAgent.setMaxOfflineStorageSize(megaBytes);
+  };
+
 
   setAttribute = (attributeName, value) => {
     const attribute = new Attribute({ attributeName, value });

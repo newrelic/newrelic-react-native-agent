@@ -103,6 +103,9 @@ import {Platform} from 'react-native';
 
     // Optional:Enable or disable reporting data using different endpoints for US government clients.
     //fedRampEnabled: false
+
+     // Optional: Enable or disable offline data storage when no internet connection is available.
+     offlineStorageEnabled:true
   };
 
 
@@ -125,7 +128,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.2.0"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.3.0"
       }
     }
   ```
@@ -417,6 +420,13 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 ```js
    NewRelic.addHTTPHeadersTrackingFor(["Car","Music"]);
 ```
+
+### [setMaxOfflineStorageSize](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile/mobile-sdk/set-max-offline-storage/)() : void;
+> Sets the maximum size of total data that can be stored for offline storage.By default, mobile monitoring can collect a maximum of 100 megaBytes of offline storage. When a data payload fails to send because the device doesn't have an internet connection, it can be stored in the file system until an internet connection has been made. After a typical harvest payload has been successfully sent, all offline data is sent to New Relic and cleared from storage.
+```js
+   NewRelic.setMaxOfflineStorageSize(200);
+```
+
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 

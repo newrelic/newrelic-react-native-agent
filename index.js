@@ -46,7 +46,8 @@ class NewRelic {
       webViewInstrumentation: true,
       collectorAddress: "",
       crashCollectorAddress: "",
-      fedRampEnabled: false
+      fedRampEnabled: false,
+      offlineStorageEnabled: true
     };
   }
 
@@ -362,6 +363,16 @@ class NewRelic {
   setMaxEventPoolSize(maxSize) {
     this.NRMAModularAgentWrapper.execute('setMaxEventPoolSize', maxSize);
   }
+
+    /**
+   * Sets the maximum size of total data that can be stored for offline storage.By default, mobile monitoring can collect a maximum of 100 megaBytes of offline storage. 
+   * When a data payload fails to send because the device doesn't have an internet connection, it can be stored in the file system until an internet connection has been made. 
+   * After a typical harvest payload has been successfully sent, all offline data is sent to New Relic and cleared from storage.
+   * @param megaBytes {number} Maximum size in megaBytes that can be stored in the file system..
+   */
+    setMaxOfflineStorageSize(megaBytes) {
+      this.NRMAModularAgentWrapper.execute('setMaxOfflineStorageSize', megaBytes);
+    }
 
   /**
  * Track a method as an interaction

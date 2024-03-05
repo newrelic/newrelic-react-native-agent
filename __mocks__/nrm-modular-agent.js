@@ -38,6 +38,8 @@ export default  {
   recordHandledException:jest.fn(),
   shutdown:jest.fn(),
   addHTTPHeadersTrackingFor:jest.fn(),
+  setMaxOfflineStorageSize: jest.fn(),
+  
 
   isAgentStarted: (name, callback) => {
     callback(true);

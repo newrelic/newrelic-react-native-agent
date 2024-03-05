@@ -62,7 +62,11 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     if ([[agentConfig objectForKey:@"interactionTracingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_InteractionTracing];
     }
-    
+
+    if ([[agentConfig objectForKey:@"offlineStorageEnabled"] boolValue] == NO) {
+         [NewRelic disableFeatures:NRFeatureFlag_OfflineStorage];
+    }
+
     if ([[agentConfig objectForKey:@"fedRampEnabled"]boolValue] == YES) {
         [NewRelic enableFeatures:NRFeatureFlag_FedRampEnabled];
     } 
@@ -115,7 +119,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
     
     resolve(@(TRUE));
-}
+      }
 
 
 RCT_EXPORT_METHOD(isAgentStarted:(NSString* _Nonnull)call
@@ -252,6 +256,11 @@ RCT_EXPORT_METHOD(removeAllAttributes) {
 RCT_EXPORT_METHOD(setMaxEventBufferTime:(NSNumber* _Nonnull)seconds) {
     unsigned int uint_seconds = seconds.unsignedIntValue;
     [NewRelic setMaxEventBufferTime:uint_seconds];
+}
+
+RCT_EXPORT_METHOD(setMaxOfflineStorageSize:(NSNumber* _Nonnull)megaBytes) {
+    unsigned int uint_megaBytes = megaBytes.unsignedIntValue;
+    [NewRelic setMaxOfflineStorageSize:uint_megaBytes];
 }
 
 RCT_EXPORT_METHOD(setMaxEventPoolSize:(NSNumber* _Nonnull)maxSize) {
