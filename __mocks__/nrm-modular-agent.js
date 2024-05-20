@@ -39,7 +39,14 @@ export default  {
   shutdown:jest.fn(),
   addHTTPHeadersTrackingFor:jest.fn(),
   setMaxOfflineStorageSize: jest.fn(),
-  
+  log: jest.fn(),
+  logInfo: jest.fn(),
+  logAttributes: jest.fn(),
+  logAll: jest.fn(),
+  logVerbose: jest.fn(),
+  logDebug: jest.fn(),
+  logError: jest.fn(),
+  logWarning: jest.fn(),
 
   isAgentStarted: (name, callback) => {
     callback(true);

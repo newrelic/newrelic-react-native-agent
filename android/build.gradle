@@ -87,6 +87,8 @@ android {
 repositories {
     mavenCentral()
     google()
+    maven { url "https://oss.sonatype.org/content/repositories/comnewrelic-2914"}
+
 }
 
 dependencies {

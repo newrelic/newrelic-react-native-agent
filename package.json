@@ -95,7 +95,7 @@
       "newrelic": "7.4.10"
     },
     "android": {
-      "newrelic": "7.3.0",
+      "newrelic": "7.4.0-alpha01",
       "ndk": "1.0.4"
     }
   }

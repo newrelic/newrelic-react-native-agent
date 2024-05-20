@@ -27,4 +27,7 @@ export default class Utils {
   static hasValidAttributes(attributes) {
     return Utils.isObject(attributes) && attributes !== null;
   }
+  static isObjectEmpty = (objectName) => {
+    return JSON.stringify(objectName) === "{}";
+  };
 }

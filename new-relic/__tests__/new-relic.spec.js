@@ -85,6 +85,8 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.logReportingEnabled).toBe(true);
+
 
   });
 
@@ -103,7 +105,8 @@ describe('New Relic', () => {
       crashCollectorAddress: "gov-mobile-crash.newrelic.com",
       fedRampEnabled: true,
       nativeCrashReportingEnabled:false,
-      offlineStorageEnabled:false
+      offlineStorageEnabled:false,
+      logReportingEnabled: false
     };
 
     NewRelic.startAgent("12345", customerConfiguration);
@@ -122,6 +125,8 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.logReportingEnabled).toBe(false);
+
 
   });
 
@@ -473,6 +478,28 @@ describe('New Relic', () => {
     expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
     NewRelic.addHTTPHeadersTrackingFor(["Car","Music"]);
     expect(MockNRM.addHTTPHeadersTrackingFor.mock.calls.length).toBe(1);
+  });
+
+    it('should logAttributes when called', () => {
+      expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+      NewRelic.logInfo('test');
+      NewRelic.log(NewRelic.LogLevel.ERROR, 'test');
+      var attr = {"key1":"value1","key2":"value2"};
+      var error = new Error('test');
+      NewRelic.logAll(error,attr);
+      expect(MockNRM.logAttributes.mock.calls.length).toBe(3);
+    });
+
+  it('should not call logAttributes', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.logInfo();
+    expect(MockNRM.logAttributes.mock.calls.length).toBe(6);
+  });
+
+  it('should not call logAttributes', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.logAttributes({});
+    expect(MockNRM.logAttributes.mock.calls.length).toBe(6);
   });
 
 });

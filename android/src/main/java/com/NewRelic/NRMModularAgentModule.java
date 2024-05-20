@@ -20,6 +20,8 @@ import com.newrelic.agent.android.FeatureFlag;
 import com.newrelic.agent.android.NewRelic;
 import com.newrelic.agent.android.ApplicationFramework;
 import com.newrelic.agent.android.logging.AgentLog;
+import com.newrelic.agent.android.logging.LogLevel;
+import com.newrelic.agent.android.logging.LogReporting;
 import com.newrelic.agent.android.stats.StatsEngine;
 import com.newrelic.agent.android.metric.MetricUnit;
 import com.newrelic.agent.android.util.NetworkFailure;
@@ -110,6 +112,13 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.NativeReporting);
             }
 
+            if ((Boolean) agentConfig.get("logReportingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.LogReporting);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.LogReporting);
+            }
+
+
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
             strToLogLevel.put("WARNING", AgentLog.WARN);
@@ -129,6 +138,8 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 }
             }
 
+            String configLogLevel = (String) agentConfig.get("logLevel");
+            LogReporting.setLogLevel(LogLevel.valueOf(configLogLevel));
             boolean useDefaultCollectorAddress =
                     agentConfig.get("collectorAddress") == null ||
                     ((String) agentConfig.get("collectorAddress")).isEmpty();
