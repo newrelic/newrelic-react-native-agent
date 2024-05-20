@@ -48,6 +48,7 @@ class NewRelic {
         crashCollectorAddress: "",
         fedRampEnabled: false,
         offlineStorageEnabled: true,
+        logReportingEnabled: true,
         backgroundReportingEnabled: false,
         newEventSystemEnabled: true
     };
