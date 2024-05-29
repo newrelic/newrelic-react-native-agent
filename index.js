@@ -37,7 +37,7 @@ class NewRelic {
       analyticsEventEnabled: true,
       nativeCrashReportingEnabled: true,
       crashReportingEnabled: true,
-      interactionTracingEnabled: true,
+      interactionTracingEnabled: false,
       networkRequestEnabled: true,
       networkErrorRequestEnabled: true,
       httpResponseBodyCaptureEnabled: true,

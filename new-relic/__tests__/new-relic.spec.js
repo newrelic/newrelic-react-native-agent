@@ -73,7 +73,7 @@ describe('New Relic', () => {
   it('should have correct default configuration settings', () => {
     expect(NewRelic.agentConfiguration.analyticsEventEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.crashReportingEnabled).toBe(true);
-    expect(NewRelic.agentConfiguration.interactionTracingEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.interactionTracingEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.networkRequestEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.networkErrorRequestEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.httpResponseBodyCaptureEnabled).toBe(true);
