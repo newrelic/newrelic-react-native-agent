@@ -37,7 +37,7 @@ class NewRelic {
       analyticsEventEnabled: true,
       nativeCrashReportingEnabled: true,
       crashReportingEnabled: true,
-      interactionTracingEnabled: true,
+      interactionTracingEnabled: false,
       networkRequestEnabled: true,
       networkErrorRequestEnabled: true,
       httpResponseBodyCaptureEnabled: true,
@@ -47,7 +47,9 @@ class NewRelic {
       collectorAddress: "",
       crashCollectorAddress: "",
       fedRampEnabled: false,
-      offlineStorageEnabled: true
+      offlineStorageEnabled: true,
+      backgroundReportingEnabled: false,
+      newEventSystemEnabled: true
     };
   }
 

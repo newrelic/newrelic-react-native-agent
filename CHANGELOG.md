@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.8
+
+* Improvements
+The native iOS Agent has been updated to version 7.4.12, bringing performance enhancements and bug fixes.
+
+* New Features
+A new backgroundReportingEnabled feature flag has been introduced to enable background reporting functionality.
+A new newEventSystemEnabled feature flag has been added to enable the new event system.
+
+* Changes
+The interactionTracingEnabled feature flag has been disabled by default to prevent potential crashes from occurring.
+
+
 ## 1.3.7
 
 * Updated native iOS Agent: We've upgraded the native iOS agent to version 7.4.10, which includes performance improvements and bug fixes.
