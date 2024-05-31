@@ -71,6 +71,14 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
         [NewRelic enableFeatures:NRFeatureFlag_FedRampEnabled];
     } 
     
+    if ([[agentConfig objectForKey:@"backgroundReportingEnabled"]boolValue] == YES) {
+        [NewRelic enableFeatures:NRFeatureFlag_BackgroundReporting];
+    }
+    
+    if ([[agentConfig objectForKey:@"newEventSystemEnabled"]boolValue] == YES) {
+        [NewRelic enableFeatures:NRFeatureFlag_NewEventSystem];
+    }
+    
     //Default is NRLogLevelWarning
     NRLogLevels logLevel = NRLogLevelWarning;
     NSDictionary *logDict = @{

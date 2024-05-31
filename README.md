@@ -105,7 +105,15 @@ import {Platform} from 'react-native';
     //fedRampEnabled: false
 
      // Optional: Enable or disable offline data storage when no internet connection is available.
-     offlineStorageEnabled:true
+     offlineStorageEnabled:true,
+
+     // iOS Specific
+     // Optional: Enable or disable Background Reporting.
+     backgroundReportingEnabled:true,
+
+     // iOS Specific
+     // Optional: Enable or disable to use our new, more stable, event system for iOS agent.
+     newEventSystemEnabled:true
   };
 
 
