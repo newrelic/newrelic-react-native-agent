@@ -85,6 +85,8 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(false);
 
   });
 
@@ -103,7 +105,9 @@ describe('New Relic', () => {
       crashCollectorAddress: "gov-mobile-crash.newrelic.com",
       fedRampEnabled: true,
       nativeCrashReportingEnabled:false,
-      offlineStorageEnabled:false
+      offlineStorageEnabled:false,
+      newEventSystemEnabled:false,
+      backgroundReportingEnabled:true
     };
 
     NewRelic.startAgent("12345", customerConfiguration);
@@ -122,6 +126,9 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(false);
+    expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(true);
+
 
   });
 

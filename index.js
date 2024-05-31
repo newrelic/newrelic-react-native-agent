@@ -47,7 +47,9 @@ class NewRelic {
       collectorAddress: "",
       crashCollectorAddress: "",
       fedRampEnabled: false,
-      offlineStorageEnabled: true
+      offlineStorageEnabled: true,
+      backgroundReportingEnabled: false,
+      newEventSystemEnabled: true
     };
   }
 
