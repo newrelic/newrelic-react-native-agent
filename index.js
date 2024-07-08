@@ -675,7 +675,7 @@ class NewRelic {
             }else {
             this.logInfo("[CONSOLE][LOG]" +argsStr);
           }
-       
+
     }
 
 }
