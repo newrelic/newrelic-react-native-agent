@@ -3,18 +3,18 @@
  * SPDX-License-Identifier: Apache-2.0 
  */
 
-import utils from './new-relic/nr-utils';
-import {LOG} from './new-relic/nr-logger';
+import utils from 'newrelic-react-native-agent/new-relic/nr-utils';
+import {LOG} from 'newrelic-react-native-agent/new-relic/nr-logger';
 import {Platform} from 'react-native';
-import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
-import version from './new-relic/version';
+import NRMAModularAgentWrapper from 'newrelic-react-native-agent/new-relic/nrma-modular-agent-wrapper';
+import version from 'newrelic-react-native-agent/new-relic/version';
 import forEach from 'lodash.foreach';
-import getCircularReplacer from './new-relic/circular-replacer';
+import getCircularReplacer from 'newrelic-react-native-agent/new-relic/circular-replacer';
 
 import {
     getUnhandledPromiseRejectionTracker,
     setUnhandledPromiseRejectionTracker,
-} from 'react-native-promise-rejection-utils'
+} from 'newrelic-react-native-agent/node_modules/react-native-promise-rejection-utils'
 
 
 /**
@@ -48,7 +48,6 @@ class NewRelic {
         crashCollectorAddress: "",
         fedRampEnabled: false,
         offlineStorageEnabled: true,
-        logReportingEnabled: true,
         backgroundReportingEnabled: false,
         newEventSystemEnabled: true
     };
@@ -57,10 +56,11 @@ class NewRelic {
     LogLevel = {
         // ERROR is least verbose and AUDIT is most verbose
         ERROR: "ERROR",
-        WARNING: "WARNING",
+        WARN: "WARN",
         INFO: "INFO",
         VERBOSE: "VERBOSE",
-        AUDIT: "AUDIT"
+        AUDIT: "AUDIT",
+        DEBUG: "DEBUG"
     };
 
     NetworkFailure = {
@@ -458,7 +458,7 @@ class NewRelic {
         var attributes = {};
         // Set the message and log level as attributes
           attributes["message"] = message;
-          attributes["logLevel"] = logLevel;
+          attributes["level"] = logLevel;
         // Log the attributes
         this.logAttributes(attributes);
     }
@@ -505,7 +505,7 @@ class NewRelic {
      *
      * @param {string} message - The warning message to be logged.
      */
-    logWarning(message) {
+    logWarn(message) {
         this.log(this.LogLevel.WARN, message);
     }
 
@@ -654,6 +654,13 @@ class NewRelic {
                 self.sendConsole('error', arguments);
                 defaultError.apply(console, arguments);
             };
+
+            console.debug = function () {
+                self.sendConsole('debug', arguments);
+                defaultError.apply(console, arguments);
+            }
+
+
             this.state.didOverrideConsole = true;
         }
     }
@@ -662,22 +669,15 @@ class NewRelic {
         const argsStr = JSON.stringify(args, getCircularReplacer());
 
         if(type === 'error') {
-          this.logError(argsStr);
-        } else if (type === 'warn') {
-          this.logWarning(argsStr);
-        } else {
-          this.logInfo(argsStr);
-        }
-        this.send('JSConsole', {consoleType: type, args: argsStr});
-    }
-
-    send(name, args) {
-        const nameStr = String(name);
-        const argsStr = {};
-        forEach(args, (value, key) => {
-            argsStr[String(key)] = String(value);
-        });
-        this.NRMAModularAgentWrapper.execute('recordCustomEvent', 'consoleEvents', nameStr, argsStr);
+            this.logError("[CONSOLE][ERROR]" + argsStr);
+          } else if (type === 'warn') {
+            this.logWarn("[CONSOLE][WARN]" +argsStr);
+          }  else if (type === 'debug') {
+              this.logDebug("[CONSOLE][DEBUG]" +argsStr);
+            }else {
+            this.logInfo("[CONSOLE][LOG]" +argsStr);
+          }
+       
     }
 
 }

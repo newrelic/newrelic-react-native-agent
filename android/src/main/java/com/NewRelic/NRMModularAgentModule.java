@@ -112,12 +112,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.NativeReporting);
             }
 
-            if ((Boolean) agentConfig.get("logReportingEnabled")) {
-                NewRelic.enableFeature(FeatureFlag.LogReporting);
+            if ((Boolean) agentConfig.get("backgroundReportingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.BackgroundReporting);
             } else {
-                NewRelic.disableFeature(FeatureFlag.LogReporting);
+                NewRelic.disableFeature(FeatureFlag.BackgroundReporting);
             }
-
 
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
@@ -138,8 +137,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 }
             }
 
-            String configLogLevel = (String) agentConfig.get("logLevel");
-            LogReporting.setLogLevel(LogLevel.valueOf(configLogLevel));
+  
             boolean useDefaultCollectorAddress =
                     agentConfig.get("collectorAddress") == null ||
                     ((String) agentConfig.get("collectorAddress")).isEmpty();
@@ -427,6 +425,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void noticeHttpTransaction(String url, String method, int statusCode, int startTime, int endTime, int bytesSent, int bytesReceived, String responseBody) {
         NewRelic.noticeHttpTransaction(url, method, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody);
+    }
+
+    @ReactMethod
+    public void logAttributes(ReadableMap attributes) {
+        NewRelic.logAttributes(mapToAttributes(attributes));
     }
 
 

@@ -295,7 +295,7 @@ RCT_EXPORT_METHOD(removeAttribute:(NSString *)name)
 
 RCT_EXPORT_METHOD(logAttributes:(NSDictionary* _Nullable)attributes)
 {
-    [NewRelic logAll:attributes];
+    [NewRelic logAttributes:attributes];
 }
 
 RCT_EXPORT_METHOD(incrementAttribute:(NSString *)key withNumber:(NSNumber* _Nonnull)value) {

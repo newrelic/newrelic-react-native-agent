@@ -136,7 +136,7 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
       }
       dependencies {
         ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.3.1"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.5.0"
       }
     }
   ```
@@ -434,6 +434,65 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 ```js
    NewRelic.setMaxOfflineStorageSize(200);
 ```
+
+### logInfo(String message) : void
+
+> Logs an informational message to the New Relic log.
+``` js
+    NewRelic.logInfo();
+```
+
+### logError(String message) : void
+> Logs an error message to the New Relic log.
+``` js
+     NewRelic.logError("This is an error message");
+```
+### logVerbose(String message) : void
+> Logs a verbose message to the New Relic log.
+``` js
+     NewRelic.logVerbose("This is a verbose message");
+```
+
+### logWarning(String message) : void
+> Logs a warning message to the New Relic log.
+``` js
+     NewRelic.logWarning("This is a warning message");
+```
+
+### logDebug(String message) : void
+> Logs a debug message to the New Relic log.
+``` js
+     NewRelic.logDebug("This is a debug message");
+```
+
+### log(LogLevel level, String message) : void
+> Logs a message to the New Relic log with a specified log level.
+``` js
+     NewRelic.log(LogLevel.INFO, "This is an informational message");
+``` 
+
+### logAll(Error error,attributes?: {[key: string]: any}) : void
+> Logs an exception with attributes to the New Relic log.
+``` js
+       Newrelic.logAll(new Error("This is an exception"),
+                          {"BreadNumValue": 12.3 ,
+                            "BreadStrValue": "FlutterBread",
+                            "BreadBoolValue": true ,
+                            "message": "This is a message with attributes" }
+       );
+```
+
+### logAttributes(attributes?: {[key: string]: any}) : void
+> Logs a message with attributes to the New Relic log.
+``` js
+             Newrelic.logAttributes(
+              {"BreadNumValue": 12.3 ,
+              "BreadStrValue": "FlutterBread",
+              "BreadBoolValue": true ,
+              "message": "This is a message with attributes",
+              level:newRelic.LogLevel.INFO });
+```
+
 
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?

@@ -85,10 +85,6 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(true);
-    expect(NewRelic.agentConfiguration.logReportingEnabled).toBe(true);
-
-    expect(NewRelic.agentConfiguration.logReportingEnabled).toBe(true);
-
     expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(false);
 
@@ -110,7 +106,6 @@ describe('New Relic', () => {
       fedRampEnabled: true,
       nativeCrashReportingEnabled:false,
       offlineStorageEnabled:false,
-      logReportingEnabled: false
       newEventSystemEnabled:false,
       backgroundReportingEnabled:true
     };
@@ -131,7 +126,6 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(false);
-    expect(NewRelic.agentConfiguration.logReportingEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(true);
 
@@ -422,7 +416,7 @@ describe('New Relic', () => {
     // Each agent start call is 2 custom event calls (5 actual calls prior to this test) = 10
     NewRelic.startAgent("12345");
     console.log('hello');
-    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(15);
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(0);
   });
 
   it('sends console.warn to record custom Events', () => {
@@ -431,7 +425,7 @@ describe('New Relic', () => {
     console.log('hello');
     console.warn('hello');
     console.error('hello');
-    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(30);
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(0);
   });
 
   it('sends breadcrumb for navigation if it is not first screen', () => {
