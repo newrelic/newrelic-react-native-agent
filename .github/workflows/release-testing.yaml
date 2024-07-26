@@ -62,7 +62,7 @@ jobs:
       - name: Publish as NPM package on new relic account(we need npm secret from new relic account)
         env:
           NODE_AUTH_TOKEN: ${{secrets.MOBILE_AGENT_NPM_TOKEN}}
-        run: npm publish
+        run: npm unpublish newrelic-react-native-agent@1.4.0
 
       - name: Capture logs if previous failure
         if: ${{ failure() }}
