@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.0
+## 1.4.1
 ## New Features
 
 1. Application Exit Information
@@ -15,6 +15,16 @@
 
 - Native Android agent updated to version 7.5.0
 - Native iOS agent updated to version 7.5.0
+
+## 1.4.0
+
+## Important Notice
+
+This is an Unpublished Version
+
+**Build Status**: Failed
+
+We encountered issues during the build process for this version. As a result, it has not been published and is not available for general use.
 
 ## 1.3.9
 
