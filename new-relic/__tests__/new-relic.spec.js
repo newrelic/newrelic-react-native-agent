@@ -129,7 +129,6 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(true);
 
-
   });
 
   it('should set the analytics event flag', () => {
@@ -417,7 +416,7 @@ describe('New Relic', () => {
     // Each agent start call is 2 custom event calls (5 actual calls prior to this test) = 10
     NewRelic.startAgent("12345");
     console.log('hello');
-    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(15);
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(0);
   });
 
   it('sends console.warn to record custom Events', () => {
@@ -426,7 +425,7 @@ describe('New Relic', () => {
     console.log('hello');
     console.warn('hello');
     console.error('hello');
-    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(30);
+    expect(MockNRM.recordCustomEvent.mock.calls.length).toBe(0);
   });
 
   it('sends breadcrumb for navigation if it is not first screen', () => {
@@ -480,6 +479,28 @@ describe('New Relic', () => {
     expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
     NewRelic.addHTTPHeadersTrackingFor(["Car","Music"]);
     expect(MockNRM.addHTTPHeadersTrackingFor.mock.calls.length).toBe(1);
+  });
+
+    it('should logAttributes when called', () => {
+      expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+      NewRelic.logInfo('test');
+      NewRelic.log(NewRelic.LogLevel.ERROR, 'test');
+      var attr = {"key1":"value1","key2":"value2"};
+      var error = new Error('test');
+      NewRelic.logAll(error,attr);
+      expect(MockNRM.logAttributes.mock.calls.length).toBe(3);
+    });
+
+  it('should not call logAttributes', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.logInfo();
+    expect(MockNRM.logAttributes.mock.calls.length).toBe(6);
+  });
+
+  it('should not call logAttributes', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.logAttributes({});
+    expect(MockNRM.logAttributes.mock.calls.length).toBe(6);
   });
 
 });

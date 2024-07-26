@@ -293,6 +293,11 @@ RCT_EXPORT_METHOD(removeAttribute:(NSString *)name)
     [NewRelic removeAttribute:(NSString * _Nonnull)name];
 }
 
+RCT_EXPORT_METHOD(logAttributes:(NSDictionary* _Nullable)attributes)
+{
+    [NewRelic logAttributes:attributes];
+}
+
 RCT_EXPORT_METHOD(incrementAttribute:(NSString *)key withNumber:(NSNumber* _Nonnull)value) {
     [NewRelic incrementAttribute:key value:value];
 }
@@ -301,10 +306,6 @@ RCT_EXPORT_METHOD(incrementAttribute:(NSString *)key withNumber:(NSNumber* _Nonn
 RCT_EXPORT_METHOD(setUserId:(NSString* _Nonnull)userId) {
     [NewRelic setUserId:userId];
 }
-
-//RCT_EXPORT_METHOD(continueSession) {
-//    [NewRelic continueSession];
-//}
 
 RCT_EXPORT_METHOD(setJSAppVersion:(NSString* _Nonnull)version) {
     [NewRelic setAttribute:@"JSBundleId" value:version];

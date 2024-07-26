@@ -86,6 +86,14 @@ class NRMAModularAgentWrapper {
     });
   };
 
+  logAttributes = (attributes = {}) => {
+    if(attributes.size === 0) {
+      LOG.error("Attributes are empty in logAttributes");
+    } else {
+      NRMModularAgent.logAttributes(attributes);
+    }
+  };
+
   crashNow = (message) => {
     NRMModularAgent.crashNow(message);
   };

@@ -20,6 +20,8 @@ import com.newrelic.agent.android.FeatureFlag;
 import com.newrelic.agent.android.NewRelic;
 import com.newrelic.agent.android.ApplicationFramework;
 import com.newrelic.agent.android.logging.AgentLog;
+import com.newrelic.agent.android.logging.LogLevel;
+import com.newrelic.agent.android.logging.LogReporting;
 import com.newrelic.agent.android.stats.StatsEngine;
 import com.newrelic.agent.android.metric.MetricUnit;
 import com.newrelic.agent.android.util.NetworkFailure;
@@ -110,6 +112,12 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.NativeReporting);
             }
 
+            if ((Boolean) agentConfig.get("backgroundReportingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.BackgroundReporting);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.BackgroundReporting);
+            }
+
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
             strToLogLevel.put("WARNING", AgentLog.WARN);
@@ -129,6 +137,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 }
             }
 
+  
             boolean useDefaultCollectorAddress =
                     agentConfig.get("collectorAddress") == null ||
                     ((String) agentConfig.get("collectorAddress")).isEmpty();
@@ -416,6 +425,11 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void noticeHttpTransaction(String url, String method, int statusCode, int startTime, int endTime, int bytesSent, int bytesReceived, String responseBody) {
         NewRelic.noticeHttpTransaction(url, method, statusCode, startTime, endTime, bytesSent, bytesReceived, responseBody);
+    }
+
+    @ReactMethod
+    public void logAttributes(ReadableMap attributes) {
+        NewRelic.logAttributes(mapToAttributes(attributes));
     }
 
 
