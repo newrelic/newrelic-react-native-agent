@@ -9,7 +9,6 @@ import { Platform } from 'react-native';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
 import getCircularReplacer from './new-relic/circular-replacer';
-
 import {
   getUnhandledPromiseRejectionTracker,
   setUnhandledPromiseRejectionTracker,
