@@ -46,8 +46,7 @@ export default  {
   logVerbose: jest.fn(),
   logDebug: jest.fn(),
   logError: jest.fn(),
-  logWarning: jest.fn(),
-
+  logWarn: jest.fn(),
   isAgentStarted: (name, callback) => {
     callback(true);
   },

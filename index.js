@@ -3,18 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0 
  */
 
-import utils from 'newrelic-react-native-agent/new-relic/nr-utils';
-import {LOG} from 'newrelic-react-native-agent/new-relic/nr-logger';
-import {Platform} from 'react-native';
-import NRMAModularAgentWrapper from 'newrelic-react-native-agent/new-relic/nrma-modular-agent-wrapper';
-import version from 'newrelic-react-native-agent/new-relic/version';
-import forEach from 'lodash.foreach';
-import getCircularReplacer from 'newrelic-react-native-agent/new-relic/circular-replacer';
-
+import utils from './new-relic/nr-utils';
+import { LOG } from './new-relic/nr-logger';
+import { Platform } from 'react-native';
+import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
+import version from './new-relic/version';
+import getCircularReplacer from './new-relic/circular-replacer';
 import {
-    getUnhandledPromiseRejectionTracker,
-    setUnhandledPromiseRejectionTracker,
-} from 'newrelic-react-native-agent/node_modules/react-native-promise-rejection-utils'
+  getUnhandledPromiseRejectionTracker,
+  setUnhandledPromiseRejectionTracker,
+} from 'react-native-promise-rejection-utils'
 
 
 /**
