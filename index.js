@@ -638,6 +638,7 @@ class NewRelic {
             const defaultLog = console.log;
             const defaultWarn = console.warn;
             const defaultError = console.error;
+            const defaultDebug = console.debug;
             const self = this;
 
             console.log = function () {
@@ -655,7 +656,7 @@ class NewRelic {
 
             console.debug = function () {
                 self.sendConsole('debug', arguments);
-                defaultError.apply(console, arguments);
+                defaultDebug.apply(console, arguments);
             }
 
 
