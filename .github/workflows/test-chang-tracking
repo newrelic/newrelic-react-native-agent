@@ -1,5 +1,16 @@
 name: Change Tracking Marker
-  on: [push, pull_request]
+  on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      confirmation:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Are you sure you want to release?'
+        type: boolean
+        # Default value if no value is explicitly provided
+        default: false
+        # Input has to be provided for the workflow to run
+        required: true
   
   jobs:
     newrelic:
