@@ -1,8 +1,6 @@
 name: Change Tracking Marker
-  on:
-    release:
-      types: [published]
-
+  on: [push, pull_request]
+  
   jobs:
     newrelic:
       runs-on: ubuntu-latest
