@@ -78,6 +78,10 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     if ([[agentConfig objectForKey:@"newEventSystemEnabled"]boolValue] == YES) {
         [NewRelic enableFeatures:NRFeatureFlag_NewEventSystem];
     }
+
+    if ([[agentConfig objectForKey:@"distributedTracingEnabled"]boolValue] == NO) {
+        [NewRelic enableFeatures:NRFeatureFlag_DistributedTracing];
+    }
     
     //Default is NRLogLevelWarning
     NRLogLevels logLevel = NRLogLevelWarning;

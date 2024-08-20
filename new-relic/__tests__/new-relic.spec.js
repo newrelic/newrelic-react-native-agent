@@ -87,7 +87,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(false);
-
+    expect(NewRelic.agentConfiguration.distributedTracingEnabled).toBe(true);
   });
 
   it('should change default agent configuration when configuration is passed into the start call', () => {
@@ -107,7 +107,8 @@ describe('New Relic', () => {
       nativeCrashReportingEnabled:false,
       offlineStorageEnabled:false,
       newEventSystemEnabled:false,
-      backgroundReportingEnabled:true
+      backgroundReportingEnabled:true,
+      distributedTracingEnabled: false
     };
 
     NewRelic.startAgent("12345", customerConfiguration);
@@ -128,7 +129,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(true);
-
+    expect(NewRelic.agentConfiguration.distributedTracingEnabled).toBe(false);
   });
 
   it('should set the analytics event flag', () => {

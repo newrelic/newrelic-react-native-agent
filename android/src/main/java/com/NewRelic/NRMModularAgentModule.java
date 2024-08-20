@@ -118,6 +118,12 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
                 NewRelic.disableFeature(FeatureFlag.BackgroundReporting);
             }
 
+            if ((Boolean) agentConfig.get("distributedTracingEnabled")) {
+                NewRelic.enableFeature(FeatureFlag.DistributedTracing);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.DistributedTracing);
+            }
+
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
             strToLogLevel.put("WARNING", AgentLog.WARN);
