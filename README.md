@@ -73,7 +73,7 @@ import {Platform} from 'react-native';
     crashReportingEnabled: true,
 
     // Optional:Enable or disable interaction tracing. Trace instrumentation still occurs, but no traces are harvested. This will disable default and custom interactions.
-    interactionTracingEnabled: true,
+    interactionTracingEnabled: false,
 
     // Optional:Enable or disable reporting successful HTTP requests to the MobileRequest event type.
     networkRequestEnabled: true,
