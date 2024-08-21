@@ -80,7 +80,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString* _Nonnull)appKey agentVersion:(NSString* 
     }
 
     if ([[agentConfig objectForKey:@"distributedTracingEnabled"]boolValue] == NO) {
-        [NewRelic enableFeatures:NRFeatureFlag_DistributedTracing];
+        [NewRelic disableFeatures:NRFeatureFlag_DistributedTracing];
     }
     
     //Default is NRLogLevelWarning
