@@ -85,7 +85,7 @@ describe('New Relic', () => {
     expect(NewRelic.agentConfiguration.fedRampEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.nativeCrashReportingEnabled).toBe(true);
     expect(NewRelic.agentConfiguration.offlineStorageEnabled).toBe(true);
-    expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(true);
+    expect(NewRelic.agentConfiguration.newEventSystemEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.backgroundReportingEnabled).toBe(false);
     expect(NewRelic.agentConfiguration.distributedTracingEnabled).toBe(true);
   });

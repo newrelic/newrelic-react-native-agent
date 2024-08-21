@@ -47,7 +47,7 @@ class NewRelic {
         fedRampEnabled: false,
         offlineStorageEnabled: true,
         backgroundReportingEnabled: false,
-        newEventSystemEnabled: true,
+        newEventSystemEnabled: false,
         distributedTracingEnabled: true,
     };
   }

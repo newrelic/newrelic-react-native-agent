@@ -109,11 +109,14 @@ import {Platform} from 'react-native';
 
      // iOS Specific
      // Optional: Enable or disable Background Reporting.
-     backgroundReportingEnabled:true,
+     backgroundReportingEnabled:false,
 
      // iOS Specific
      // Optional: Enable or disable to use our new, more stable, event system for iOS agent.
-     newEventSystemEnabled:true
+     newEventSystemEnabled:false,
+
+      // Optional: Enable or disable distributed tracing.
+       distributedTracingEnabled: true,
   };
 
 
@@ -126,33 +129,50 @@ AppToken is platform-specific. You need to generate the seprate token for Androi
 
 ### Android Setup
 1. Install the New Relic native Android agent ([instructions here](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/install-android-apps-gradle-android-studio)).
-2. Update `build.gradle`:
-  ```groovy
-    buildscript {
-      ...
-      repositories {
-        ...
-        mavenCentral()
-      }
-      dependencies {
-        ...
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.5.0"
-      }
-    }
-  ```
 
-3. Update `app/build.gradle`:
-```groovy
-plugins {
-  id 'newrelic'
-}  
-```
-For legacy plugin application:
-```groovy
-apply plugin: 'newrelic'
-```
+2. Add the following changes to Apply Gradle Plugin:
 
-4. Make sure your app requests INTERNET and ACCESS_NETWORK_STATE permissions by adding these lines to your `AndroidManifest.xml`
+If you are using Plugins DSL to Apply the NewRelic Gradle Plugin, make the following changes:
+
+In android/settings.gradle:
+   ```groovy
+   plugins {
+      id "com.android.application" version "7.4.2" apply false
+      id "org.jetbrains.kotlin.android" version "1.7.10" apply false
+      id "com.newrelic.agent.android" version "7.5.1" apply false // <-- include this
+   }
+   ```
+
+In android/app/build.gradle:
+   ```groovy
+   plugins {
+      id "com.android.application"
+      id "kotlin-android"
+      id "com.newrelic.agent.android"  //<-- include this
+   }
+   ```
+
+Or, if you are using the traditional way to apply the plugin:
+   ```groovy
+   buildscript {
+     ...
+     repositories {
+       ...
+       mavenCentral()
+     }
+     dependencies {
+       ...
+       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.5.1"
+     }
+   }
+   ```
+
+Apply the NewRelic plugin to the top of the android/app/build.gradle file:
+   ```groovy
+   apply plugin: "com.android.application"
+   apply plugin: 'newrelic' // <-- include this
+   ```
+3. Make sure your app requests INTERNET and ACCESS_NETWORK_STATE permissions by adding these lines to your `AndroidManifest.xml`
   ```
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
