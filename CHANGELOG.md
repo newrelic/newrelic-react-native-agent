@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.2
+
+## New Features
+
+1. **Distributed Tracing Control**
+   - Introducing a new feature flag: `distributedTracingEnabled`, providing the ability to enable or disable distributed tracing functionality.
+
+## Bug Fixes
+
+- Addressed an issue where console debug logs were incorrectly displayed as console errors.
+
+
 ## 1.4.1
 ## New Features
 
