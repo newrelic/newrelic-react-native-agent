@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.4
+
+## Bug Fixes
+
+- Fixed an issue causing the application to crash when transitioning to the background due to a mismatch between the Android and NDK agents.
+
+
 ## 1.4.3
 
 ## New Features
