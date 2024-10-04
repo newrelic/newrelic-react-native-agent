@@ -7,6 +7,17 @@
 
 This agent uses native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
 
+### Known Issues
+
+**Crash reports may not be sent when ProGuard rules are not properly configured for New Relic in hybrid Android applications.**
+
+Symptoms:
+- Crashes occur but are not visible in New Relic dashboard
+- Crash reporting appears to be non-functional despite correct initialization
+
+Solution:
+Ensure proper ProGuard rules are added to your ProGuard configuration file. See "Configuring ProGuard Rules" in setup documentation.
+
 
 ## Features
 * Capture JavaScript errors
@@ -619,6 +630,14 @@ Strip Debug Symbols During Copy : Yes
 ### Configure app launch times
 
 To measure app launch time, you can refer to the following documentation for both [Android](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/configure-app-launch-time-android-apps/) and [iOS](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/configuration/app-launch-times-ios-apps/) platforms.
+
+### Known Issues
+
+**Crash reports may not be sent when ProGuard rules are not properly configured for New Relic in hybrid Android applications.**
+
+
+**Solution**:
+Ensure proper ProGuard rules are added to your ProGuard configuration file. See [Configuring ProGuard Rules](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/configure-proguard-or-dexguard-android-apps/) in setup documentation.
 
 
 ## Testing
