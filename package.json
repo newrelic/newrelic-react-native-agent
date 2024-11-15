@@ -50,7 +50,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@expo/config-plugins": "^8.0.6",
+    "@expo/config-plugins": "^9.0.0",
     "@react-native-community/cli-platform-android": "^13.6.4",
     "lodash.foreach": "^4.5.0",
     "react-native-promise-rejection-utils": "0.0.1"
