@@ -33,7 +33,7 @@ class NewRelic {
     this.agentVersion = version;
     this.agentConfiguration = {
         analyticsEventEnabled: true,
-        nativeCrashReportingEnabled: true,
+        nativeCrashReportingEnabled: false,
         crashReportingEnabled: true,
         interactionTracingEnabled: false,
         networkRequestEnabled: true,

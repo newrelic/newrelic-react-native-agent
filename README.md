@@ -78,7 +78,7 @@ import {Platform} from 'react-native';
     
     //Android Specific
     // Optional:Enable or disable collection of native c/c++ crash.
-    nativeCrashReportingEnabled: true,
+    nativeCrashReportingEnabled: false,
 
     // Optional:Enable or disable crash reporting.
     crashReportingEnabled: true,

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.7
+
+## Improvements
+
+- Added support for Expo 52
+- Disabled default native C++ crash reporting
+
 ## 1.4.6
 
 ## Improvements
