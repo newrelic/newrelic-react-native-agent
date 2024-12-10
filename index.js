@@ -163,7 +163,7 @@ class NewRelic {
      */
     startAgent(appkey, customerConfiguration) {
         this.LOG.verbose = true; // todo: should let this get set by a param
-        this.config = Object.assign(this.agentConfiguration, customerConfiguration);
+        this.config = {...this.agentConfiguration, ...customerConfiguration};
         this.NRMAModularAgentWrapper.startAgent(appkey, this.agentVersion, this.getReactNativeVersion(), this.config);
         this.addNewRelicErrorHandler();
         this.addNewRelicPromiseRejectionHandler();
