@@ -15,7 +15,7 @@ export const withNetworkAcessPermission: ConfigPlugin = config => {
     return withAndroidManifest(config, async config => {
         let androidManifest = config.modResults
 
-        AndroidConfig.Permissions.addPermission(androidManifest,networkAcessStatePermission);
+        AndroidConfig.Permissions.ensurePermission(androidManifest,networkAcessStatePermission);
     
         return config
       })
