@@ -55,6 +55,9 @@
     "lodash.foreach": "^4.5.0",
     "react-native-promise-rejection-utils": "0.0.1"
   },
+  "peerDependencies": {
+    "react-native": "*"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
@@ -79,8 +82,9 @@
     "jsdoc": "^4.0.2",
     "markdown-it": ">=12.3.2",
     "marked": ">=4.0.10",
+    "metro-react-native-babel-preset": "^0.77.0",
     "node-notifier": ">=8.0.1",
-    "react-native": "^0.70.6",
+    "react-native": "^0.73.0",
     "shelljs": "^0.8.4",
     "typescript": "^4.9.4",
     "unzipper": "^0.10.11"
@@ -88,6 +92,14 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "codegenConfig": {
+    "name": "RNNewRelicSpec",
+    "type": "modules",
+    "jsSrcsDir": "new-relic/spec",
+    "android": {
+      "javaPackageName": "com.NewRelic"
     }
   },
   "sdkVersions": {

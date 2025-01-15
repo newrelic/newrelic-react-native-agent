@@ -35,14 +35,15 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class NRMModularAgentModule extends ReactContextBaseJavaModule {
+public class NRMModularAgentModuleImpl {
+
+
+      public static final String NAME = "NRMModularAgent";
 
     private final ReactApplicationContext reactContext;
 
-    public NRMModularAgentModule(ReactApplicationContext reactContext) {
-        super(reactContext);
+    public NRMModularAgentModuleImpl(ReactApplicationContext reactContext) {
         this.reactContext = reactContext;
-
     }
 
     @Override

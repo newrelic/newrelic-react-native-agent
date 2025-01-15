@@ -8,8 +8,9 @@ import utils from './nr-utils';
 import { LOG } from './nr-logger';
 import { Attribute, BreadCrumb, NewRelicEvent } from './models';
 import StackFrameEditor from './stack-frame-editor';
-
-const { NRMModularAgent } = NativeModules;
+const isTurboModuleEnabled = global.__turboModuleProxy != null;
+const NRMModularAgent = isTurboModuleEnabled ?
+require("./spec/NativeNewRelicModule").default:NativeModules.NRMModularAgent;
 
 class NRMAModularAgentWrapper {
   static isAgentStarted = false;
@@ -221,6 +222,7 @@ class NRMAModularAgentWrapper {
   }
 
   startAgent = (appKey,agentVersion,reactNativeVersion,config) => {
+    LOG.info('React Native agent started. 12245' + isTurboModuleEnabled);
     NRMModularAgent.startAgent(appKey,agentVersion,reactNativeVersion,config);
     NRMAModularAgentWrapper.isAgentStarted = true;
   }
@@ -285,6 +287,5 @@ class NRMAModularAgentWrapper {
   }
 
 }
-
 
 export default NRMAModularAgentWrapper;

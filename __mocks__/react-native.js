@@ -10,8 +10,6 @@ const mockedModule = jest.mock(
     () => {
 
 
-
-     
       return {
         NativeModules: { 
             NRMModularAgent: MOCK_NRM_MODULAR_AGENT      
