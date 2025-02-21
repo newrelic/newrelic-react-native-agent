@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.0
+
+## Improvements
+
+- Updated the Native Android agent to version 7.6.4.
+- Added support for React Native New Architecture.
+
+
 ## 1.4.8
 
 ## Improvements

@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   }
 #   todo: we have to make sure the zip matches this name.
   s.source         = { :http => 'file:' + '$PODS_TARGET_SRCROOT/../ios/ios-bridge.zip' }
-  s.source_files = "ios/bridge/**/*.{h,m}"
+  s.source_files = "ios/bridge/**/*.{h,mm}"
   s.platforms    = { :ios => "9.0", :tvos => "11.1" }
   s.requires_arc = true
 
@@ -31,6 +31,19 @@ Pod::Spec.new do |s|
 
   s.preserve_paths = '*.js'
 
-  s.dependency 'React'
+  if respond_to?(:install_modules_dependencies, true)
+    install_modules_dependencies(s)
+  else
+    s.dependency 'React-Core'
+  end
+
+  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
+    s.pod_target_xcconfig = {
+      'DEFINES_MODULE' => 'YES',
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) COCOAPODS=1 RCT_NEW_ARCH_ENABLED=1',
+      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
+      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
+    }
+  end
 end
 

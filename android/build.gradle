@@ -28,6 +28,9 @@ def packageJson = PackageJson.getForProject(project)
 def newrelicVersion = packageJson['sdkVersions']['android']['newrelic']
 def ndkVersion = packageJson['sdkVersions']['android']['ndk']
 
+def isNewArchitectureEnabled() {
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
 
 
 project.ext {
@@ -43,7 +46,17 @@ project.ext {
 }
 
 apply plugin: 'com.android.library'
+if (isNewArchitectureEnabled()) {
+    apply plugin: 'com.facebook.react'
+}
 
+if (isNewArchitectureEnabled()) {
+    react {
+        jsRootDir = file("../new-relic/spec")
+        libraryName = "newrelic-react-native-agent"
+        codegenJavaPackageName = "com.NewRelic"
+    }
+}
 
 def appProject
 if (findProject(':@newrelic-react-native-agent')) {
@@ -58,13 +71,15 @@ android {
         namespace "com.NewRelic"
     }
 
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName version
+        buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
+
     }
 
     lintOptions {
@@ -82,6 +97,16 @@ android {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
+
+   sourceSets {
+        main {
+            if (isNewArchitectureEnabled()) {
+                java.srcDirs += ['src/newarch/java']
+            } else {
+                java.srcDirs += ['src/oldarch/java']
+            }
+        }
+   }
 }
 
 repositories {

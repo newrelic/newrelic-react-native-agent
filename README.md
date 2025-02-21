@@ -150,7 +150,7 @@ In android/settings.gradle:
    plugins {
       id "com.android.application" version "7.4.2" apply false
       id "org.jetbrains.kotlin.android" version "1.7.10" apply false
-      id "com.newrelic.agent.android" version "7.6.2" apply false // <-- include this
+      id "com.newrelic.agent.android" version "7.6.4" apply false // <-- include this
    }
    ```
 
