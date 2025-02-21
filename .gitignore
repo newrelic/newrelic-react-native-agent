@@ -61,3 +61,4 @@ coverage/
 docs/
 git.README.md
 package-lock.json
+.codebuddy/
