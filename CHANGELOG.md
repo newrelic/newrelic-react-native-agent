@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.1
+
+## Improvements
+
+- Resolved build issues related to changes in the new architecture.
+
 ## 1.5.0
 
 ## Improvements
