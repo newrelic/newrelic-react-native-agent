@@ -170,7 +170,7 @@ public class NRMModularAgentModule extends NativeNewRelicModuleSpec {
 
     @Override
     public void noticeHttpTransaction(String url, String method, double statusCode, double startTime, double endTime, double bytesSent, double bytesReceived, String responseBody) {
-        impl.noticeHttpTransaction(url, method, (int)statusCode, (long)startTime, (long)endTime, (long)bytesSent, (long)bytesReceived, responseBody);
+        impl.noticeHttpTransaction(url, method, (int)statusCode, (int)startTime, (int)endTime, (int)bytesSent, (int)bytesReceived, responseBody);
     }
 
     @Override

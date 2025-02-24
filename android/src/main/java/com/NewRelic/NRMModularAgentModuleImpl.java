@@ -46,7 +46,6 @@ public class NRMModularAgentModuleImpl {
         this.reactContext = reactContext;
     }
 
-    @Override
     @Nonnull
     public String getName() {
         return "NRMModularAgent";
@@ -220,8 +219,8 @@ public class NRMModularAgentModuleImpl {
     }
 
     @ReactMethod
-    public void isAgentStarted(String name, Callback callback) {
-        callback.invoke(false, NewRelic.isStarted());
+    public void isAgentStarted(Promise promise) {
+        promise.resolve(NewRelic.isStarted());
     }
 
     @ReactMethod
