@@ -68,7 +68,7 @@ RCT_EXPORT_METHOD(httpResponseBodyCaptureEnabled:(BOOL) enabled) {
     }
 }
 
-RCT_EXPORT_METHOD(recordBreadcrumb:(NSString* _Nonnull)eventName attributes:(NSDictionary* _Nullable)attributes) {
+RCT_EXPORT_METHOD(recordBreadcrumb:(NSString* _Nonnull)eventName attributes:(NSDictionary* _Nonnull)attributes) {
     [NewRelic recordBreadcrumb:eventName attributes:attributes];
 }
 
@@ -156,7 +156,7 @@ RCT_EXPORT_METHOD(removeAttribute:(NSString *)name)
     [NewRelic removeAttribute:(NSString * _Nonnull)name];
 }
 
-RCT_EXPORT_METHOD(logAttributes:(NSDictionary* _Nullable)attributes)
+RCT_EXPORT_METHOD(logAttributes:(NSDictionary* _Nonnull)attributes)
 {
     [NewRelic logAttributes:attributes];
 }
@@ -224,7 +224,7 @@ RCT_EXPORT_METHOD(addHTTPHeadersTrackingFor:(NSArray<NSString*>*_Nonnull) header
     [NewRelic addHTTPHeaderTrackingFor:headers];
 }
 
-RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nullable)exceptionDictionary) {
+RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nonnull)exceptionDictionary) {
     if (exceptionDictionary == nil) {
         NSLog(@"[NRMA] Null dictionary given to recordHandledException");
         return;
