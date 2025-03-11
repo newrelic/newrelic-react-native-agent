@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.2
+
+## Improvements
+
+- Resolved build issues related to changes in the new architecture.
+- Native iOS agent updated to version 7.5.4
+
+
 ## 1.5.1
 
 ## Improvements
