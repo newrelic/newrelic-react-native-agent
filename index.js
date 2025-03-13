@@ -512,7 +512,7 @@ class NewRelic {
      * This function is used to log all attributes.
      *
      * @param {Error} error - The error object from which the message is extracted.
-     * @param {Record<string, string | number | boolean>} attributes - A map of attributes to be logged.
+     * @param {Record<string, string | number | boolean>} attributes - The attributes to be logged.
      */
     logAll(error, attributes) {
         // Create a new Map to store all attributes
