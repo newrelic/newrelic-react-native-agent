@@ -217,9 +217,9 @@ If you run following commands then Fatal JS erros will show up as a crash in NR.
 
 ```shell
 
-npx react-native run-ios --configuration Release
+npx react-native run-ios --mode=release
 
-npx react-native run-android --variant=release
+npx react-native run-android --mode=release
 
 ```
 
