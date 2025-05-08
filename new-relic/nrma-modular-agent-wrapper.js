@@ -253,8 +253,8 @@ class NRMAModularAgentWrapper {
   }
 
   recordHandledException = async (error, JSAppVersion, isFatal) => {
-    const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack').default;
-    const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace').default;
+    const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack');
+    const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace');
     
     let parsedStack;
     try {
