@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.5
+
+## Improvements
+
+- Fixed to update import statements for error stack parsing for Dev Build
+
 ## 1.5.4
 
 ## Improvements
