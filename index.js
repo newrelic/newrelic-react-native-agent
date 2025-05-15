@@ -273,7 +273,7 @@ class NewRelic {
     /**
      * Add Headers as Attributes in Http Requests, for use in New Relic Insights.
      * The method includes a list of headers, specified as a map.
-     * @param headers {Map<string, any>} A map that includes a list of headers.
+     * @param headers {string[]} A list of headers.
      */
     addHTTPHeadersTrackingFor(headers) {
         this.NRMAModularAgentWrapper.execute('addHTTPHeadersTrackingFor', headers);
