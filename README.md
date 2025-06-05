@@ -183,11 +183,7 @@ Apply the NewRelic plugin to the top of the android/app/build.gradle file:
    apply plugin: "com.android.application"
    apply plugin: 'newrelic' // <-- include this
    ```
-3. Make sure your app requests INTERNET and ACCESS_NETWORK_STATE permissions by adding these lines to your `AndroidManifest.xml`
-  ```
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  ```
+
 
 ### iOS Setup
 
