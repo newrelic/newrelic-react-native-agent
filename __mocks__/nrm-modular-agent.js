@@ -47,5 +47,8 @@ export default  {
   logDebug: jest.fn(),
   logError: jest.fn(),
   logWarn: jest.fn(),
-  isAgentStarted:jest.fn()
+  nativeLog: jest.fn(),
+  isAgentStarted:jest.fn(() => {
+    return Promise.resolve(true);
+  })
 };
