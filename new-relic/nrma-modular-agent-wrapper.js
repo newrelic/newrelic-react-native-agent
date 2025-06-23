@@ -41,7 +41,7 @@ class NRMAModularAgentWrapper {
       return LOG.error(agentFailedToStartMsg);
     }
 
-    return NRMModularAgent.isAgentStarted(name, (error, isRunning) => {
+    return NRMModularAgent.isAgentStarted().then((isRunning) =>{
       this.didCheck = true;
       if (isRunning) {
         NRMAModularAgentWrapper.isAgentStarted = isRunning;

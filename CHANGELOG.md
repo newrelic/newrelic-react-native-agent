@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.6
+
+## Improvements
+
+- Updated the Native Android agent to version 7.6.7.
+- Updated the Native iOS agent to version 7.5.6.
+- Fixed the issue related to android crash.
+
 ## 1.5.5
 
 ## Improvements
