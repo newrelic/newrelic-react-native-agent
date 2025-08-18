@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   }
 #   todo: we have to make sure the zip matches this name.
   s.source         = { :http => 'file:' + '$PODS_TARGET_SRCROOT/../ios/ios-bridge.zip' }
-  s.source_files = "ios/bridge/**/*.{h,mm}"
+  s.source_files = "ios/bridge/**/*.{h,m,mm,swift}"
   s.platforms    = { :ios => "9.0", :tvos => "11.1" }
   s.requires_arc = true
 
