@@ -27,6 +27,6 @@ public class NRMModularAgentPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Collections.emptyList();
+      return Arrays.<ViewManager>asList(new SessionReplayReactNativeMaskViewManager(), new SessionReplayReactNativeUnMaskViewManager());
     }
 }
