@@ -1,6 +1,6 @@
 {
   "name": "newrelic-react-native-agent",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "description": "A New Relic Mobile Agent for React Native",
   "main": "./index.js",
   "types": "./dist/index.d.ts",
@@ -33,7 +33,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@expo/config-plugins": "^9.0.0",
+    "@expo/config-plugins": "^10.1.1",
     "@react-native-community/cli-platform-android": "^13.6.4",
     "lodash.foreach": "^4.5.0",
     "react-native-promise-rejection-utils": "0.0.1"
@@ -87,7 +87,7 @@
   },
   "sdkVersions": {
     "ios": {
-      "newrelic": "~>7.5.8"
+      "newrelic": "~>7.5.9"
     },
     "android": {
       "newrelic": "7.6.8",
