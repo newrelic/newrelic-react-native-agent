@@ -253,37 +253,42 @@ class NRMAModularAgentWrapper {
   }
 
   recordHandledException = async (error, JSAppVersion, isFatal) => {
-    const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack').default;
-    const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace').default;
-    
-    let parsedStack;
-    try {
-      parsedStack = parseErrorStack(error.stack);
-    } catch {
-      // React Native <=0.63 takes an error instead of a string
-      parsedStack = parseErrorStack(error);
-    }
+  const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack');
+  const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace');
 
-    let stack;
+  let parsedStack;
+  let stack;
 
-    try {
-      let symbolicatedStack = await symbolicateStackTrace(parsedStack);
-      stack = symbolicatedStack.stack;
-    } catch (e) {
-      // Unable to symbolicate stack in release mode
-      stack = parsedStack;
-    }
+  const parseFunction = parseErrorStack.default || parseErrorStack;
+  const symbolicateFunction = symbolicateStackTrace.default || symbolicateStackTrace;
 
-    let fileNameProperties = StackFrameEditor.parseFileNames(stack);
-    let exceptionDictionary = {
-      name: error.name,
-      message: error.message,
-      stackFrames: Object.assign({}, stack),
-      isFatal: isFatal,
-      JSAppVersion: JSAppVersion,
-      ...fileNameProperties
-    }
-    NRMModularAgent.recordHandledException(exceptionDictionary);
+  // Parse the error stack
+  try {
+    parsedStack = parseFunction(error.stack);
+  } catch {
+    // React Native <=0.63 takes an error instead of a string
+    parsedStack = parseFunction(error);
+  }
+
+  // Symbolicate the stack trace
+  try {
+    const symbolicatedStack = await symbolicateFunction(parsedStack);
+    stack = symbolicatedStack.stack;
+  } catch (e) {
+    // Unable to symbolicate stack in release mode
+    stack = parsedStack;
+  }
+
+  const fileNameProperties = StackFrameEditor.parseFileNames(stack);
+  const exceptionDictionary = {
+    name: error.name,
+    message: error.message,
+    stackFrames: Object.assign({}, stack),
+    isFatal: isFatal,
+    JSAppVersion: JSAppVersion,
+    ...fileNameProperties
+  };
+  NRMModularAgent.recordHandledException(exceptionDictionary);
   }
 
 }
