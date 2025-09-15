@@ -18,7 +18,10 @@ const reactNative = {
         'patch':3
       }
     }
-  },
+  },  requireNativeComponent: jest.fn((componentName) => {
+    // Return a mock component that can be used in tests
+    return componentName;
+  }),
 };
 
 module.exports = reactNative;

@@ -687,3 +687,5 @@ const newRelic = new NewRelic();
 export default newRelic;
 
 
+
+export { NewRelicMask, NewRelicUnMask } from './new-relic/replay/newrelic-mask-view';
