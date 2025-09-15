@@ -1,11 +1,17 @@
 # Changelog
 
+## 1.5.10
+
+## Improvements
+
+- Updated the Native Android agent to version 7.6.9.
+- Updated the Native iOS agent to version 7.5.10.
+
 ## 1.5.9
 
 ## Improvements
 
 - Resolved the issue to update import statements for error stack parsing compatible with React Native version 0.78 and lower.
-
 
 ## 1.5.8
 
