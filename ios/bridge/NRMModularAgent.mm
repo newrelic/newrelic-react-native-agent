@@ -101,7 +101,7 @@ RCT_EXPORT_METHOD(noticeNetworkFailure:(NSString *)url
 
 RCT_EXPORT_METHOD(recordMetric:(NSString*)name
                   category:(NSString *)category
-                  value:(NSNumber* _Nonnull)value
+                  value:(double) value
                   countUnit:(NSString *)countUnit
                   valueUnit:(NSString *)valueUnit) {
     
@@ -112,17 +112,18 @@ RCT_EXPORT_METHOD(recordMetric:(NSString*)name
         @"BYTES_PER_SECOND": kNRMetricUnitsBytesPerSecond,
         @"OPERATIONS": kNRMetricUnitsOperations
     };
-    if([value intValue] < 0) {
+    if(value == -1) {
         [NewRelic recordMetricWithName:name category:category];
     } else {
-        if(countUnit == nil || valueUnit == nil) {
-            [NewRelic recordMetricWithName:name category:category value:value];
-        } else {
-            [NewRelic recordMetricWithName:name category:category value:value valueUnits:dict[valueUnit] countUnits:dict[countUnit]];
+         if (valueUnit != nil && countUnit != nil){
+             [NewRelic recordMetricWithName:name category:category value:[NSNumber numberWithDouble:value] valueUnits:dict[valueUnit] countUnits:dict[countUnit]];
+         } else {
+            [NewRelic recordMetricWithName:name category:category value:[NSNumber numberWithDouble:value]];
         }
     }
 
 }
+
 
 RCT_EXPORT_METHOD(removeAllAttributes) {
     [NewRelic removeAllAttributes];
