@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.11
+
+## Improvements
+
+- Updated the Native Android agent to version 7.6.10.
+- Updated the Native iOS agent to version 7.5.11.
+- Fixed RecordMetric issue for iOS
+
 ## 1.5.10
 
 ## Improvements
