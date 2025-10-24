@@ -47,6 +47,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
+
+      - name: create tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git tag v$(jq -r '.version' package.json)
+          git push --tags
+          
       - name: Install Dependencies
         run: |
           if [ -e yarn.lock ]; then
@@ -58,6 +66,12 @@ jobs:
           fi
       - name: Run all test cases
         run: npm run test
+
+      - name: create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v$(jq -r '.version' package.json) --generate-notes
 
       - name: Publish as NPM package on new relic account(we need npm secret from new relic account)
         env:
