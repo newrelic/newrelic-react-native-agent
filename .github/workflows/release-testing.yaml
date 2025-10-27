@@ -20,6 +20,13 @@ on:
         # Input has to be provided for the workflow to run
         required: true
 
+permissions:
+  # In order to create the git tag, we must have write permissions.
+  contents: write
+  # This is important. Trusted Publishing requires this for the OIDC exchange.
+  id-token: write
+
+
 # A workflow run is made up of one or more jobs
 # that can run sequentially or in parallel
 jobs:
