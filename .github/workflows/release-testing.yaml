@@ -1,7 +1,6 @@
 # Copyright (c) 2022-present New Relic Corporation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0 
 
----
 name: "release"
 
 # Controls when the action will run.
