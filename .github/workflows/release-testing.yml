@@ -134,17 +134,14 @@ jobs:
 
           # Commit and push changes
           git add package.json CHANGELOG.md
-          git commit -m "$(cat <<EOF
-chore: bump version to $NEW_VERSION [skip ci]
+          git commit -m "chore: bump version to $NEW_VERSION [skip ci]
 
-- Auto-bumped version based on commit type
-- Updated CHANGELOG.md
+          - Auto-bumped version based on commit type
+          - Updated CHANGELOG.md
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+          🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-Co-Authored-By: Claude <noreply@anthropic.com>
-EOF
-)"
+          Co-Authored-By: Claude <noreply@anthropic.com>"
           git push origin main
 
       - name: Wait for version update commit
