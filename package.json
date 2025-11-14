@@ -1,5 +1,5 @@
 {
-  "name": "newrelic-react-native-agent",
+  "name": "@newrelic/newrelic-react-native-agent",
   "version": "1.5.12",
   "description": "A New Relic Mobile Agent for React Native",
   "main": "./index.js",
