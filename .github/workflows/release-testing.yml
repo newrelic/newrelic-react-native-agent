@@ -58,6 +58,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
 
+
       - name: Check if version was updated in package.json
         id: version_check
         run: |
@@ -182,8 +183,6 @@ jobs:
 
       - name: Publish as NPM package on new relic account(we need npm secret from new relic account)
         if: steps.version_check.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.MOBILE_AGENT_NPM_TOKEN}}
         run: npm publish --provenance --access public
 
       - name: Capture logs if previous failure
