@@ -182,8 +182,6 @@ jobs:
 
       - name: Publish as NPM package on new relic account(we need npm secret from new relic account)
         if: steps.version_check.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.MOBILE_AGENT_NPM_TOKEN}}
         run: npm publish
 
       - name: Capture logs if previous failure
