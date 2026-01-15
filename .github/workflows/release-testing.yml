@@ -36,6 +36,11 @@ jobs:
   release:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
+
+    outputs:
+      version: ${{ steps.final_version.outputs.current_version }}
+      version_changed: ${{ steps.version_check.outputs.version_changed }}
+
     strategy:
       matrix:
         node-version: [24.x]
@@ -196,3 +201,81 @@ jobs:
       - name: Check environmental variables
         if: ${{ always() }}
         run: printenv | sort -f
+      - name: Finalize Version Output
+        id: final_version
+        if: always()
+        run: |
+          # Re-read package.json in case it was auto-bumped during this run
+          FINAL_VER=$(jq -r '.version' package.json)
+          echo "current_version=$FINAL_VER" >> $GITHUB_OUTPUT
+
+  update-documentation:
+    needs: release
+    # Only run if a release actually happened
+    if: needs.release.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      AGENT_NAME: "react-native"
+      AGENT_TITLE: "React Native agent"
+      DOCS_PATH: "src/content/docs/release-notes/mobile-release-notes/npm-release-notes"
+      REPO_URL: "https://github.com/newrelic/newrelic-npm-agent"
+      BOT_EMAIL: ${{ secrets.BOT_EMAIL }}
+      PASSED_VERSION: ${{ needs.release.outputs.version }}
+
+    steps:
+      - name: Checkout Agent Repo
+        uses: actions/checkout@v4
+        with:
+          path: agent-repo
+
+      - name: Checkout Docs-Website
+        uses: actions/checkout@v4
+        with:
+          repository: newrelic/docs-website
+          ref: develop
+          token: ${{ secrets.BOT_PAT }}
+          path: docs-website
+          fetch-depth: 1
+
+      - name: Generate Release Document
+        working-directory: agent-repo
+        env:
+          GH_TOKEN: ${{ secrets.BOT_PAT }}
+        run: |
+          chmod +x ./.github/scripts/generate-docs.sh
+          ./.github/scripts/generate-docs.sh
+          
+          if [ -f "release_info.env" ]; then
+            cat release_info.env >> $GITHUB_ENV
+          else
+            echo "::error::Script failed to create release_info.env"
+            exit 1
+          fi
+
+      - name: Create branch, commit, and PR
+        env:
+          GH_TOKEN: ${{ secrets.BOT_PAT }}
+        run: |
+          cd docs-website
+          VERSION="${{ env.FINAL_VERSION }}"
+          VERSION_STRIPPED=$(echo "${VERSION}" | tr -d '.')
+          FINAL_FILENAME="${{ env.AGENT_NAME }}-agent-${VERSION_STRIPPED}.mdx"
+          BRANCH_NAME="${{ env.AGENT_NAME }}_release_notes_$(echo ${VERSION} | tr '.' '-')"
+          
+          git config user.name "newrelic-mobile-agent-bot"
+          git config user.email "${{ env.BOT_EMAIL }}"
+          
+          git checkout -b "$BRANCH_NAME"
+          cp ../agent-repo/release-notes.mdx "${{ env.DOCS_PATH }}/$FINAL_FILENAME"
+          
+          git add .
+          git commit -m "chore(${{ env.AGENT_NAME }} agent): add release notes v${VERSION}"
+          git push origin "$BRANCH_NAME"
+
+          gh pr create \
+            --repo newrelic/docs-website \
+            --base develop \
+            --head "$BRANCH_NAME" \
+            --title "${{ env.AGENT_TITLE }} Release Notes v${VERSION}" \
+            --body "Automated PR for ${{ env.AGENT_TITLE }} v${VERSION} release." \
+            --label "documentation"
