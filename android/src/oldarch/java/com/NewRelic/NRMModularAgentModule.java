@@ -199,6 +199,16 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void recordReplay() {
+        impl.recordReplay();
+    }
+
+    @ReactMethod
+    public void pauseReplay() {
+        impl.pauseReplay();
+    }
+
+    @ReactMethod
     public void recordHandledException(ReadableMap exceptionDictionary) {
         impl.recordHandledException(exceptionDictionary);
     }

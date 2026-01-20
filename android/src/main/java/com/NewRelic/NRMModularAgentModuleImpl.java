@@ -471,6 +471,16 @@ public class NRMModularAgentModuleImpl {
     }
 
     @ReactMethod
+    public void recordReplay() {
+        NewRelic.recordReplay();
+    }
+
+    @ReactMethod
+    public void pauseReplay() {
+        NewRelic.pauseReplay();
+    }
+
+    @ReactMethod
     public void recordHandledException(ReadableMap exceptionDictionary) {
         if(exceptionDictionary == null) {
             Log.w("NRMA", "Null dictionary given to recordHandledException");

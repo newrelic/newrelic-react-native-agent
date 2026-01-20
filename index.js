@@ -592,6 +592,22 @@ class NewRelic {
     }
 
     /**
+     * Start recording session replay.
+     * Enables session replay functionality to capture and record user interactions.
+     */
+    recordReplay() {
+        this.NRMAModularAgentWrapper.execute('recordReplay');
+    }
+
+    /**
+     * Pause recording session replay.
+     * Temporarily pauses the session replay recording functionality.
+     */
+    pauseReplay() {
+        this.NRMAModularAgentWrapper.execute('pauseReplay');
+    }
+
+    /**
      * @private
      */
     addNewRelicErrorHandler() {

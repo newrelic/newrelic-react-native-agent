@@ -450,6 +450,19 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 ```js
     NewRelic.shutdown();
 ```
+
+### recordReplay() : void;
+> Start recording session replay. Enables session replay functionality to capture and record user interactions.
+```js
+    NewRelic.recordReplay();
+```
+
+### pauseReplay() : void;
+> Pause recording session replay. Temporarily pauses the session replay recording functionality.
+```js
+    NewRelic.pauseReplay();
+```
+
 ### [addHTTPHeadersTrackingFor](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile/mobile-sdk/add-tracked-headers/)() : void;
 > This API allows you to add any header field strings to a list that gets recorded as attributes with networking request events. After header fields have been added using this function, if the headers are in a network call they will be included in networking events in NR1. 
 ```js
