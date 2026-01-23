@@ -3,16 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0 
  */
 
-import utils from './new-relic/nr-utils';
-import { LOG } from './new-relic/nr-logger';
 import { Platform } from 'react-native';
+import {
+    getUnhandledPromiseRejectionTracker,
+    setUnhandledPromiseRejectionTracker,
+} from 'react-native-promise-rejection-utils';
+import getCircularReplacer from './new-relic/circular-replacer';
+import { LOG } from './new-relic/nr-logger';
+import utils from './new-relic/nr-utils';
 import NRMAModularAgentWrapper from './new-relic/nrma-modular-agent-wrapper';
 import version from './new-relic/version';
-import getCircularReplacer from './new-relic/circular-replacer';
-import {
-  getUnhandledPromiseRejectionTracker,
-  setUnhandledPromiseRejectionTracker,
-} from 'react-native-promise-rejection-utils'
 
 
 /**
@@ -90,9 +90,11 @@ class NewRelic {
      * Navigation Route Listener
      */
     /**
-     * Subcribe onNavigationStateChange Listenr from React Navigation Version 4.x and lower
-     =
+     * Subscribe onNavigationStateChange Listener from React Navigation Version 4.x and lower
      * Creates and records a MobileBreadcrumb for Current Screen
+     * @param {object} prevState
+     * @param {object} newState
+     * @param {object} action
      */
     onNavigationStateChange = (prevState, newState, action) => {
 
@@ -105,6 +107,10 @@ class NewRelic {
 
     }
 
+    /**
+     * @param {object} currentState
+     * @returns {string | null}
+     */
     getCurrentRouteName = (currentState) => {
         if (!currentState) {
             return null;
@@ -118,6 +124,7 @@ class NewRelic {
     /**
      * Subcribe componentDidAppearListener Listenr from React Native Navigation Package
      * Creates and records a MobileBreadcrumb for Current Screen
+     * @param {object} event
      */
     componentDidAppearListener = (event) => {
         if (this.state.isFirstScreen) {
@@ -139,6 +146,7 @@ class NewRelic {
     /**
      * Subcribe OnStateChange Listenr from React Navigation Version 5.x and higer
      * Creates and records a MobileBreadcrumb for Current Screen
+     * @param {object} state
      */
     onStateChange = (state) => {
         var currentScreenName = this.getCurrentScreen(state);
@@ -150,6 +158,10 @@ class NewRelic {
 
     }
 
+    /**
+     * @param {object} state
+     * @returns {string}
+     */
     getCurrentScreen(state) {
 
         if (!state.routes[state.index].state) {
@@ -160,6 +172,8 @@ class NewRelic {
 
     /**
      * Start the agent
+     * @param {string} appkey
+     * @param {object} customerConfiguration
      */
     startAgent(appkey, customerConfiguration) {
         this.LOG.verbose = true; // todo: should let this get set by a param
@@ -314,13 +328,18 @@ class NewRelic {
     }
 
     /**
-     * Records javascript errors for react-native.
-     * @param e {Error} A JavaScript error.
+     * Records JavaScript errors for react-native.
+     * @param e {Error | string} A JavaScript error.
      */
     async recordError(e) {
         await this.recordError(e, false);
     }
 
+    /**
+     * Records JavaScript errors for react-native.
+     * @param {Error | string} e
+     * @param {boolean} isFatal
+     */
     async recordError(e, isFatal) {
         if (e) {
             if (!this.JSAppVersion) {
@@ -380,6 +399,7 @@ class NewRelic {
 
     /**
      * Track a method as an interaction
+     * @param {string} actionName - The interaction's name
      */
     async startInteraction(actionName) {
         if (utils.notEmptyString(actionName)) {
@@ -393,8 +413,8 @@ class NewRelic {
      * End an interaction
      * Required. The string ID for the interaction you want to end.
      * This string is returned when you use startInteraction().
+     * @param {string} interActionId
      */
-
     endInteraction(interActionId) {
         if (utils.notEmptyString(interActionId)) {
             this.NRMAModularAgentWrapper.execute('endInteraction', interActionId);
@@ -407,8 +427,8 @@ class NewRelic {
     /**
      * ANDROID ONLY
      * Name or rename an interaction
+     * @param {string} name
      */
-
     setInteractionName(name) {
         if (Platform.OS === 'android') {
             this.NRMAModularAgentWrapper.execute('setInteractionName', name);
@@ -442,7 +462,7 @@ class NewRelic {
     /**
      * This function is used to log a message with a specific log level.
      *
-     * @param {Object} logLevel - The level of the log (e.g., ERROR, WARNING, INFO, VERBOSE, AUDIT).
+     * @param {string} logLevel - The level of the log (e.g., ERROR, WARNING, INFO, VERBOSE, AUDIT).
      * @param {string} message - The message to be logged.
      */
     log(logLevel, message) {
@@ -533,7 +553,7 @@ class NewRelic {
     /**
      * This function is used to log attributes.
      *
-     * @param {Object} attributes - The attributes to be logged.
+     * @param {Record<string, string | number | boolean>} attributes - The attributes to be logged.
      */
     logAttributes(attributes) {
         // Check if the attributes are empty
@@ -611,6 +631,9 @@ class NewRelic {
         }
     }
 
+    /**
+     * @private
+     */
     addNewRelicPromiseRejectionHandler() {
 
         const prevTracker = getUnhandledPromiseRejectionTracker();
@@ -634,6 +657,9 @@ class NewRelic {
 
     }
 
+    /**
+     * @private
+     */
     _overrideConsole() {
         if (!this.state.didOverrideConsole) {
             const defaultLog = console.log;
@@ -665,18 +691,23 @@ class NewRelic {
         }
     }
 
+    /**
+     * @private
+     * @param {string} type
+     * @param {IArguments | Array<unknown>} args
+     */
     sendConsole(type, args) {
         const argsStr = JSON.stringify(args, getCircularReplacer());
 
-        if(type === 'error') {
+        if (type === 'error') {
             this.logError("[CONSOLE][ERROR]" + argsStr);
-          } else if (type === 'warn') {
-            this.logWarn("[CONSOLE][WARN]" +argsStr);
-          }  else if (type === 'debug') {
-              this.logDebug("[CONSOLE][DEBUG]" +argsStr);
-            }else {
-            this.logInfo("[CONSOLE][LOG]" +argsStr);
-          }
+        } else if (type === 'warn') {
+            this.logWarn("[CONSOLE][WARN]" + argsStr);
+        } else if (type === 'debug') {
+            this.logDebug("[CONSOLE][DEBUG]" + argsStr);
+        } else {
+            this.logInfo("[CONSOLE][LOG]" + argsStr);
+        }
 
     }
 
@@ -688,4 +719,4 @@ export default newRelic;
 
 
 
-export { NewRelicMask, NewRelicUnmask } from './new-relic/replay/newrelic-mask-view';
+export { NewRelicMask, NewRelicUnMask } from './new-relic/replay/newrelic-mask-view';
