@@ -217,8 +217,8 @@ jobs:
     env:
       AGENT_NAME: "react-native"
       AGENT_TITLE: "React Native agent"
-      DOCS_PATH: "src/content/docs/release-notes/mobile-release-notes/npm-release-notes"
-      REPO_URL: "https://github.com/newrelic/newrelic-npm-agent"
+      DOCS_PATH: "src/content/docs/release-notes/mobile-release-notes/react-native-release-notes"
+      REPO_URL: "https://github.com/newrelic/newrelic-react-native-agent"
       BOT_EMAIL: ${{ secrets.BOT_EMAIL }}
       PASSED_VERSION: ${{ needs.release.outputs.version }}
 
