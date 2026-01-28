@@ -719,4 +719,4 @@ export default newRelic;
 
 
 
-export { NewRelicMask, NewRelicUnMask } from './new-relic/replay/newrelic-mask-view';
+export { NewRelicMask, NewRelicUnmask } from './new-relic/replay/newrelic-mask-view';
