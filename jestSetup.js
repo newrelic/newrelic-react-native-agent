@@ -36,5 +36,8 @@ jest.mock('./index.js', () => ({
   setUserId: jest.fn(),
   shutdown: jest.fn(),
   startAgent: jest.fn(),
+  recordReplay: jest.fn(),
+  pauseReplay: jest.fn(),
+  addHTTPHeadersTrackingFor: jest.fn(),
   startInteraction: jest.fn()
 }));

@@ -252,6 +252,18 @@ class NRMAModularAgentWrapper {
     }
   }
 
+  recordReplay = () => {
+    if(NRMAModularAgentWrapper.isAgentStarted) {
+      NRMModularAgent.recordReplay();
+    }
+  }
+
+  pauseReplay = () => {
+    if(NRMAModularAgentWrapper.isAgentStarted) {
+      NRMModularAgent.pauseReplay();
+    }
+  }
+
   recordHandledException = async (error, JSAppVersion, isFatal) => {
   const parseErrorStack = require('react-native/Libraries/Core/Devtools/parseErrorStack');
   const symbolicateStackTrace = require('react-native/Libraries/Core/Devtools/symbolicateStackTrace');

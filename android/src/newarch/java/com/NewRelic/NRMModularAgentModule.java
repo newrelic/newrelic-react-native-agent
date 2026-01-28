@@ -190,6 +190,16 @@ public class NRMModularAgentModule extends NativeNewRelicModuleSpec {
     }
 
     @Override
+    public void recordReplay() {
+        impl.recordReplay();
+    }
+
+    @Override
+    public void pauseReplay() {
+        impl.pauseReplay();
+    }
+
+    @Override
     public void recordHandledException(ReadableMap exceptionDictionary) {
         impl.recordHandledException(exceptionDictionary);
     }

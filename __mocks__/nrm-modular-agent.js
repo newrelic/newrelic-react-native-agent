@@ -37,6 +37,8 @@ export default  {
   onStateChange:jest.fn(),
   recordHandledException:jest.fn(),
   shutdown:jest.fn(),
+  recordReplay:jest.fn(),
+  pauseReplay:jest.fn(),
   addHTTPHeadersTrackingFor:jest.fn(),
   setMaxOfflineStorageSize: jest.fn(),
   log: jest.fn(),
