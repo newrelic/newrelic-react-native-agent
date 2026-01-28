@@ -31,7 +31,9 @@ Ensure proper ProGuard rules are added to your ProGuard configuration file. See 
 
 ## Current Support:
 - Android API 24+
-- iOS 10
+- iOS:
+    - iOS 10+ (for agent versions below 1.5.12)
+    - iOS 16+ (starting from agent version 1.5.12)
 - Depends on New Relic iOS/XCFramework and Android agents
 
 Native support levels are based on [React Native requirements](https://github.com/facebook/react-native#-requirements).
