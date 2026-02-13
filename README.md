@@ -175,7 +175,7 @@ Or, if you are using the traditional way to apply the plugin:
      }
      dependencies {
        ...
-       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.6.15"
+       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.7.0"
      }
    }
    ```
@@ -453,14 +453,14 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.shutdown();
 ```
 
-### recordReplay() : void;
-> Start recording session replay. Enables session replay functionality to capture and record user interactions.
+### recordReplay(): void;
+> Start recording session replay. Call this method to manually start capturing session replay data after it has been paused or if auto-start is disabled. Session replay captures user interactions and screen recordings for playback in New Relic One.
 ```js
     NewRelic.recordReplay();
 ```
 
-### pauseReplay() : void;
-> Pause recording session replay. Temporarily pauses the session replay recording functionality.
+### pauseReplay(): void;
+> Pause the session replay recording. Use this method to temporarily stop capturing session replay data without ending the session. Recording can be resumed by calling `recordReplay()`.
 ```js
     NewRelic.pauseReplay();
 ```
