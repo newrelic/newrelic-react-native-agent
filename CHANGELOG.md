@@ -4,7 +4,9 @@
 ## Improvements
 
 - Updated the Native Android agent to version 7.7.0.
-
+- Intelligent Session Replay: Introduced ERROR mode (15-30s buffered recording triggered by crashes) and FULL mode (continuous recording) for optimized data capture.
+- Session Control APIs: Added NewRelic.recordReplay() and NewRelic.pauseReplay() to allow manual, programmatic control over replay recording states.
+- Networking Bug Fix: Fixed an OkHttp3 issue where peekBody() caused indefinite blocking on streaming responses (SSE/chunked) with unknown content lengths.
 
 ## 1.6.0
 
