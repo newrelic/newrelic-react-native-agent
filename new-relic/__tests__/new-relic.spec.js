@@ -504,4 +504,16 @@ describe('New Relic', () => {
     expect(MockNRM.logAttributes.mock.calls.length).toBe(6);
   });
 
+  it('should call recordReplay when called', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.recordReplay();
+    expect(MockNRM.recordReplay.mock.calls.length).toBe(1);
+  });
+
+  it('should call pauseReplay when called', () => {
+    expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
+    NewRelic.pauseReplay();
+    expect(MockNRM.pauseReplay.mock.calls.length).toBe(1);
+  });
+
 });

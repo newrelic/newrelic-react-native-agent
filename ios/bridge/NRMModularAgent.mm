@@ -221,6 +221,14 @@ RCT_EXPORT_METHOD(shutdown) {
     [NewRelic shutdown];
 }
 
+RCT_EXPORT_METHOD(recordReplay) {
+    [NewRelic recordReplay];
+}
+
+RCT_EXPORT_METHOD(pauseReplay) {
+    [NewRelic pauseReplay];
+}
+
 RCT_EXPORT_METHOD(addHTTPHeadersTrackingFor:(NSArray<NSString*>*_Nonnull) headers) {
     [NewRelic addHTTPHeaderTrackingFor:headers];
 }

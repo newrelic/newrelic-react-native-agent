@@ -29,6 +29,8 @@ export interface Spec extends TurboModule {
   setJSAppVersion(version:string): void;
   setUserId(userId:string): void;
   shutdown(): void;
+  recordReplay(): void;
+  pauseReplay(): void;
   recordHandledException(exceptionDictionary:Object): void;
   recordStack(name:string,message:string, stack:string,isFatal:boolean,jsAppVersion:string): void;
   setStringAttribute(name:string, value:string): void;
