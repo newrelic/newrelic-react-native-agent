@@ -1,4 +1,12 @@
 # Changelog
+## 1.7.1
+
+## Improvements
+
+- Updated the Native iOS agent to version 7.6.3.
+- Restore Minimum iOS 15 support.
+
+
 ## 1.7.0
 
 ## Improvements
