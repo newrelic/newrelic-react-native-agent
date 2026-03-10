@@ -329,40 +329,39 @@ class NewRelic {
 
     /**
      * Records JavaScript errors for react-native.
-     * @param e {Error | string} A JavaScript error.
+     * @param {Error | string} e - A JavaScript error.
+     * @param {boolean} [isFatal=false] - Whether the error is fatal.
+     * @param {Object} [attributes={}] - Additional attributes to attach to the error.
      */
-    async recordError(e) {
-        await this.recordError(e, false);
-    }
-
-    /**
-     * Records JavaScript errors for react-native.
-     * @param {Error | string} e
-     * @param {boolean} isFatal
-     */
-    async recordError(e, isFatal) {
-        if (e) {
-            if (!this.JSAppVersion) {
-                this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
-            }
-
-            var error;
-
-            if (e instanceof Error) {
-                error = e;
-            }
-
-            if (typeof e === 'string') {
-                error = new Error(e || '');
-            }
-
-            if (error !== undefined) {
-                this.NRMAModularAgentWrapper.execute("recordHandledException", error, this.JSAppVersion, isFatal)
-            } else {
-                this.LOG.warn('undefined error name or message');
-            }
-        } else {
+    async recordError(e, isFatal = false, attributes = {}) {
+        if (!e) {
             this.LOG.warn('error is required');
+            return;
+        }
+
+        if (!this.JSAppVersion) {
+            this.LOG.error('unable to capture JS error. Call NewRelic.setJSAppVersion() first.');
+        }
+
+        let error;
+        if (e instanceof Error) {
+            error = e;
+        } else if (typeof e === 'string') {
+            error = new Error(e || '');
+        }
+
+        if (error !== undefined) {
+            this.NRMAModularAgentWrapper.execute(
+                "recordJavascriptError",
+                error.name || 'Error',
+                error.message || '',
+                error.stack || '',
+                isFatal,
+                this.JSAppVersion,
+                attributes
+            );
+        } else {
+            this.LOG.warn('undefined error name or message');
         }
     }
 
