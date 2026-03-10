@@ -32,6 +32,14 @@ export interface Spec extends TurboModule {
   recordReplay(): void;
   pauseReplay(): void;
   recordHandledException(exceptionDictionary:Object): void;
+  recordJavascriptError(
+    errorName: string,
+    errorMessage: string,
+    stackString: string,
+    isFatal: boolean,
+    jsAppVersion: string,
+    attributes: Object
+  ): void;
   recordStack(name:string,message:string, stack:string,isFatal:boolean,jsAppVersion:string): void;
   setStringAttribute(name:string, value:string): void;
   setNumberAttribute(name:string, value:number): void;

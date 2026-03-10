@@ -203,4 +203,12 @@ public class NRMModularAgentModule extends NativeNewRelicModuleSpec {
     public void recordHandledException(ReadableMap exceptionDictionary) {
         impl.recordHandledException(exceptionDictionary);
     }
+
+    @Override
+    public void recordJavascriptError(String errorName, String errorMessage,
+                                      String stackString, boolean isFatal,
+                                      String jsAppVersion, ReadableMap attributes) {
+        impl.recordJavascriptError(errorName, errorMessage, stackString, isFatal,
+                                   jsAppVersion, attributes);
+    }
 }
