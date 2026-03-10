@@ -503,6 +503,29 @@ public class NRMModularAgentModuleImpl {
         NewRelic.recordHandledException(exception, exceptionMap);
     }
 
+    public void recordJavascriptError(String errorName, String errorMessage,
+                                      String stackString, boolean isFatal,
+                                      String jsAppVersion, ReadableMap attributes) {
+        if (errorName == null || errorMessage == null) {
+            Log.w("NRMA", "Error name and message are required");
+            return;
+        }
+
+        Map<String, Object> attributeMap = new HashMap<>();
+        if (attributes != null) {
+            attributeMap = attributes.toHashMap();
+        }
+
+        NewRelic.recordJavascriptError(
+            errorName,
+            errorMessage,
+            stackString != null ? stackString : "",
+            isFatal,
+            jsAppVersion != null ? jsAppVersion : "",
+            attributeMap
+        );
+    }
+
     private StackTraceElement[] generateStackTraceElements(Map<String, Object> stackFrameMap) {
         try {
             List<StackTraceElement> stackTraceList = new ArrayList<>();
