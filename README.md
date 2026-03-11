@@ -35,9 +35,9 @@ Ensure proper ProGuard rules are added to your ProGuard configuration file. See 
 
   | Agent Version | Minimum iOS Version |
   | :--- | :--- |
-  | < 1.1.17 | iOS 10+ |
-  | 1.1.17 – 1.1.21 | iOS 16+ |
-  | >= 1.2.0 | iOS 15+ |
+  | < 1.5.12 | iOS 10+ |
+  | 1.5.12 – 1.7.0 | iOS 16+ |
+  | >= 1.7.1 | iOS 15+ |
 
 
 - Depends on New Relic iOS/XCFramework and Android agents
