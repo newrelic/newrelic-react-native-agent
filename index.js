@@ -357,7 +357,6 @@ class NewRelic {
                 error.message || '',
                 error.stack || '',
                 isFatal,
-                this.JSAppVersion,
                 attributes
             );
         } else {

@@ -505,7 +505,7 @@ public class NRMModularAgentModuleImpl {
 
     public void recordJavascriptError(String errorName, String errorMessage,
                                       String stackString, boolean isFatal,
-                                      String jsAppVersion, ReadableMap attributes) {
+                                      ReadableMap attributes) {
         if (errorName == null || errorMessage == null) {
             Log.w("NRMA", "Error name and message are required");
             return;
@@ -521,7 +521,6 @@ public class NRMModularAgentModuleImpl {
             errorMessage,
             stackString != null ? stackString : "",
             isFatal,
-            jsAppVersion != null ? jsAppVersion : "",
             attributeMap
         );
     }

@@ -274,7 +274,6 @@ RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
                   errorMessage:(NSString* _Nonnull)errorMessage
                   stackString:(NSString* _Nullable)stackString
                   isFatal:(BOOL)isFatal
-                  jsAppVersion:(NSString* _Nullable)jsAppVersion
                   attributes:(NSDictionary* _Nullable)attributes) {
     if (errorName == nil || errorMessage == nil) {
         return;
@@ -289,7 +288,6 @@ RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
                                errorMessage:errorMessage
                                 stackString:(stackString ?: @"")
                                     isFatal:isFatal
-                               jsAppVersion:(jsAppVersion ?: @"")
                        additionalAttributes:mergedAttributes];
 }
 

@@ -37,7 +37,6 @@ export interface Spec extends TurboModule {
     errorMessage: string,
     stackString: string,
     isFatal: boolean,
-    jsAppVersion: string,
     attributes: Object
   ): void;
   recordStack(name:string,message:string, stack:string,isFatal:boolean,jsAppVersion:string): void;
