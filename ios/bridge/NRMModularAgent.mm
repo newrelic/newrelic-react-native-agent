@@ -272,9 +272,9 @@ RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nonnull)exceptionDictio
 
 RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
                   errorMessage:(NSString* _Nonnull)errorMessage
-                  stackString:(NSString* _Nullable)stackString
+                  stackString:(NSString* _Nonnull)stackString
                   isFatal:(BOOL)isFatal
-                  attributes:(NSDictionary* _Nullable)attributes) {
+                  attributes:(NSDictionary* _Nonnull) attributes) {
     if (errorName == nil || errorMessage == nil) {
         return;
     }
@@ -284,9 +284,9 @@ RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
         [mergedAttributes addEntriesFromDictionary:attributes];
     }
 
-    [NewRelic recordJavascriptErrorWithName:errorName
-                               errorMessage:errorMessage
-                                stackString:(stackString ?: @"")
+    [NewRelic recordJavascriptError:errorName
+                            message:errorMessage
+                         stackTrace:(stackString ?: @"")
                                     isFatal:isFatal
                        additionalAttributes:mergedAttributes];
 }
