@@ -129,18 +129,18 @@ RCT_EXPORT_METHOD(removeAllAttributes) {
     [NewRelic removeAllAttributes];
 }
 
-RCT_EXPORT_METHOD(setMaxEventBufferTime:(NSNumber* )seconds) {
-    unsigned int uint_seconds = seconds.unsignedIntValue;
+RCT_EXPORT_METHOD(setMaxEventBufferTime:(double)seconds) {
+    unsigned int uint_seconds = seconds > 0 ? (unsigned int)seconds : 0;
     [NewRelic setMaxEventBufferTime:uint_seconds];
 }
 
-RCT_EXPORT_METHOD(setMaxOfflineStorageSize:(NSNumber* )megaBytes) {
-    unsigned int uint_megaBytes = megaBytes.unsignedIntValue;
+RCT_EXPORT_METHOD(setMaxOfflineStorageSize:(double)megaBytes) {
+    unsigned int uint_megaBytes = megaBytes > 0 ? (unsigned int)megaBytes : 0;
     [NewRelic setMaxOfflineStorageSize:uint_megaBytes];
 }
 
-RCT_EXPORT_METHOD(setMaxEventPoolSize:(NSNumber* )maxSize) {
-    unsigned int uint_maxSize = maxSize.unsignedIntValue;
+RCT_EXPORT_METHOD(setMaxEventPoolSize:(double)maxSize) {
+    unsigned int uint_maxSize = maxSize > 0 ? (unsigned int)maxSize : 0;
     [NewRelic setMaxEventPoolSize:uint_maxSize];
 }
 
