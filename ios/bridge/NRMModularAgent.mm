@@ -267,7 +267,28 @@ RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nonnull)exceptionDictio
     
     attributes[@"stackTraceElements"] = stackFramesArr;
     [NewRelic recordHandledExceptionWithStackTrace:attributes];
-    
+
+}
+
+RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
+                  errorMessage:(NSString* _Nonnull)errorMessage
+                  stackString:(NSString* _Nonnull)stackString
+                  isFatal:(BOOL)isFatal
+                  attributes:(NSDictionary* _Nonnull) attributes) {
+    if (errorName == nil || errorMessage == nil) {
+        return;
+    }
+
+    NSMutableDictionary* mergedAttributes = [NSMutableDictionary new];
+    if (attributes != nil) {
+        [mergedAttributes addEntriesFromDictionary:attributes];
+    }
+
+    [NewRelic recordJavascriptError:errorName
+                            message:errorMessage
+                         stackTrace:(stackString ?: @"")
+                                    isFatal:isFatal
+                       additionalAttributes:mergedAttributes];
 }
 
 RCT_EXPORT_METHOD(currentSessionId:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

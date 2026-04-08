@@ -68,4 +68,38 @@ describe('nrmaModularAgentWrapper', () => {
     expect(test.hasMethod('foo')).toBe(false);
     expect(test.hasMethod('setJSAppVersion')).toBe(true);
   });
+
+  it('should execute recordJavascriptError when agent is started', () => {
+    NRMAModularAgentWrapper.isAgentStarted = true;
+    test.execute('recordJavascriptError', 'TestError', 'Test message', 'stack trace', false, {});
+    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(1);
+    expect(MockNRM.recordJavascriptError.mock.calls[0][0]).toBe('TestError');
+    expect(MockNRM.recordJavascriptError.mock.calls[0][1]).toBe('Test message');
+    expect(MockNRM.recordJavascriptError.mock.calls[0][2]).toBe('stack trace');
+    expect(MockNRM.recordJavascriptError.mock.calls[0][3]).toBe(false);
+  });
+
+  it('should not execute recordJavascriptError when agent is not started', () => {
+    NRMAModularAgentWrapper.isAgentStarted = false;
+    test.execute('recordJavascriptError', 'TestError', 'Test message', 'stack trace', false, {});
+    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(0);
+  });
+
+  it('should handle null values in recordJavascriptError with defaults', () => {
+    NRMAModularAgentWrapper.isAgentStarted = true;
+    test.execute('recordJavascriptError', null, null, null, true, {});
+    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(1);
+    expect(MockNRM.recordJavascriptError.mock.calls[0][0]).toBe('Error');
+    expect(MockNRM.recordJavascriptError.mock.calls[0][1]).toBe('');
+    expect(MockNRM.recordJavascriptError.mock.calls[0][2]).toBe('');
+    expect(MockNRM.recordJavascriptError.mock.calls[0][3]).toBe(true);
+  });
+
+  it('should pass attributes to recordJavascriptError', () => {
+    NRMAModularAgentWrapper.isAgentStarted = true;
+    const attributes = { customKey: 'customValue' };
+    test.execute('recordJavascriptError', 'Error', 'message', 'stack', false, attributes);
+    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(1);
+    expect(MockNRM.recordJavascriptError.mock.calls[0][4]).toEqual(attributes);
+  });
 });

@@ -264,7 +264,7 @@ describe('New Relic', () => {
     await NewRelic.recordError(new ReferenceError);
     await NewRelic.recordError('fakeErrorName');
 
-    expect(MockNRM.recordHandledException.mock.calls.length).toBe(6);
+    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(6);
   });
 
   it('should not record JS error with a bad error', async () => {
@@ -276,7 +276,7 @@ describe('New Relic', () => {
     await NewRelic.recordError(true);
     await NewRelic.recordError('');
 
-    expect(MockNRM.recordHandledException.mock.calls.length).toBe(0);
+    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(0);
   });
 
   it('should set max event buffer time', () => {
