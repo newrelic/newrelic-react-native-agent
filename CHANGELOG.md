@@ -1,4 +1,13 @@
 # Changelog
+
+## 1.8.1
+
+## Improvements
+
+- Updated the Native iOS agent to version 7.7.1.
+- Updated the Native Android agent to version 7.7.2.
+- Added `NRBlockView` component for session replay. Views wrapped in `NRBlockView` are completely hidden (replaced with a placeholder) in session replay recordings.
+
 ## 1.8.0
 
 ## Improvements
@@ -6,7 +15,7 @@
 - Updated the Native iOS agent to version 7.7.0. 
 
 
-## 1.8.0
+## 1.7.2
 
 ## Improvements
 
