@@ -404,6 +404,11 @@ RCT_EXPORT_METHOD(startAgent:(NSString *)appkey agentVersion:(NSString *)agentVe
     if ([[customerConfiguration objectForKey:@"distributedTracingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_DistributedTracing];
     }
+
+    if ([customerConfiguration objectForKey:@"jsErrorReportingEnabled"] != nil &&
+        [[customerConfiguration objectForKey:@"jsErrorReportingEnabled"] boolValue] == NO) {
+        [NewRelic disableFeatures:NRFeatureFlag_JSError];
+    }
     
     //Default is NRLogLevelWarning
     NRLogLevels logLevel = NRLogLevelWarning;

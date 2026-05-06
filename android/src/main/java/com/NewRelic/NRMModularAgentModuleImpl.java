@@ -124,6 +124,13 @@ public class NRMModularAgentModuleImpl {
                 NewRelic.disableFeature(FeatureFlag.DistributedTracing);
             }
 
+            Object jsErrorReportingEnabled = agentConfig.get("jsErrorReportingEnabled");
+            if (jsErrorReportingEnabled == null || (Boolean) jsErrorReportingEnabled) {
+                NewRelic.enableFeature(FeatureFlag.JSError);
+            } else {
+                NewRelic.disableFeature(FeatureFlag.JSError);
+            }
+
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
             strToLogLevel.put("WARN", AgentLog.WARN);
@@ -504,7 +511,7 @@ public class NRMModularAgentModuleImpl {
         NewRelic.recordHandledException(exception, exceptionMap);
     }
 
-    public void recordJavascriptError(String errorName, String errorMessage,
+    public void recordJavaScriptError(String errorName, String errorMessage,
                                       String stackString, boolean isFatal,
                                       ReadableMap attributes) {
         if (errorName == null || errorMessage == null) {

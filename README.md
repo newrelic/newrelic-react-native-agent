@@ -136,6 +136,10 @@ import {Platform} from 'react-native';
 
       // Optional: Enable or disable distributed tracing.
        distributedTracingEnabled: true,
+
+      // Optional: Enable or disable collection of JavaScript errors reported via recordError
+      // (routed through the MobileJSError / /mobile/errors protocol). Enabled by default.
+       jsErrorReportingEnabled: true,
   };
 
 
