@@ -49,6 +49,7 @@ class NewRelic {
         backgroundReportingEnabled: false,
         newEventSystemEnabled: false,
         distributedTracingEnabled: true,
+        jsErrorReportingEnabled: true,
     };
   }
 
