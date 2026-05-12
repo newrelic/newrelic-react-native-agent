@@ -49,7 +49,6 @@ class NewRelic {
         backgroundReportingEnabled: false,
         newEventSystemEnabled: false,
         distributedTracingEnabled: true,
-        jsErrorReportingEnabled: true,
     };
   }
 
@@ -330,38 +329,40 @@ class NewRelic {
 
     /**
      * Records JavaScript errors for react-native.
-     * @param {Error | string} e - A JavaScript error.
-     * @param {boolean} [isFatal=false] - Whether the error is fatal.
-     * @param {Object} [attributes={}] - Additional attributes to attach to the error.
+     * @param e {Error | string} A JavaScript error.
      */
-    async recordError(e, isFatal = false, attributes = {}) {
-        if (!e) {
-            this.LOG.warn('error is required');
-            return;
-        }
+    async recordError(e) {
+        await this.recordError(e, false);
+    }
 
-        if (!this.JSAppVersion) {
-            this.LOG.error('unable to capture JS error. Call NewRelic.setJSAppVersion() first.');
-        }
+    /**
+     * Records JavaScript errors for react-native.
+     * @param {Error | string} e
+     * @param {boolean} isFatal
+     */
+    async recordError(e, isFatal) {
+        if (e) {
+            if (!this.JSAppVersion) {
+                this.LOG.error('unable to capture JS error. Make sure to call NewRelic.setJSAppVersion() at the start of your application.');
+            }
 
-        let error;
-        if (e instanceof Error) {
-            error = e;
-        } else if (typeof e === 'string') {
-            error = new Error(e || '');
-        }
+            var error;
 
-        if (error !== undefined) {
-            this.NRMAModularAgentWrapper.execute(
-                "recordJavascriptError",
-                error.name || 'Error',
-                error.message || '',
-                error.stack || '',
-                isFatal,
-                attributes
-            );
+            if (e instanceof Error) {
+                error = e;
+            }
+
+            if (typeof e === 'string') {
+                error = new Error(e || '');
+            }
+
+            if (error !== undefined) {
+                this.NRMAModularAgentWrapper.execute("recordHandledException", error, this.JSAppVersion, isFatal)
+            } else {
+                this.LOG.warn('undefined error name or message');
+            }
         } else {
-            this.LOG.warn('undefined error name or message');
+            this.LOG.warn('error is required');
         }
     }
 

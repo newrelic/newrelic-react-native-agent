@@ -212,12 +212,4 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     public void recordHandledException(ReadableMap exceptionDictionary) {
         impl.recordHandledException(exceptionDictionary);
     }
-
-    @ReactMethod
-    public void recordJavascriptError(String errorName, String errorMessage,
-                                      String stackString, boolean isFatal,
-                                      ReadableMap attributes) {
-        impl.recordJavascriptError(errorName, errorMessage, stackString, isFatal,
-                                   attributes);
-    }
 }

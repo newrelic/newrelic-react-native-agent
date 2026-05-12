@@ -124,13 +124,6 @@ public class NRMModularAgentModuleImpl {
                 NewRelic.disableFeature(FeatureFlag.DistributedTracing);
             }
 
-            Object jsErrorReportingEnabled = agentConfig.get("jsErrorReportingEnabled");
-            if (jsErrorReportingEnabled == null || (Boolean) jsErrorReportingEnabled) {
-                NewRelic.enableFeature(FeatureFlag.JSError);
-            } else {
-                NewRelic.disableFeature(FeatureFlag.JSError);
-            }
-
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
             strToLogLevel.put("WARNING", AgentLog.WARN);
@@ -508,28 +501,6 @@ public class NRMModularAgentModuleImpl {
                 generateStackTraceElements(stackFramesMap));
         exceptionMap.remove("stackFrames");
         NewRelic.recordHandledException(exception, exceptionMap);
-    }
-
-    public void recordJavaScriptError(String errorName, String errorMessage,
-                                      String stackString, boolean isFatal,
-                                      ReadableMap attributes) {
-        if (errorName == null || errorMessage == null) {
-            Log.w("NRMA", "Error name and message are required");
-            return;
-        }
-
-        Map<String, Object> attributeMap = new HashMap<>();
-        if (attributes != null) {
-            attributeMap = attributes.toHashMap();
-        }
-
-        NewRelic.recordJavascriptError(
-            errorName,
-            errorMessage,
-            stackString != null ? stackString : "",
-            isFatal,
-            attributeMap
-        );
     }
 
     private StackTraceElement[] generateStackTraceElements(Map<String, Object> stackFrameMap) {
