@@ -735,4 +735,4 @@ export default newRelic;
 
 
 
-export { NewRelicMask, NewRelicUnmask } from './new-relic/replay/newrelic-mask-view';
+export { NewRelicMask, NewRelicUnmask, NewRelicBlock } from './new-relic/replay/newrelic-mask-view';
