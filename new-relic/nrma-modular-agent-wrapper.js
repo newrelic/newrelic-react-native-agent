@@ -211,6 +211,17 @@ class NRMAModularAgentWrapper {
     NRMModularAgent.recordStack(name, message, stack, isFatal, JSAppVersion);
   };
 
+  recordJavascriptError = (errorName, errorMessage, stackString, isFatal, attributes = {}) => {
+    if (NRMAModularAgentWrapper.isAgentStarted) {
+      NRMModularAgent.recordJavascriptError(
+        errorName || 'Error',
+        errorMessage || '',
+        stackString || '',
+        isFatal,
+        attributes
+      );
+    }
+  };
 
   noticeHttpTransaction = (url,method,status,startTime,endTime,bytesSent,bytesReceived,response) => {
     NRMModularAgent.noticeHttpTransaction(url,method,status,startTime,endTime,bytesSent,bytesReceived,response);
