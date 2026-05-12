@@ -88,7 +88,6 @@ describe('New Relic', () => {
     expect(NewRelic.config.newEventSystemEnabled).toBe(false);
     expect(NewRelic.config.backgroundReportingEnabled).toBe(false);
     expect(NewRelic.config.distributedTracingEnabled).toBe(true);
-    expect(NewRelic.config.jsErrorReportingEnabled).toBe(true);
   });
 
   it('should change default agent configuration when configuration is passed into the start call', () => {
@@ -109,8 +108,7 @@ describe('New Relic', () => {
       offlineStorageEnabled:false,
       newEventSystemEnabled:false,
       backgroundReportingEnabled:true,
-      distributedTracingEnabled: false,
-      jsErrorReportingEnabled: false
+      distributedTracingEnabled: false
     };
 
     NewRelic.startAgent("12345", customerConfiguration);
@@ -132,7 +130,6 @@ describe('New Relic', () => {
     expect(NewRelic.config.newEventSystemEnabled).toBe(false);
     expect(NewRelic.config.backgroundReportingEnabled).toBe(true);
     expect(NewRelic.config.distributedTracingEnabled).toBe(false);
-    expect(NewRelic.config.jsErrorReportingEnabled).toBe(false);
   });
 
   it('should set the analytics event flag', () => {
@@ -267,7 +264,7 @@ describe('New Relic', () => {
     await NewRelic.recordError(new ReferenceError);
     await NewRelic.recordError('fakeErrorName');
 
-    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(6);
+    expect(MockNRM.recordHandledException.mock.calls.length).toBe(6);
   });
 
   it('should not record JS error with a bad error', async () => {
@@ -279,7 +276,7 @@ describe('New Relic', () => {
     await NewRelic.recordError(true);
     await NewRelic.recordError('');
 
-    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(0);
+    expect(MockNRM.recordHandledException.mock.calls.length).toBe(0);
   });
 
   it('should set max event buffer time', () => {
@@ -517,24 +514,6 @@ describe('New Relic', () => {
     expect(NRMAModularAgentWrapper.isAgentStarted).toBe(true);
     NewRelic.pauseReplay();
     expect(MockNRM.pauseReplay.mock.calls.length).toBe(1);
-  });
-
-  it('should default jsErrorReportingEnabled to true and forward it to the native startAgent call', () => {
-    NRMAModularAgentWrapper.isAgentStarted = false;
-    NewRelic.startAgent("12345");
-
-    expect(NewRelic.config.jsErrorReportingEnabled).toBe(true);
-    const nativeConfig = MockNRM.startAgent.mock.calls[0][3];
-    expect(nativeConfig.jsErrorReportingEnabled).toBe(true);
-  });
-
-  it('should forward jsErrorReportingEnabled=false to the native startAgent call when explicitly disabled', () => {
-    NRMAModularAgentWrapper.isAgentStarted = false;
-    NewRelic.startAgent("12345", { jsErrorReportingEnabled: false });
-
-    expect(NewRelic.config.jsErrorReportingEnabled).toBe(false);
-    const nativeConfig = MockNRM.startAgent.mock.calls[0][3];
-    expect(nativeConfig.jsErrorReportingEnabled).toBe(false);
   });
 
 });

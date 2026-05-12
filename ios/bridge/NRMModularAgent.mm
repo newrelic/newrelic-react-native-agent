@@ -267,28 +267,7 @@ RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nonnull)exceptionDictio
     
     attributes[@"stackTraceElements"] = stackFramesArr;
     [NewRelic recordHandledExceptionWithStackTrace:attributes];
-
-}
-
-RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
-                  errorMessage:(NSString* _Nonnull)errorMessage
-                  stackString:(NSString* _Nonnull)stackString
-                  isFatal:(BOOL)isFatal
-                  attributes:(NSDictionary* _Nonnull) attributes) {
-    if (errorName == nil || errorMessage == nil) {
-        return;
-    }
-
-    NSMutableDictionary* mergedAttributes = [NSMutableDictionary new];
-    if (attributes != nil) {
-        [mergedAttributes addEntriesFromDictionary:attributes];
-    }
-
-    [NewRelic recordJavascriptError:errorName
-                            message:errorMessage
-                         stackTrace:(stackString ?: @"")
-                                    isFatal:isFatal
-                       additionalAttributes:mergedAttributes];
+    
 }
 
 RCT_EXPORT_METHOD(currentSessionId:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
@@ -403,11 +382,6 @@ RCT_EXPORT_METHOD(startAgent:(NSString *)appkey agentVersion:(NSString *)agentVe
 
     if ([[customerConfiguration objectForKey:@"distributedTracingEnabled"]boolValue] == NO) {
         [NewRelic disableFeatures:NRFeatureFlag_DistributedTracing];
-    }
-
-    if ([customerConfiguration objectForKey:@"jsErrorReportingEnabled"] != nil &&
-        [[customerConfiguration objectForKey:@"jsErrorReportingEnabled"] boolValue] == NO) {
-        [NewRelic disableFeatures:NRFeatureFlag_JSError];
     }
     
     //Default is NRLogLevelWarning

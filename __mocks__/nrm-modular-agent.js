@@ -36,7 +36,6 @@ export default  {
   componentDidAppearListener:jest.fn(),
   onStateChange:jest.fn(),
   recordHandledException:jest.fn(),
-  recordJavascriptError:jest.fn(),
   shutdown:jest.fn(),
   recordReplay:jest.fn(),
   pauseReplay:jest.fn(),
