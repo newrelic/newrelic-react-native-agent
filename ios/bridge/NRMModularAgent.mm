@@ -388,10 +388,11 @@ RCT_EXPORT_METHOD(startAgent:(NSString *)appkey agentVersion:(NSString *)agentVe
     NRLogLevels logLevel = NRLogLevelWarning;
     NSDictionary *logDict = @{
         @"ERROR": [NSNumber numberWithInt:NRLogLevelError],
-        @"WARNING": [NSNumber numberWithInt:NRLogLevelWarning],
+        @"WARN": [NSNumber numberWithInt:NRLogLevelWarning],
         @"INFO": [NSNumber numberWithInt:NRLogLevelInfo],
         @"VERBOSE": [NSNumber numberWithInt:NRLogLevelVerbose],
         @"AUDIT": [NSNumber numberWithInt:NRLogLevelAudit],
+        @"DEBUG": [NSNumber numberWithInt:NRLogLevelDebug],
     };
 
     
@@ -401,7 +402,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString *)appkey agentVersion:(NSString *)agentVe
             configLogLevel = [configLogLevel uppercaseString];
             NSNumber* newLogLevel = [logDict valueForKey:configLogLevel];
             if(newLogLevel != nil) {
-                logLevel = NRLogLevelALL;
+                logLevel = (NRLogLevels)[newLogLevel intValue];
             }
         }
     }

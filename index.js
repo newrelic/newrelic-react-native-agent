@@ -40,7 +40,7 @@ class NewRelic {
         networkErrorRequestEnabled: true,
         httpResponseBodyCaptureEnabled: true,
         loggingEnabled: true,
-        logLevel: this.LogLevel.INFO,
+        logLevel: this.LogLevel.WARN,
         webViewInstrumentation: true,
         collectorAddress: "",
         crashCollectorAddress: "",
@@ -462,7 +462,7 @@ class NewRelic {
     /**
      * This function is used to log a message with a specific log level.
      *
-     * @param {string} logLevel - The level of the log (e.g., ERROR, WARNING, INFO, VERBOSE, AUDIT).
+     * @param {string} logLevel - The level of the log (e.g., ERROR, WARN, INFO, VERBOSE, AUDIT, DEBUG).
      * @param {string} message - The message to be logged.
      */
     log(logLevel, message) {

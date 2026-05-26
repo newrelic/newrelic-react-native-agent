@@ -9,11 +9,12 @@ jest.mock('./index.js', () => ({
   incrementAttribute: jest.fn(),
   isAgentStarted: jest.fn(),
   LogLevel: {
-    AUDIT: 'AUDIT',
     ERROR: 'ERROR',
+    WARN: 'WARN',
     INFO: 'INFO',
     VERBOSE: 'VERBOSE',
-    WARNING: 'WARNING'
+    AUDIT: 'AUDIT',
+    DEBUG: 'DEBUG'
   },
   networkErrorRequestEnabled: jest.fn(),
   networkRequestEnabled: jest.fn(),

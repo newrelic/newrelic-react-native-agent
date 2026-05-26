@@ -78,7 +78,7 @@ describe('New Relic', () => {
     expect(NewRelic.config.networkErrorRequestEnabled).toBe(true);
     expect(NewRelic.config.httpResponseBodyCaptureEnabled).toBe(true);
     expect(NewRelic.config.loggingEnabled).toBe(true);
-    expect(NewRelic.config.logLevel).toBe(NewRelic.LogLevel.INFO);
+    expect(NewRelic.config.logLevel).toBe(NewRelic.LogLevel.WARN);
     expect(NewRelic.config.webViewInstrumentation).toBe(true);
     expect(NewRelic.config.collectorAddress).toBe("");
     expect(NewRelic.config.crashCollectorAddress).toBe("");
