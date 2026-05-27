@@ -22,12 +22,34 @@ Pod::Spec.new do |s|
 #   todo: we have to make sure the zip matches this name.
   s.source         = { :http => 'file:' + '$PODS_TARGET_SRCROOT/../ios/ios-bridge.zip' }
   s.source_files = "ios/bridge/**/*.{h,m,mm,swift}"
-  s.platforms    = { :ios => "15.0", :tvos => "11.1" }
+  s.platforms    = { :ios => "15.0", :tvos => "15.0" }
   s.requires_arc = true
 
-# todo: change these to their public repos - changes these to the correct versions
-  s.dependency 'NewRelicAgent', newrelic_sdk_version
-#
+  # Opt-in Swift Package Manager consumption of the NewRelic iOS agent.
+  # When `NEWRELIC_USE_SPM=1`, the agent is pulled from
+  # https://github.com/newrelic/newrelic-ios-agent-spm as a binary XCFramework
+  # via SPM instead of from the `NewRelicAgent` CocoaPods spec. Default stays
+  # CocoaPods so existing consumers (including those on RN < 0.75) are
+  # unaffected.
+  #
+  # Requires React Native >= 0.75 (the SPM helper lives in
+  # react-native/scripts/cocoapods/spm.rb) AND a consumer Podfile that uses
+  # `use_frameworks! :linkage => :dynamic`. Mixing static linkage with SPM
+  # produces linker errors at build time.
+  if ENV['NEWRELIC_USE_SPM'] == '1'
+    unless defined?(SPM) && SPM.respond_to?(:dependency)
+      raise 'NEWRELIC_USE_SPM=1 is set but the SPM helper is not loaded. ' \
+            'This requires React Native >= 0.75 and a Podfile that imports ' \
+            'react_native_pods.rb.'
+    end
+    SPM.dependency(s,
+      url: 'https://github.com/newrelic/newrelic-ios-agent-spm',
+      requirement: { kind: 'exactVersion', version: newrelic_sdk_version },
+      products: ['NewRelic']
+    )
+  else
+    s.dependency 'NewRelicAgent', newrelic_sdk_version
+  end
 
   s.preserve_paths = '*.js'
 

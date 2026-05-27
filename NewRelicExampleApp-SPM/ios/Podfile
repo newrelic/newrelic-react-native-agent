@@ -1,0 +1,48 @@
+# Opt-in to fetching the NewRelic iOS agent via Swift Package Manager
+# instead of the `NewRelicAgent` CocoaPods spec. This must be set BEFORE
+# `react_native_pods.rb` is required and BEFORE the podspec is evaluated.
+ENV['NEWRELIC_USE_SPM'] = '1'
+
+# Required for SPM consumption: SPM packages cannot be linked statically
+# under React Native. RN's spm.rb prints a warning and the build will fail
+# at link time without this.
+ENV['USE_FRAMEWORKS'] ||= 'dynamic'
+
+# Resolve react_native_pods.rb (RN >= 0.75) — the SPM helper module is
+# loaded transitively from this require.
+require Pod::Executable.execute_command('node', ['--print',
+  'require.resolve("react-native/scripts/react_native_pods.rb", {paths: [process.argv[1]]})',
+  __dir__]).strip
+
+require Pod::Executable.execute_command('node', ['--print',
+  'require.resolve("@react-native-community/cli-platform-ios/native_modules.rb", {paths: [process.argv[1]]})',
+  __dir__]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+target 'AwesomeProject' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  post_install do |installer|
+    # MUST call react_native_post_install — this is what wires SPM packages
+    # into the generated Pods.xcodeproj via SPM.apply_on_post_install.
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+    )
+  end
+end
