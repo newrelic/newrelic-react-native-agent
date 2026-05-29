@@ -200,6 +200,33 @@ Run the following, and it will install the New Relic XCFramework agent:
   npx pod-install
 ```
 
+### iOS package manager: CocoaPods (default) or Swift Package Manager (opt-in)
+
+By default the agent is consumed via the `NewRelicAgent` CocoaPods spec, which works on every supported React Native version (>= 0.61).
+
+Consumers on **React Native 0.75+** can opt-in to fetch the underlying NewRelic iOS agent via Swift Package Manager (from [newrelic/newrelic-ios-agent-spm](https://github.com/newrelic/newrelic-ios-agent-spm)) instead. This anticipates CocoaPods moving to read-only and aligns with apps that already integrate other iOS dependencies through SPM.
+
+**Requirements for the SPM path:**
+
+- React Native >= 0.75 (the SPM helper ships in `react-native/scripts/cocoapods/spm.rb`).
+- The consumer Podfile must use `use_frameworks! :linkage => :dynamic`. Mixing static linkage with SPM produces linker errors.
+- The consumer Podfile must call `react_native_post_install(installer, ...)` in its `post_install` block (this is the default in the standard RN template; that's where the SPM packages are wired into the generated Xcode project).
+
+**Enabling SPM** — in your app's `ios/Podfile`, add at the top:
+
+```ruby
+ENV['NEWRELIC_USE_SPM'] = '1'
+use_frameworks! :linkage => :dynamic
+```
+
+Then run `pod install`. After install, `Pods/Pods.xcodeproj` will reference the `newrelic-ios-agent-spm` package, and `Podfile.lock` will no longer list `NewRelicAgent`.
+
+**Troubleshooting:**
+
+- *Duplicate symbol errors mentioning `_NewRelic...`* — the project is mixing static linkage with SPM. Confirm `use_frameworks! :linkage => :dynamic` is set, then `pod deintegrate && pod install`.
+- *"package requires tvOS 15"* — bump your iOS app's tvOS deployment target. The SPM package and `NewRelicAgent` itself both require tvOS 15+.
+- *"Swift package not found"* during build — close and reopen the Xcode workspace after `pod install` to let Xcode resolve the package graph.
+
 ### AutoLinking and rebuilding
 
  - Once the above steps have been completed, the React Native NewRelic library must be linked to your project and your application needs to be rebuilt.
