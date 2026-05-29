@@ -126,13 +126,14 @@ public class NRMModularAgentModuleImpl {
 
             Map<String, Integer> strToLogLevel = new HashMap<>();
             strToLogLevel.put("ERROR", AgentLog.ERROR);
-            strToLogLevel.put("WARNING", AgentLog.WARN);
+            strToLogLevel.put("WARN", AgentLog.WARN);
             strToLogLevel.put("INFO", AgentLog.INFO);
             strToLogLevel.put("VERBOSE", AgentLog.VERBOSE);
             strToLogLevel.put("AUDIT", AgentLog.AUDIT);
+            strToLogLevel.put("DEBUG", AgentLog.DEBUG);
 
-            // INFO is default log level
-            int logLevel = AgentLog.INFO;
+            // WARN is default log level
+            int logLevel = AgentLog.WARN;
             if (agentConfig.get("logLevel") != null) {
                 String configLogLevel = (String) agentConfig.get("logLevel");
                 if(configLogLevel != null) {
