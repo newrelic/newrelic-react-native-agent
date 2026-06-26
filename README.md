@@ -107,6 +107,40 @@ Notes:
   (`cd ios && pod install`) and rebuild the app so the native New Relic SDK
   versions declared in this branch are picked up.
 
+### Using a snapshot build of the native Android SDK
+
+Some pre-release branches pin the native New Relic Android agent to a
+`-SNAPSHOT` version (for example `7.7.8-SNAPSHOT`). Snapshot artifacts are not
+on Maven Central, so you must add the Central Portal Snapshots repository to
+your app's `android/build.gradle` in **both** the `buildscript` and
+`allprojects` repository blocks:
+
+```gradle
+buildscript {
+    repositories {
+        // ...existing repositories (google(), mavenCentral(), etc.)
+        maven {
+            name = "Central Portal Snapshots"
+            url = "https://central.sonatype.com/repository/maven-snapshots/"
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        // ...existing repositories (google(), mavenCentral(), etc.)
+        maven {
+            name = "Central Portal Snapshots"
+            url = "https://central.sonatype.com/repository/maven-snapshots/"
+        }
+    }
+}
+```
+
+Without this repository, the Android build fails to resolve the snapshot
+version of the native agent. Once the feature ships to a stable release, you
+can remove the snapshots repository.
+
 ## React Native Setup
 
 Now open your `index.js` and add the following code to launch NewRelic (don't forget to put proper application tokens):
