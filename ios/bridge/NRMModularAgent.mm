@@ -407,7 +407,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString *)appkey agentVersion:(NSString *)agentVe
 
     if ([customerConfiguration objectForKey:@"jsErrorReportingEnabled"] != nil &&
         [[customerConfiguration objectForKey:@"jsErrorReportingEnabled"] boolValue] == NO) {
-        [NewRelic disableFeatures:NRFeatureFlag_JSError];
+        [NewRelic disableFeatures:NRFeatureFlag_JSErrorEvents];
     }
     
     //Default is NRLogLevelWarning
