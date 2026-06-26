@@ -59,6 +59,53 @@ NPM
 npm i newrelic-react-native-agent
 ```
 
+### Installing from a GitHub branch
+
+To try a pre-release feature before it is published to npm, you can install the
+agent directly from a branch of this repository. npm and Yarn both support a
+`github:<owner>/<repo>#<ref>` install spec, where `<ref>` can be a branch name,
+tag, or commit SHA.
+
+In your app's `package.json`, point the dependency at the branch instead of a
+version range:
+
+```json
+"dependencies": {
+  "newrelic-react-native-agent": "github:newrelic/newrelic-react-native-agent#feature/reactnative-javascript-error-pipeline"
+}
+```
+
+Then install:
+
+```sh
+# npm
+npm install
+
+# yarn
+yarn install
+```
+
+Or add it in one step from the CLI:
+
+```sh
+# npm
+npm i github:newrelic/newrelic-react-native-agent#feature/reactnative-javascript-error-pipeline
+
+# yarn
+yarn add newrelic-react-native-agent@github:newrelic/newrelic-react-native-agent#feature/reactnative-javascript-error-pipeline
+```
+
+Notes:
+- Replace the branch name with whichever branch you want to test. You can also
+  pin to a tag (`#v1.8.6`) or an exact commit SHA (`#<commit-sha>`) for a
+  reproducible install.
+- Branch installs resolve to the current tip of that branch. To pull in new
+  commits after they are pushed, remove the package from `node_modules` and your
+  lockfile entry, then reinstall (e.g. `npm install --force` or delete the entry
+  and run `npm install`).
+- After updating the dependency, reinstall pods on iOS
+  (`cd ios && pod install`) and rebuild the app so the native New Relic SDK
+  versions declared in this branch are picked up.
 
 ## React Native Setup
 
