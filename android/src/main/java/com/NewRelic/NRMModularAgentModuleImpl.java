@@ -524,7 +524,7 @@ public class NRMModularAgentModuleImpl {
             attributeMap = attributes.toHashMap();
         }
 
-        NewRelic.recordJavascriptError(
+        NewRelic.recordJavaScriptError(
             errorName,
             errorMessage,
             stackString != null ? stackString : "",

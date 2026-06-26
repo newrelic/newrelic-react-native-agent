@@ -217,7 +217,7 @@ public class NRMModularAgentModule extends ReactContextBaseJavaModule {
     public void recordJavascriptError(String errorName, String errorMessage,
                                       String stackString, boolean isFatal,
                                       ReadableMap attributes) {
-        impl.recordJavascriptError(errorName, errorMessage, stackString, isFatal,
+        impl.recordJavaScriptError(errorName, errorMessage, stackString, isFatal,
                                    attributes);
     }
 }
