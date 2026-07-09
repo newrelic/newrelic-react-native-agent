@@ -515,14 +515,36 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.removeAllAttributes();
 ```
 
-### recordError(e: string|error): void;
-> Records javascript errors for react-native.
+### recordError(e: string|error, isFatal?: boolean, attributes?: {[key: string]: any}): void;
+> Records JavaScript errors for react-native.
+>
+> - `e` (required): A JavaScript `Error` object or an error message string.
+> - `isFatal` (optional, default `false`): Marks the error as fatal. Fatal errors are reported as crashes; non-fatal errors are reported as handled exceptions.
+> - `attributes` (optional, default `{}`): A key/value map of custom attributes attached to the recorded error. Values may be strings, numbers, or booleans.
+>
+> Errors are routed through the `MobileJSError` / `/mobile/errors` protocol and can be disabled with the `jsErrorReportingEnabled` agent configuration flag.
+
 ```js
     try {
       var foo = {};
       foo.bar();
     } catch(e) {
       NewRelic.recordError(e);
+    }
+```
+
+You can also flag an error as fatal and attach custom attributes:
+
+```js
+    try {
+      var foo = {};
+      foo.bar();
+    } catch(e) {
+      NewRelic.recordError(e, false, {
+        'screen': 'Checkout',
+        'cartItemCount': 3,
+        'isGuestCheckout': true,
+      });
     }
 ```
 
@@ -657,7 +679,31 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
-### React Native Agent v1.2.0 and above:
+### React Native Agent v1.9.0 and above:
+JavaScript errors and promise rejections are recorded as `MobileJSError` events. You will be able to see the event trail, attributes, and stack trace for each JavaScript error in New Relic One.
+
+You can also find these errors by running this query:
+
+```sql
+SELECT * FROM MobileJSError SINCE 24 hours ago
+```
+
+JavaScript error reporting is enabled by default. To disable it, set the
+`jsErrorReportingEnabled` feature flag to `false` in the agent configuration
+passed to `startAgent`:
+
+```js
+const agentConfiguration = {
+    // ...other options
+    // Enable or disable collection of JavaScript errors reported via recordError
+    // (routed through the MobileJSError / /mobile/errors protocol). Enabled by default.
+    jsErrorReportingEnabled: false,
+};
+```
+
+To make the stack traces in `MobileJSError` events human-readable, upload the source map for your JavaScript bundle. See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md) for automatic and manual source map upload (including CodePush/OTA updates), the upload API reference, and troubleshooting.
+
+### React Native Agent v1.2.0 to v1.8.x:
 JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for each JavaScript error recorded. 
 
 You can also build a dashboard for these errors using this query:
@@ -679,9 +725,9 @@ You can also build dashboard for errors using this query:
 
  ## Symbolicating a stack trace
 
-The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/debugging-release-builds).
+The agent symbolicates JavaScript errors by uploading the source map for your JavaScript bundle, so the stack traces in `MobileJSError` events are human-readable. The agent can upload source maps automatically after each build, and you can also upload them manually (including for CodePush/OTA updates). For full setup, the upload API reference, and troubleshooting, see [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
 
-### Symbolication for Javascript errors are coming in future releases.
+If you prefer to symbolicate a release build's stack trace manually, follow the steps described [here for Symbolication](https://reactnative.dev/docs/debugging-release-builds).
 
 ```angular2html
 * IMPORTANT considerations and best practices include:
