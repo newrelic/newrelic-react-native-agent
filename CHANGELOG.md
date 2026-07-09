@@ -1,4 +1,11 @@
 # Changelog
+## 1.9.0
+
+## Improvements
+
+- Updated the Native iOS agent to version 7.7.4.
+
+
 ## 1.8.6
 
 ## Improvements
