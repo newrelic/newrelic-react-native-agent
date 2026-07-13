@@ -7,6 +7,20 @@
 
 This agent uses native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
 
+> [!IMPORTANT]
+> **⚠️ Breaking change in error reporting (v1.9.0)**
+>
+> Starting with version **1.9.0**, JavaScript errors are reported via a new event type: **`MobileJSError`**. They will no longer appear under the `MobileHandledException` event type.
+>
+> **Action required:**
+> - **Alerts:** Update your NRQL alert conditions to target `MobileJSError`.
+> - **Dashboards:** Update any custom charts that query `MobileHandledException` for JavaScript-layer errors.
+> - **Symbolication:** Update your build scripts to the latest version to support source map uploads for this new event. See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
+>
+> **Migrate your NRQL:**
+> - Old query: `SELECT count(*) FROM MobileHandledException WHERE platform = 'reactnative'`
+> - New query: `SELECT count(*) FROM MobileJSError`
+
 ### Known Issues
 
 **Crash reports may not be sent when ProGuard rules are not properly configured for New Relic in hybrid Android applications.**
