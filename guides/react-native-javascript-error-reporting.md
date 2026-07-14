@@ -1,8 +1,8 @@
 # React Native JavaScript error reporting
 
-By default, the New Relic React Native agent captures JavaScript errors and unhandled promise rejections and reports them as [`MobileJSError` events](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile/mobile-sdk/record-errors/#react). You can view these errors in the mobile monitoring UI, query them with NRQL, and chart them in dashboards.
+By default, the New Relic React Native agent captures JavaScript errors and unhandled promise rejections and reports them as [`MobileError` events](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile/mobile-sdk/record-errors/#react). You can view these errors in the mobile monitoring UI, query them with NRQL, and chart them in dashboards.
 
-To make the stack traces in `MobileJSError` events human-readable, the agent needs the source map that corresponds to the JavaScript bundle running in your app. When your New Relic User API key and application token are configured correctly, the agent uploads the source map for you automatically after each build. If you can't upload automatically, or you ship JavaScript-only updates with CodePush or another over-the-air (OTA) service, you can upload source maps manually.
+To make the stack traces in `MobileError` events human-readable, the agent needs the source map that corresponds to the JavaScript bundle running in your app. When your New Relic User API key and application token are configured correctly, the agent uploads the source map for you automatically after each build. If you can't upload automatically, or you ship JavaScript-only updates with CodePush or another over-the-air (OTA) service, you can upload source maps manually.
 
 > [!IMPORTANT]
 > Source map upload uses a [User API key](https://docs.newrelic.com/docs/apis/intro-apis/new-relic-api-keys/#user-key). The User API key and the application token must belong to the same New Relic account.
@@ -137,7 +137,7 @@ Example `201 Created` response body:
 
 ## Upload source maps for CodePush and OTA updates
 
-When you use CodePush or another OTA update service, the JavaScript bundle version diverges from the native binary version. Each time you push a JavaScript update, upload the new source map so that `MobileJSError` events remain readable in New Relic.
+When you use CodePush or another OTA update service, the JavaScript bundle version diverges from the native binary version. Each time you push a JavaScript update, upload the new source map so that `MobileError` events remain readable in New Relic.
 
 To symbolicate an OTA update, the upload must use:
 
@@ -185,13 +185,13 @@ Source map files must be under **200 MB after zipping** to be stored for symboli
 
 Our build scripts automatically zip the `.map` file before upload. If the resulting `.zip` archive exceeds 200 MB, the file is **not** uploaded, which prevents build timeouts and ingestion errors.
 
-In these cases, the script sends build telemetry (metadata) instead of the file. This lets New Relic track that a build occurred, even though symbolication isn't available for that specific version. As a result, `MobileJSError` events for that build show unsymbolicated (minified) stack traces.
+In these cases, the script sends build telemetry (metadata) instead of the file. This lets New Relic track that a build occurred, even though symbolication isn't available for that specific version. As a result, `MobileError` events for that build show unsymbolicated (minified) stack traces.
 
 If your source map is larger than 200 MB after zipping, [reach out to New Relic Support or file a feature request](#request-support-for-large-source-maps). There's currently no way to raise this limit yourself.
 
 ## Troubleshoot source map uploads
 
-If your `MobileJSError` stack traces aren't symbolicated, your source map may have exceeded the [200 MB size limit](#file-size-limitations). Use the following steps to confirm the cause and request help. For more troubleshooting tips and frequently asked questions, see [Troubleshoot React Native source maps and JavaScript errors](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-monitoring-react-native/troubleshoot-react-native-source-maps).
+If your `MobileError` stack traces aren't symbolicated, your source map may have exceeded the [200 MB size limit](#file-size-limitations). Use the following steps to confirm the cause and request help. For more troubleshooting tips and frequently asked questions, see [Troubleshoot React Native source maps and JavaScript errors](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-monitoring-react-native/troubleshoot-react-native-source-maps).
 
 ### Confirm whether the file or telemetry was uploaded
 

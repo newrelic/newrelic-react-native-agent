@@ -10,16 +10,16 @@ This agent uses native New Relic Android and iOS agents to instrument the React-
 > [!IMPORTANT]
 > **⚠️ Breaking change in error reporting (v1.9.0)**
 >
-> Starting with version **1.9.0**, JavaScript errors are reported via a new event type: **`MobileJSError`**. They will no longer appear under the `MobileHandledException` event type.
+> Starting with version **1.9.0**, JavaScript errors are reported via a new event type: **`MobileError`**. They will no longer appear under the `MobileHandledException` event type.
 >
 > **Action required:**
-> - **Alerts:** Update your NRQL alert conditions to target `MobileJSError`.
+> - **Alerts:** Update your NRQL alert conditions to target `MobileError`.
 > - **Dashboards:** Update any custom charts that query `MobileHandledException` for JavaScript-layer errors.
 > - **Symbolication:** Update your build scripts to the latest version to support source map uploads for this new event. See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
 >
 > **Migrate your NRQL:**
 > - Old query: `SELECT count(*) FROM MobileHandledException WHERE platform = 'reactnative'`
-> - New query: `SELECT count(*) FROM MobileJSError`
+> - New query: `SELECT count(*) FROM MobileError`
 
 ### Known Issues
 
@@ -233,7 +233,7 @@ import {Platform} from 'react-native';
        distributedTracingEnabled: true,
 
       // Optional: Enable or disable collection of JavaScript errors reported via recordError
-      // (routed through the MobileJSError / /mobile/errors protocol). Enabled by default.
+      // (routed through the MobileError / /mobile/errors protocol). Enabled by default.
        jsErrorReportingEnabled: true,
   };
 
@@ -536,7 +536,7 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 > - `isFatal` (optional, default `false`): Marks the error as fatal. Fatal errors are reported as crashes; non-fatal errors are reported as handled exceptions.
 > - `attributes` (optional, default `{}`): A key/value map of custom attributes attached to the recorded error. Values may be strings, numbers, or booleans.
 >
-> Errors are routed through the `MobileJSError` / `/mobile/errors` protocol and can be disabled with the `jsErrorReportingEnabled` agent configuration flag.
+> Errors are routed through the `MobileError` / `/mobile/errors` protocol and can be disabled with the `jsErrorReportingEnabled` agent configuration flag.
 
 ```js
     try {
@@ -694,12 +694,12 @@ You can also flag an error as fatal and attach custom attributes:
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
 ### React Native Agent v1.9.0 and above:
-JavaScript errors and promise rejections are recorded as `MobileJSError` events. You will be able to see the event trail, attributes, and stack trace for each JavaScript error in New Relic One.
+JavaScript errors and promise rejections are recorded as `MobileError` events. You will be able to see the event trail, attributes, and stack trace for each JavaScript error in New Relic One.
 
 You can also find these errors by running this query:
 
 ```sql
-SELECT * FROM MobileJSError SINCE 24 hours ago
+SELECT * FROM MobileError SINCE 24 hours ago
 ```
 
 JavaScript error reporting is enabled by default. To disable it, set the
@@ -710,12 +710,12 @@ passed to `startAgent`:
 const agentConfiguration = {
     // ...other options
     // Enable or disable collection of JavaScript errors reported via recordError
-    // (routed through the MobileJSError / /mobile/errors protocol). Enabled by default.
+    // (routed through the MobileError / /mobile/errors protocol). Enabled by default.
     jsErrorReportingEnabled: false,
 };
 ```
 
-To make the stack traces in `MobileJSError` events human-readable, upload the source map for your JavaScript bundle. See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md) for automatic and manual source map upload (including CodePush/OTA updates), the upload API reference, and troubleshooting.
+To make the stack traces in `MobileError` events human-readable, upload the source map for your JavaScript bundle. See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md) for automatic and manual source map upload (including CodePush/OTA updates), the upload API reference, and troubleshooting.
 
 ### React Native Agent v1.2.0 to v1.8.x:
 JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for each JavaScript error recorded. 
@@ -739,7 +739,7 @@ You can also build dashboard for errors using this query:
 
  ## Symbolicating a stack trace
 
-The agent symbolicates JavaScript errors by uploading the source map for your JavaScript bundle, so the stack traces in `MobileJSError` events are human-readable. The agent can upload source maps automatically after each build, and you can also upload them manually (including for CodePush/OTA updates). For full setup, the upload API reference, and troubleshooting, see [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
+The agent symbolicates JavaScript errors by uploading the source map for your JavaScript bundle, so the stack traces in `MobileError` events are human-readable. The agent can upload source maps automatically after each build, and you can also upload them manually (including for CodePush/OTA updates). For full setup, the upload API reference, and troubleshooting, see [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
 
 If you prefer to symbolicate a release build's stack trace manually, follow the steps described [here for Symbolication](https://reactnative.dev/docs/debugging-release-builds).
 
