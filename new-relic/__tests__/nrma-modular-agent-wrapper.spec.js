@@ -69,37 +69,37 @@ describe('nrmaModularAgentWrapper', () => {
     expect(test.hasMethod('setJSAppVersion')).toBe(true);
   });
 
-  it('should execute recordJavascriptError when agent is started', () => {
+  it('should execute recordError when agent is started', () => {
     NRMAModularAgentWrapper.isAgentStarted = true;
-    test.execute('recordJavascriptError', 'TestError', 'Test message', 'stack trace', false, {});
-    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(1);
-    expect(MockNRM.recordJavascriptError.mock.calls[0][0]).toBe('TestError');
-    expect(MockNRM.recordJavascriptError.mock.calls[0][1]).toBe('Test message');
-    expect(MockNRM.recordJavascriptError.mock.calls[0][2]).toBe('stack trace');
-    expect(MockNRM.recordJavascriptError.mock.calls[0][3]).toBe(false);
+    test.execute('recordError', 'TestError', 'Test message', 'stack trace', false, {});
+    expect(MockNRM.recordError.mock.calls.length).toBe(1);
+    expect(MockNRM.recordError.mock.calls[0][0]).toBe('TestError');
+    expect(MockNRM.recordError.mock.calls[0][1]).toBe('Test message');
+    expect(MockNRM.recordError.mock.calls[0][2]).toBe('stack trace');
+    expect(MockNRM.recordError.mock.calls[0][3]).toBe(false);
   });
 
-  it('should not execute recordJavascriptError when agent is not started', () => {
+  it('should not execute recordError when agent is not started', () => {
     NRMAModularAgentWrapper.isAgentStarted = false;
-    test.execute('recordJavascriptError', 'TestError', 'Test message', 'stack trace', false, {});
-    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(0);
+    test.execute('recordError', 'TestError', 'Test message', 'stack trace', false, {});
+    expect(MockNRM.recordError.mock.calls.length).toBe(0);
   });
 
-  it('should handle null values in recordJavascriptError with defaults', () => {
+  it('should handle null values in recordError with defaults', () => {
     NRMAModularAgentWrapper.isAgentStarted = true;
-    test.execute('recordJavascriptError', null, null, null, true, {});
-    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(1);
-    expect(MockNRM.recordJavascriptError.mock.calls[0][0]).toBe('Error');
-    expect(MockNRM.recordJavascriptError.mock.calls[0][1]).toBe('');
-    expect(MockNRM.recordJavascriptError.mock.calls[0][2]).toBe('');
-    expect(MockNRM.recordJavascriptError.mock.calls[0][3]).toBe(true);
+    test.execute('recordError', null, null, null, true, {});
+    expect(MockNRM.recordError.mock.calls.length).toBe(1);
+    expect(MockNRM.recordError.mock.calls[0][0]).toBe('Error');
+    expect(MockNRM.recordError.mock.calls[0][1]).toBe('');
+    expect(MockNRM.recordError.mock.calls[0][2]).toBe('');
+    expect(MockNRM.recordError.mock.calls[0][3]).toBe(true);
   });
 
-  it('should pass attributes to recordJavascriptError', () => {
+  it('should pass attributes to recordError', () => {
     NRMAModularAgentWrapper.isAgentStarted = true;
     const attributes = { customKey: 'customValue' };
-    test.execute('recordJavascriptError', 'Error', 'message', 'stack', false, attributes);
-    expect(MockNRM.recordJavascriptError.mock.calls.length).toBe(1);
-    expect(MockNRM.recordJavascriptError.mock.calls[0][4]).toEqual(attributes);
+    test.execute('recordError', 'Error', 'message', 'stack', false, attributes);
+    expect(MockNRM.recordError.mock.calls.length).toBe(1);
+    expect(MockNRM.recordError.mock.calls[0][4]).toEqual(attributes);
   });
 });

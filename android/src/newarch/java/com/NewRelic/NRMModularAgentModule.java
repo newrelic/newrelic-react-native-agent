@@ -205,10 +205,10 @@ public class NRMModularAgentModule extends NativeNewRelicModuleSpec {
     }
 
     @Override
-    public void recordJavascriptError(String errorName, String errorMessage,
+    public void recordError(String errorName, String errorMessage,
                                       String stackString, boolean isFatal,
                                       ReadableMap attributes) {
-        impl.recordJavaScriptError(errorName, errorMessage, stackString, isFatal,
+        impl.recordError(errorName, errorMessage, stackString, isFatal,
                                    attributes);
     }
 }
