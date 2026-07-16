@@ -211,9 +211,9 @@ class NRMAModularAgentWrapper {
     NRMModularAgent.recordStack(name, message, stack, isFatal, JSAppVersion);
   };
 
-  recordJavascriptError = (errorName, errorMessage, stackString, isFatal, attributes = {}) => {
+  recordError = (errorName, errorMessage, stackString, isFatal, attributes = {}) => {
     if (NRMAModularAgentWrapper.isAgentStarted) {
-      NRMModularAgent.recordJavascriptError(
+      NRMModularAgent.recordError(
         errorName || 'Error',
         errorMessage || '',
         stackString || '',

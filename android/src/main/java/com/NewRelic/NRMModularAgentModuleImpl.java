@@ -126,9 +126,9 @@ public class NRMModularAgentModuleImpl {
 
             Object jsErrorReportingEnabled = agentConfig.get("jsErrorReportingEnabled");
             if (jsErrorReportingEnabled == null || (Boolean) jsErrorReportingEnabled) {
-                NewRelic.enableFeature(FeatureFlag.JSError);
+                NewRelic.enableFeature(FeatureFlag.MobileError);
             } else {
-                NewRelic.disableFeature(FeatureFlag.JSError);
+                NewRelic.disableFeature(FeatureFlag.MobileError);
             }
 
             Map<String, Integer> strToLogLevel = new HashMap<>();
@@ -511,7 +511,7 @@ public class NRMModularAgentModuleImpl {
         NewRelic.recordHandledException(exception, exceptionMap);
     }
 
-    public void recordJavaScriptError(String errorName, String errorMessage,
+    public void recordError(String errorName, String errorMessage,
                                       String stackString, boolean isFatal,
                                       ReadableMap attributes) {
         if (errorName == null || errorMessage == null) {
@@ -524,7 +524,7 @@ public class NRMModularAgentModuleImpl {
             attributeMap = attributes.toHashMap();
         }
 
-        NewRelic.recordJavaScriptError(
+        NewRelic.recordError(
             errorName,
             errorMessage,
             stackString != null ? stackString : "",

@@ -32,7 +32,7 @@ export interface Spec extends TurboModule {
   recordReplay(): void;
   pauseReplay(): void;
   recordHandledException(exceptionDictionary:Object): void;
-  recordJavascriptError(
+  recordError(
     errorName: string,
     errorMessage: string,
     stackString: string,

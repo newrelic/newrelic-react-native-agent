@@ -270,7 +270,7 @@ RCT_EXPORT_METHOD(recordHandledException:(NSDictionary* _Nonnull)exceptionDictio
 
 }
 
-RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
+RCT_EXPORT_METHOD(recordError:(NSString* _Nonnull)errorName
                   errorMessage:(NSString* _Nonnull)errorMessage
                   stackString:(NSString* _Nonnull)stackString
                   isFatal:(BOOL)isFatal
@@ -284,7 +284,7 @@ RCT_EXPORT_METHOD(recordJavascriptError:(NSString* _Nonnull)errorName
         [mergedAttributes addEntriesFromDictionary:attributes];
     }
 
-    [NewRelic recordJavascriptError:errorName
+    [NewRelic recordError:errorName
                             message:errorMessage
                          stackTrace:(stackString ?: @"")
                                     isFatal:isFatal
@@ -407,7 +407,7 @@ RCT_EXPORT_METHOD(startAgent:(NSString *)appkey agentVersion:(NSString *)agentVe
 
     if ([customerConfiguration objectForKey:@"jsErrorReportingEnabled"] != nil &&
         [[customerConfiguration objectForKey:@"jsErrorReportingEnabled"] boolValue] == NO) {
-        [NewRelic disableFeatures:NRFeatureFlag_JSErrorEvents];
+        [NewRelic disableFeatures:NRFeatureFlag_MobileErrorEvents];
     }
     
     //Default is NRLogLevelWarning

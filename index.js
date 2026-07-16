@@ -353,7 +353,7 @@ class NewRelic {
 
         if (error !== undefined) {
             this.NRMAModularAgentWrapper.execute(
-                "recordJavascriptError",
+                "recordError",
                 error.name || 'Error',
                 error.message || '',
                 error.stack || '',
