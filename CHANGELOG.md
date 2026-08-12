@@ -20,6 +20,27 @@
 - Added source map upload support for symbolicating `MobileError` stack traces (automatic, manual, and CodePush/OTA). See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
 - Added the `jsErrorReportingEnabled` configuration flag to enable or disable JavaScript error reporting (enabled by default).
 - `recordError` now accepts optional `isFatal` and `attributes` arguments.
+## 1.8.8
+
+## Improvements
+
+- Updated the Native Android agent to version 7.8.0.
+- Updated the Native iOS agent to version 7.7.5.
+
+
+## 1.8.7
+
+## Improvements
+
+- Updated the Native iOS agent to version 7.7.4.
+
+
+## 1.8.6
+
+## Improvements
+
+- Updated the Native Android agent to version 7.7.7.
+- Updated the Native iOS agent to version 7.7.3.
 
 
 ## 1.8.5
