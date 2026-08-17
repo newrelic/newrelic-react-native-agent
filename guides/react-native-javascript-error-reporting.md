@@ -55,7 +55,7 @@ You can upload a source map directly to the New Relic source map ingest API. Thi
 Use the following **cURL** template:
 
 ```bash
-curl -X POST "https://symbol-ingest-api.newrelic.com/v1/react-native/sourcemaps" \
+curl -X POST "https://symbol-ingest-api.service.newrelic.com/v1/react-native/sourcemaps" \
      -H "Api-Key: $NR_USER_API_KEY" \
      -H "X-APP-LICENSE-KEY: $NR_APP_TOKEN" \
      -F "sourcemap=@./index.android.bundle.map" \
@@ -81,7 +81,7 @@ Replace the following:
 | Property | Value |
 | :--- | :--- |
 | Method | `POST` |
-| URL | `https://symbol-ingest-api.newrelic.com/v1/react-native/sourcemaps` |
+| URL | `https://symbol-ingest-api.service.newrelic.com/v1/react-native/sourcemaps` |
 | Content-Type | `multipart/form-data` |
 
 **Headers**
