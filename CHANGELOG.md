@@ -3,21 +3,21 @@
 
 > ### ⚠️ IMPORTANT: Breaking Change in Error Reporting
 >
-> Starting with version **1.9.0**, JavaScript errors are reported via a new event type: **`MobileError`**. These errors will no longer appear under the `MobileHandledException` event type.
+> Starting with version **1.9.0**, JavaScript errors are reported via a new event type: **`MobileJSError`**. These errors will no longer appear under the `MobileHandledException` event type.
 >
 > **Action Required:**
-> - **Alerts:** Update your NRQL alert conditions to target `MobileError`.
+> - **Alerts:** Update your NRQL alert conditions to target `MobileJSError`.
 > - **Dashboards:** Update any custom charts that query `MobileHandledException` for JavaScript-layer errors.
 > - **Symbolication:** Ensure your build scripts are updated to the latest version to support source map uploads for this new event.
 >
 > **Migrate your NRQL:**
 > - Old query: `SELECT count(*) FROM MobileHandledException WHERE platform = 'reactnative'`
-> - New query: `SELECT count(*) FROM MobileError`
+> - New query: `SELECT count(*) FROM MobileJSError`
 
 ## Improvements
 
-- JavaScript errors and unhandled promise rejections are now reported as a first-class `MobileError` event type (via the new Mobile Errors Protocol) instead of `MobileHandledException`.
-- Added source map upload support for symbolicating `MobileError` stack traces (automatic, manual, and CodePush/OTA). See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
+- JavaScript errors and unhandled promise rejections are now reported as a first-class `MobileJSError` event type (via the new Mobile Errors Protocol) instead of `MobileHandledException`.
+- Added source map upload support for symbolicating `MobileJSError` stack traces (automatic, manual, and CodePush/OTA). See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
 - Added the `jsErrorReportingEnabled` configuration flag to enable or disable JavaScript error reporting (enabled by default).
 - `recordError` now accepts optional `isFatal` and `attributes` arguments.
 - Updated the Native Android agent to version 7.8.1.
