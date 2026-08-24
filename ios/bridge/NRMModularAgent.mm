@@ -5,6 +5,7 @@
 
 #import "NRMModularAgent.h"
 #import <NewRelic/NewRelic.h>
+#import "NRMAFatalJSErrorHandler.h"
 
 
 @interface NewRelic (Private)
@@ -455,6 +456,8 @@ RCT_EXPORT_METHOD(startAgent:(NSString *)appkey agentVersion:(NSString *)agentVe
                         andCollectorAddress:collectorAddress
                    andCrashCollectorAddress:crashCollectorAddress];
     }
+
+    [NRMAFatalJSErrorHandler installIfNeeded];
 
     [NewRelic setAttribute:@"React Native Version" value:reactNativeVersion];
     
