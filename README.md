@@ -257,7 +257,7 @@ In android/settings.gradle:
    plugins {
       id "com.android.application" version "7.4.2" apply false
       id "org.jetbrains.kotlin.android" version "1.7.10" apply false
-      id "com.newrelic.agent.android" version "7.7.2" apply false // <-- include this
+      id "com.newrelic.agent.android" version "7.8.2" apply false // <-- include this
    }
    ```
 
@@ -280,7 +280,7 @@ Or, if you are using the traditional way to apply the plugin:
      }
      dependencies {
        ...
-       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.8.0"
+       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.8.2"
      }
    }
    ```
