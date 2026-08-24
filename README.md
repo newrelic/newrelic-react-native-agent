@@ -7,6 +7,20 @@
 
 This agent uses native New Relic Android and iOS agents to instrument the React-Native Javascript environment. The New Relic SDKs collect crashes, network traffic, and other information for hybrid apps using native components.
 
+> [!IMPORTANT]
+> **⚠️ Breaking change in error reporting (v1.9.0)**
+>
+> Starting with version **1.9.0**, JavaScript errors are reported via a new event type: **`MobileJSError`**. They will no longer appear under the `MobileHandledException` event type.
+>
+> **Action required:**
+> - **Alerts:** Update your NRQL alert conditions to target `MobileJSError`.
+> - **Dashboards:** Update any custom charts that query `MobileHandledException` for JavaScript-layer errors.
+> - **Symbolication:** Update your build scripts to the latest version to support source map uploads for this new event. See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
+>
+> **Migrate your NRQL:**
+> - Old query: `SELECT count(*) FROM MobileHandledException WHERE platform = 'reactnative'`
+> - New query: `SELECT count(*) FROM MobileJSError`
+
 ### Known Issues
 
 **Crash reports may not be sent when ProGuard rules are not properly configured for New Relic in hybrid Android applications.**
@@ -59,6 +73,87 @@ NPM
 npm i newrelic-react-native-agent
 ```
 
+### Installing from a GitHub branch
+
+To try a pre-release feature before it is published to npm, you can install the
+agent directly from a branch of this repository. npm and Yarn both support a
+`github:<owner>/<repo>#<ref>` install spec, where `<ref>` can be a branch name,
+tag, or commit SHA.
+
+In your app's `package.json`, point the dependency at the branch instead of a
+version range:
+
+```json
+"dependencies": {
+  "newrelic-react-native-agent": "github:newrelic/newrelic-react-native-agent#feature/reactnative-javascript-error-pipeline"
+}
+```
+
+Then install:
+
+```sh
+# npm
+npm install
+
+# yarn
+yarn install
+```
+
+Or add it in one step from the CLI:
+
+```sh
+# npm
+npm i github:newrelic/newrelic-react-native-agent#feature/reactnative-javascript-error-pipeline
+
+# yarn
+yarn add newrelic-react-native-agent@github:newrelic/newrelic-react-native-agent#feature/reactnative-javascript-error-pipeline
+```
+
+Notes:
+- Replace the branch name with whichever branch you want to test. You can also
+  pin to a tag (`#v1.8.6`) or an exact commit SHA (`#<commit-sha>`) for a
+  reproducible install.
+- Branch installs resolve to the current tip of that branch. To pull in new
+  commits after they are pushed, remove the package from `node_modules` and your
+  lockfile entry, then reinstall (e.g. `npm install --force` or delete the entry
+  and run `npm install`).
+- After updating the dependency, reinstall pods on iOS
+  (`cd ios && pod install`) and rebuild the app so the native New Relic SDK
+  versions declared in this branch are picked up.
+
+### Using a snapshot build of the native Android SDK
+
+Some pre-release branches pin the native New Relic Android agent to a
+`-SNAPSHOT` version (for example `7.7.8-SNAPSHOT`). Snapshot artifacts are not
+on Maven Central, so you must add the Central Portal Snapshots repository to
+your app's `android/build.gradle` in **both** the `buildscript` and
+`allprojects` repository blocks:
+
+```gradle
+buildscript {
+    repositories {
+        // ...existing repositories (google(), mavenCentral(), etc.)
+        maven {
+            name = "Central Portal Snapshots"
+            url = "https://central.sonatype.com/repository/maven-snapshots/"
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        // ...existing repositories (google(), mavenCentral(), etc.)
+        maven {
+            name = "Central Portal Snapshots"
+            url = "https://central.sonatype.com/repository/maven-snapshots/"
+        }
+    }
+}
+```
+
+Without this repository, the Android build fails to resolve the snapshot
+version of the native agent. Once the feature ships to a stable release, you
+can remove the snapshots repository.
 
 ## React Native Setup
 
@@ -136,6 +231,10 @@ import {Platform} from 'react-native';
 
       // Optional: Enable or disable distributed tracing.
        distributedTracingEnabled: true,
+
+      // Optional: Enable or disable collection of JavaScript errors reported via recordError
+      // (routed through the MobileJSError / /mobile/errors protocol). Enabled by default.
+       jsErrorReportingEnabled: true,
   };
 
 
@@ -158,7 +257,7 @@ In android/settings.gradle:
    plugins {
       id "com.android.application" version "7.4.2" apply false
       id "org.jetbrains.kotlin.android" version "1.7.10" apply false
-      id "com.newrelic.agent.android" version "7.7.2" apply false // <-- include this
+      id "com.newrelic.agent.android" version "7.8.2" apply false // <-- include this
    }
    ```
 
@@ -181,7 +280,7 @@ Or, if you are using the traditional way to apply the plugin:
      }
      dependencies {
        ...
-       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.8.0"
+       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.8.2"
      }
    }
    ```
@@ -430,14 +529,36 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
     NewRelic.removeAllAttributes();
 ```
 
-### recordError(e: string|error): void;
-> Records javascript errors for react-native.
+### recordError(e: string|error, isFatal?: boolean, attributes?: {[key: string]: any}): void;
+> Records JavaScript errors for react-native.
+>
+> - `e` (required): A JavaScript `Error` object or an error message string.
+> - `isFatal` (optional, default `false`): Marks the error as fatal. Fatal errors are reported as crashes; non-fatal errors are reported as handled exceptions.
+> - `attributes` (optional, default `{}`): A key/value map of custom attributes attached to the recorded error. Values may be strings, numbers, or booleans.
+>
+> Errors are routed through the `MobileJSError` / `/mobile/errors` protocol and can be disabled with the `jsErrorReportingEnabled` agent configuration flag.
+
 ```js
     try {
       var foo = {};
       foo.bar();
     } catch(e) {
       NewRelic.recordError(e);
+    }
+```
+
+You can also flag an error as fatal and attach custom attributes:
+
+```js
+    try {
+      var foo = {};
+      foo.bar();
+    } catch(e) {
+      NewRelic.recordError(e, false, {
+        'screen': 'Checkout',
+        'cartItemCount': 3,
+        'isGuestCheckout': true,
+      });
     }
 ```
 
@@ -572,7 +693,31 @@ See the examples below, and for more detail, see [New Relic IOS SDK doc](https:/
 
 ## How to see JSErrors(Fatal/Non Fatal) in NewRelic One?
 
-### React Native Agent v1.2.0 and above:
+### React Native Agent v1.9.0 and above:
+JavaScript errors and promise rejections are recorded as `MobileJSError` events. You will be able to see the event trail, attributes, and stack trace for each JavaScript error in New Relic One.
+
+You can also find these errors by running this query:
+
+```sql
+SELECT * FROM MobileJSError SINCE 24 hours ago
+```
+
+JavaScript error reporting is enabled by default. To disable it, set the
+`jsErrorReportingEnabled` feature flag to `false` in the agent configuration
+passed to `startAgent`:
+
+```js
+const agentConfiguration = {
+    // ...other options
+    // Enable or disable collection of JavaScript errors reported via recordError
+    // (routed through the MobileJSError / /mobile/errors protocol). Enabled by default.
+    jsErrorReportingEnabled: false,
+};
+```
+
+To make the stack traces in `MobileJSError` events human-readable, upload the source map for your JavaScript bundle. See [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md) for automatic and manual source map upload (including CodePush/OTA updates), the upload API reference, and troubleshooting.
+
+### React Native Agent v1.2.0 to v1.8.x:
 JavaScript errors and promise rejections can be seen in the `Handled Exceptions` tab in New Relic One. You will be able to see the event trail, attributes, and stack trace for each JavaScript error recorded. 
 
 You can also build a dashboard for these errors using this query:
@@ -594,9 +739,9 @@ You can also build dashboard for errors using this query:
 
  ## Symbolicating a stack trace
 
-The agent supports symbolication of JavaScript errors in debug mode only. Symbolicated errors are shown as Handled Exceptions in New Relic One. If you want to manually symboliate, please follow the steps described [here for Symbolication](https://reactnative.dev/docs/debugging-release-builds).
+The agent symbolicates JavaScript errors by uploading the source map for your JavaScript bundle, so the stack traces in `MobileJSError` events are human-readable. The agent can upload source maps automatically after each build, and you can also upload them manually (including for CodePush/OTA updates). For full setup, the upload API reference, and troubleshooting, see [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
 
-### Symbolication for Javascript errors are coming in future releases.
+If you prefer to symbolicate a release build's stack trace manually, follow the steps described [here for Symbolication](https://reactnative.dev/docs/debugging-release-builds).
 
 ```angular2html
 * IMPORTANT considerations and best practices include:
