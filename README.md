@@ -422,6 +422,61 @@ variables for your build:
 
 If neither environment variable is set, the plugin leaves `newrelic.properties` untouched and the two Gradle tasks skip the upload with a log message rather than failing the build.
 
+#### Automatic iOS dSYM / source map upload (Expo)
+
+Unlike Android, the dSYM and React Native source map upload scripts
+(`run-symbol-tool` and `upload-react-native-sourcemap`, from the
+[`dsym-upload-tools`](https://github.com/newrelic/newrelic-ios-agent-spm/tree/main/dsym-upload-tools)
+folder) don't ship inside the `NewRelicAgent` CocoaPod, and the Run Script build phase
+that invokes them normally has to be added by hand in Xcode — which doesn't survive
+`expo prebuild` regenerating `ios/` from scratch. The plugin vendors both scripts and,
+on every prebuild:
+
+* Copies them into `ios/dsym-upload-tools`.
+* Adds a Run Script build phase (after "Bundle React Native code and images") that runs
+  both scripts, reading credentials from environment variables — never written to any
+  generated file, only referenced by name in the build phase's shell script.
+* Ensures the "Bundle React Native code and images" phase exports `SOURCEMAP_FILE`, since
+  Expo's default template doesn't set it and the source map won't be generated otherwise.
+
+By default the build phase reads the iOS application token from `NEWRELIC_IOS_APP_TOKEN`
+and the User/Ingest API key from `NEWRELIC_USER_API_KEY` (shared with the Android
+default — same key type, [get one here](https://one.newrelic.com/api-keys)):
+
+```js
+{
+  "name": "my app",
+  "plugins": ["newrelic-react-native-agent"]
+}
+```
+
+To use different environment variable names, pass them explicitly:
+
+```js
+{
+  "name": "my app",
+  "plugins": [
+    [
+      "newrelic-react-native-agent",
+      {
+        "ios": {
+          "appTokenEnvName": "MY_NR_IOS_APP_TOKEN",
+          "apiKeyEnvName": "MY_NR_USER_API_KEY"
+        }
+      }
+    ]
+  ]
+}
+```
+
+Set the variables for your build the same way as the Android ones above (EAS environment
+variables with `plaintext`/`sensitive` visibility, or exported in your shell for bare
+`expo prebuild` / `expo run:ios`). If a variable is missing at build time, the phase logs
+which one and skips that upload rather than failing the build. Both underlying scripts
+also skip automatically for non-Release configurations and for simulator builds (the
+source map script has a `NEWRELIC_SOURCEMAP_ALLOW_SIMULATOR=true` escape hatch for
+testing the upload path on a simulator).
+
 ## Routing Instrumentation
 
 We currently provide two routing instrumentations out of the box to instrument route changes for and route changes record as Breadcrumb.
@@ -867,6 +922,9 @@ Deployment Postprocessing: Yes
 Strip Linked Product: Yes
 Strip Debug Symbols During Copy : Yes
 ```
+
+If you're using Expo, the config plugin can vendor these scripts and add the Run Script
+build phase for you automatically on every prebuild — see [Automatic iOS dSYM / source map upload (Expo)](#automatic-ios-dsym--source-map-upload-expo).
 ### Configure app launch times
 
 To measure app launch time, you can refer to the following documentation for both [Android](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/install-configure/configure-app-launch-time-android-apps/) and [iOS](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/configuration/app-launch-times-ios-apps/) platforms.

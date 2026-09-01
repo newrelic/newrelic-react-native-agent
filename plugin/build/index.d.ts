@@ -4,5 +4,7 @@
  */
 import { ConfigPlugin } from '@expo/config-plugins';
 import { NewRelicPluginProps } from './android';
-declare const _default: ConfigPlugin<void | NewRelicPluginProps>;
+import { NewRelicIosPluginProps } from './ios';
+type CombinedNewRelicPluginProps = NewRelicPluginProps & NewRelicIosPluginProps;
+declare const _default: ConfigPlugin<void | CombinedNewRelicPluginProps>;
 export default _default;

@@ -12,18 +12,27 @@ import {
   withNewRelicMapUploadProperties,
   NewRelicPluginProps,
 } from './android';
+import {
+  withNewRelicDsymUploadFiles,
+  withNewRelicDsymUploadBuildPhase,
+  NewRelicIosPluginProps,
+} from './ios';
 
 const projectPackage = require('newrelic-react-native-agent/package.json');
+
+type CombinedNewRelicPluginProps = NewRelicPluginProps & NewRelicIosPluginProps;
 
 /**
  * A config plugin for configuring `newrelic-react-native-agent`
  */
-const withNewRelicRNAgent: ConfigPlugin<NewRelicPluginProps | void> = (config, props) => {
+const withNewRelicRNAgent: ConfigPlugin<CombinedNewRelicPluginProps | void> = (config, props) => {
   return withPlugins(config, [
     withBuildscriptDependency,
     withApplyNewRelicPlugin,
     withNetworkAcessPermission,
     [withNewRelicMapUploadProperties, props ?? {}],
+    withNewRelicDsymUploadFiles,
+    [withNewRelicDsymUploadBuildPhase, props ?? {}],
   ]);
 };
 
