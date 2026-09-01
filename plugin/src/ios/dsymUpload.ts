@@ -119,13 +119,19 @@ export const withNewRelicDsymUploadBuildPhase: ConfigPlugin<NewRelicIosPluginPro
 
     const existingPhase = project.buildPhaseObject('PBXShellScriptBuildPhase', BUILD_PHASE_NAME);
     if (!existingPhase) {
-      project.addBuildPhase(
+      const { buildPhase } = project.addBuildPhase(
         [],
         'PBXShellScriptBuildPhase',
         BUILD_PHASE_NAME,
         project.getFirstTarget().uuid,
         { shellPath: '/bin/sh', shellScript: buildUploadScript(appTokenEnvName, apiKeyEnvName) },
       );
+      // Without declared inputs/outputs, Xcode's new build system warns that the script
+      // "has ambiguous dependencies causing it to run on every build". We DO want it to
+      // run on every Release build, so explicitly mark it always-out-of-date (equivalent
+      // to unchecking "Based on dependency analysis" in Xcode) rather than declaring
+      // outputPaths, which could make a later build with unchanged inputs skip it.
+      buildPhase.alwaysOutOfDate = 1;
     }
 
     return config;
