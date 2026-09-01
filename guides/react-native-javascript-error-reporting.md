@@ -21,13 +21,23 @@ Before you begin, get the following from the same New Relic account:
 
 ### Android
 
-Add your User API key to the `newrelic.properties` file in your project:
+Add your User API key and application token to the `newrelic.properties` file in your
+project (in the app module directory, alongside `build.gradle`):
 
 ```properties
-apiKey=<YOUR_USER_API_KEY>
+com.newrelic.api_key=<YOUR_USER_API_KEY>
+com.newrelic.application_token=<YOUR_APPLICATION_TOKEN>
 ```
 
-Replace `<YOUR_USER_API_KEY>` with your User API key. The agent already knows the application token from `NewRelic.startAgent()`. When both values are valid, the agent generates and uploads the Android source map to New Relic automatically after each release build.
+Replace `<YOUR_USER_API_KEY>` with your User API key and `<YOUR_APPLICATION_TOKEN>` with
+your Android application token. The build-time Gradle task cannot see the token passed
+to `NewRelic.startAgent()` in JavaScript — that call only configures the agent at
+runtime — so `com.newrelic.application_token` must also be set in this file. When both
+values are valid, the agent generates and uploads the Android source map to New Relic
+automatically after each release build.
+
+If you're using Expo, the `newrelic-react-native-agent` config plugin can generate this
+file for you automatically on every prebuild — see the [Expo section](../README.md#automatic-android-source-map--mapping-file-upload-expo) of the main README.
 
 ### iOS
 

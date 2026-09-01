@@ -417,7 +417,7 @@ If only one of the two variables is set, the plugin still writes that single pro
 the Gradle task then logs which one is missing rather than failing the build. Set the
 variables for your build:
 
-* **EAS Build**: store both as [EAS environment variables](https://docs.expo.dev/eas/environment-variables/) (e.g. `eas env:create --name NEWRELIC_USER_API_KEY --visibility secret` and `eas env:create --name NEWRELIC_ANDROID_APP_TOKEN --visibility secret`) scoped to the environments you build with. EAS Build resolves them before running `prebuild`, whether the build runs on EAS's servers or locally with `eas build --local`.
+* **EAS Build**: store both as [EAS environment variables](https://docs.expo.dev/eas/environment-variables/) with `--visibility plaintext` or `--visibility sensitive` (e.g. `eas env:set --environment production --name NEWRELIC_USER_API_KEY --value <value> --visibility sensitive` and the equivalent for `NEWRELIC_ANDROID_APP_TOKEN`), scoped to the environments you build with. **Do not use `--visibility secret`** — secret-visibility variables are reserved for EAS's own credential system and are never exposed as `process.env` to build scripts, so the plugin won't see them and will silently skip writing `newrelic.properties`. EAS Build resolves plaintext/sensitive variables before running `prebuild`, whether the build runs on EAS's servers or locally with `eas build --local`.
 * **Bare `expo prebuild` / `expo run:android`**: export both variables in your shell, or add them to a `.env` file loaded by your tooling, before running the build.
 
 If neither environment variable is set, the plugin leaves `newrelic.properties` untouched and the two Gradle tasks skip the upload with a log message rather than failing the build.
