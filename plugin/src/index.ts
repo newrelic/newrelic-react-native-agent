@@ -5,15 +5,26 @@
 
 import { ConfigPlugin, withPlugins, createRunOncePlugin } from '@expo/config-plugins';
 
-import { withApplyNewRelicPlugin, withBuildscriptDependency, withNetworkAcessPermission } from './android';
+import {
+  withApplyNewRelicPlugin,
+  withBuildscriptDependency,
+  withNetworkAcessPermission,
+  withNewRelicMapUploadProperties,
+  NewRelicPluginProps,
+} from './android';
 
 const projectPackage = require('newrelic-react-native-agent/package.json');
 
 /**
  * A config plugin for configuring `newrelic-react-native-agent`
  */
-const withNewRelicRNAgent: ConfigPlugin = config => {
-  return withPlugins(config, [withBuildscriptDependency, withApplyNewRelicPlugin,withNetworkAcessPermission]);
+const withNewRelicRNAgent: ConfigPlugin<NewRelicPluginProps | void> = (config, props) => {
+  return withPlugins(config, [
+    withBuildscriptDependency,
+    withApplyNewRelicPlugin,
+    withNetworkAcessPermission,
+    [withNewRelicMapUploadProperties, props ?? {}],
+  ]);
 };
 
-export default createRunOncePlugin(withNewRelicRNAgent,projectPackage.name, projectPackage.version);
+export default createRunOncePlugin(withNewRelicRNAgent, projectPackage.name, projectPackage.version);

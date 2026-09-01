@@ -371,6 +371,57 @@ Integration with Expo is possible in both bare workflow and [custom managed work
   * After this, you need to use the `expo prebuild --clean` command as described in the  ["Adding custom native code"](https://docs.expo.dev/workflow/customizing/) guide to rebuild your app with the plugin changes. If this command is not running, you'll get errors when starting the New Relic agent.
   * For Expo Go users, the agent will require using native code. Since Expo Go does not suport sending custom native code over-the-air, you can follow Expo's documentation on how to use ["Custom native code in Expo Go"](https://docs.expo.dev/bare/using-expo-client/).
 
+#### Automatic Android source map / mapping file upload (Expo)
+
+Since `android/` is regenerated on every `expo prebuild` (locally and on EAS Build), the
+plugin can write `android/app/newrelic.properties` for you on each prebuild, sourcing
+your [New Relic User API key](https://docs.newrelic.com/docs/apis/intro-apis/new-relic-api-keys/#user-key)
+and your Android [application token](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile/maintenance/viewing-your-application-token)
+(the same one passed to `NewRelic.startAgent()`) from environment variables instead of
+committing them to the repo. Both values are required — the agent's
+`newrelicReactNativeSourceMapUploadRelease` and `newrelicMapUploadRelease` Gradle tasks
+read `com.newrelic.api_key` and `com.newrelic.application_token` from this file to
+authenticate the upload of the React Native source map and ProGuard/R8 mapping file
+after release builds — see [React Native JavaScript error reporting](guides/react-native-javascript-error-reporting.md).
+
+By default the plugin reads the User API key from `NEWRELIC_USER_API_KEY` and the
+application token from `NEWRELIC_ANDROID_APP_TOKEN`:
+
+```js
+{
+  "name": "my app",
+  "plugins": ["newrelic-react-native-agent"]
+}
+```
+
+To use different environment variable names, pass them explicitly:
+
+```js
+{
+  "name": "my app",
+  "plugins": [
+    [
+      "newrelic-react-native-agent",
+      {
+        "android": {
+          "apiKeyEnvName": "MY_NR_USER_API_KEY",
+          "appTokenEnvName": "MY_NR_ANDROID_APP_TOKEN"
+        }
+      }
+    ]
+  ]
+}
+```
+
+If only one of the two variables is set, the plugin still writes that single property;
+the Gradle task then logs which one is missing rather than failing the build. Set the
+variables for your build:
+
+* **EAS Build**: store both as [EAS environment variables](https://docs.expo.dev/eas/environment-variables/) (e.g. `eas env:create --name NEWRELIC_USER_API_KEY --visibility secret` and `eas env:create --name NEWRELIC_ANDROID_APP_TOKEN --visibility secret`) scoped to the environments you build with. EAS Build resolves them before running `prebuild`, whether the build runs on EAS's servers or locally with `eas build --local`.
+* **Bare `expo prebuild` / `expo run:android`**: export both variables in your shell, or add them to a `.env` file loaded by your tooling, before running the build.
+
+If neither environment variable is set, the plugin leaves `newrelic.properties` untouched and the two Gradle tasks skip the upload with a log message rather than failing the build.
+
 ## Routing Instrumentation
 
 We currently provide two routing instrumentations out of the box to instrument route changes for and route changes record as Breadcrumb.
