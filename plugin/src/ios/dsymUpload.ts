@@ -64,7 +64,7 @@ function unwrapShellScript(raw: string): string {
 }
 
 function wrapShellScript(text: string): string {
-  return '"' + text.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"';
+  return '"' + text.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"';
 }
 
 function buildUploadScript(appTokenEnvName: string, apiKeyEnvName: string): string {
