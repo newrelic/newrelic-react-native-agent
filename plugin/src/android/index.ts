@@ -6,6 +6,7 @@
 import { withApplyNewRelicPlugin } from './applyPlugin';
 import { withBuildscriptDependency } from './buildscriptDependency';
 import { withNetworkAcessPermission} from './permissions'
+import { withNewRelicMapUploadProperties, NewRelicPluginProps, defaultApiKeyEnvName, defaultAppTokenEnvName } from './mapUploadProperties';
 
 
-export { withBuildscriptDependency, withApplyNewRelicPlugin,withNetworkAcessPermission };
+export { withBuildscriptDependency, withApplyNewRelicPlugin, withNetworkAcessPermission, withNewRelicMapUploadProperties, NewRelicPluginProps, defaultApiKeyEnvName, defaultAppTokenEnvName };
