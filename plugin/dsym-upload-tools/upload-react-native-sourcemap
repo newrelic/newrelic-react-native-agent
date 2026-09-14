@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# 2026 New Relic
+# Shell wrapper script used to upload React Native source maps to New Relic.
+# upload-react-native-sourcemap
+
+INGEST_API_KEY=$1
+APP_TOKEN=$2
+
+# Check if credentials are provided and not placeholder values
+if [ -z "$INGEST_API_KEY" ] || [ -z "$APP_TOKEN" ] || \
+   [ "$INGEST_API_KEY" = "NEWRELIC_INGEST_KEY" ] || [ "$APP_TOKEN" = "NEWRELIC_APP_TOKEN" ] || \
+   [ "$INGEST_API_KEY" = "YOUR_INGEST_API_KEY" ] || [ "$APP_TOKEN" = "YOUR_APP_TOKEN" ]; then
+    echo "New Relic: Skipping source map upload - credentials not configured"
+    echo "New Relic: To enable source map uploads, set NEWRELIC_INGEST_KEY and NEWRELIC_APP_TOKEN environment variables"
+    echo "New Relic: See https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-react-native for setup instructions"
+    exit 0
+fi
+DEBUG_FLAG=${3:-''}
+
+echo "New Relic: Processing React Native source map and uploading to New Relic. (In background...)"
+echo "New Relic: For troubleshooting, see upload_sourcemap_results.log file in project root folder. Add --debug as third argument in Run Script for additional information."
+
+WORK_DIRECTORY=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+SCRIPT="$WORK_DIRECTORY/upload-react-native-sourcemap.swift"
+
+## Running with below command is useful for seeing output in Xcode,
+## but it will incur delays in the build process while the source map uploads.
+# /usr/bin/xcrun --sdk macosx swift "$SCRIPT" $INGEST_API_KEY $APP_TOKEN $DEBUG_FLAG
+
+/usr/bin/xcrun --sdk macosx swift "$SCRIPT" $INGEST_API_KEY $APP_TOKEN $DEBUG_FLAG > upload_sourcemap_results.log 2>&1 &

@@ -352,13 +352,17 @@ class NewRelic {
         }
 
         if (error !== undefined) {
+            const mergedAttributes = {
+                ...(this.JSAppVersion ? { JSBundleId: this.JSAppVersion } : {}),
+                ...attributes,
+            };
             this.NRMAModularAgentWrapper.execute(
                 "recordJavascriptError",
                 error.name || 'Error',
                 error.message || '',
                 error.stack || '',
                 isFatal,
-                attributes
+                mergedAttributes
             );
         } else {
             this.LOG.warn('undefined error name or message');
