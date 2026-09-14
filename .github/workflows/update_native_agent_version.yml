@@ -109,22 +109,22 @@ jobs:
           echo "android_updated=$ANDROID_UPDATED" >> $GITHUB_OUTPUT
           echo "ios_updated=$IOS_UPDATED" >> $GITHUB_OUTPUT
 
-      - name: Calculate new plugin version (minor bump)
+      - name: Calculate new plugin version (patch bump)
         id: new_plugin_version
         if: steps.check_updates.outputs.needs_update == 'true'
         run: |
           CURRENT_VERSION="${{ steps.current_versions.outputs.current_plugin }}"
           echo "Current version: $CURRENT_VERSION"
 
-          # Increment minor version (e.g., 1.5.11 -> 1.6.0)
+          # Increment patch version (e.g., 1.5.11 -> 1.5.12)
           major=$(echo "$CURRENT_VERSION" | cut -d. -f1)
           minor=$(echo "$CURRENT_VERSION" | cut -d. -f2)
           patch=$(echo "$CURRENT_VERSION" | cut -d. -f3)
 
           echo "Parsed - Major: $major, Minor: $minor, Patch: $patch"
 
-          NEW_MINOR=$((minor + 1))
-          NEW_VERSION="$major.$NEW_MINOR.0"
+          NEW_PATCH=$((patch + 1))
+          NEW_VERSION="$major.$minor.$NEW_PATCH"
 
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New plugin version will be: $NEW_VERSION"
