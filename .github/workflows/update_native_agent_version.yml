@@ -242,6 +242,18 @@ jobs:
           fi
 
           PR_BODY="${PR_BODY}- **Plugin Version**: ${CURRENT_VERSION} → ${NEW_VERSION}\n\n"
+
+          # Becomes the bullet in the docs-website release notes (see CONTRIBUTING.md, "Release notes").
+          # Native agent updates are enhancements. The sentences match the CHANGELOG.md entries written
+          # above word for word, so the release-time reconciliation lists each update only once.
+          RELEASE_NOTE=""
+          if [ "$ANDROID_UPDATED" = "true" ]; then
+            RELEASE_NOTE="Updated the Native Android agent to version ${ANDROID_VERSION}."
+          fi
+          if [ "$IOS_UPDATED" = "true" ]; then
+            RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE }Updated the Native iOS agent to version ${IOS_VERSION}."
+          fi
+          PR_BODY="${PR_BODY}## Release note\n\n${RELEASE_NOTE}\n\n"
           PR_BODY="${PR_BODY}## Files Updated\n\n- \`package.json\`\n- \`README.md\`\n- \`CHANGELOG.md\`\n\n"
           PR_BODY="${PR_BODY}## Testing\n\n- [ ] Tests pass\n- [ ] Android app builds successfully\n- [ ] iOS app builds successfully\n- [ ] Manual testing completed\n\n---\n\n"
           PR_BODY="${PR_BODY}This PR was automatically created by the Update Native Agent Versions workflow.\n\n"
@@ -253,7 +265,7 @@ jobs:
             -H "$BRANCH_NAME" \
             --title "chore: Update native agents to v${NEW_VERSION}" \
             --body "$(echo -e "$PR_BODY")" \
-            --label "enhancement,automated"
+            --label "enhancement,automated,release-note:enhancement"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
