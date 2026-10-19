@@ -32,7 +32,7 @@ jobs:
           ref: ${{ github.event.pull_request.base.ref }}
           fetch-depth: 0 # tags, for the already-released check
           persist-credentials: false
-      - uses: newrelic/newrelic-android-agent/.github/actions/release-notes/append@NR-620061-shared-release-notes
+      - uses: newrelic/newrelic-android-agent/.github/actions/release-notes/append@develop
         with:
           bot-pat: ${{ secrets.BOT_PAT }}
           bot-email: ${{ secrets.BOT_EMAIL }}

@@ -40,7 +40,7 @@ jobs:
         with:
           fetch-depth: 0 # tags and history
           persist-credentials: false
-      - uses: newrelic/newrelic-android-agent/.github/actions/release-notes/generate@NR-620061-shared-release-notes
+      - uses: newrelic/newrelic-android-agent/.github/actions/release-notes/generate@develop
         with:
           version: ${{ inputs.version }}
           overwrite: ${{ inputs.overwrite || false }}
