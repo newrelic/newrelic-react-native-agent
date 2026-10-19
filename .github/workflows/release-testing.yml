@@ -215,7 +215,7 @@ jobs:
     if: needs.release.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
     # The release above is created with GITHUB_TOKEN, which never fires a `release` event, so the
     # release-notes workflow is called directly. It opens a draft PR on newrelic/docs-website.
-    uses: ./.github/workflows/generate-docs-release-notes.yml
+    uses: ./.github/workflows/release-notes-generate.yml
     with:
       version: ${{ needs.release.outputs.version }}
     secrets: inherit

@@ -23,4 +23,5 @@ nr-versions.json
 CHANGELOG.md
 NewRelicExampleApp
 .husky
-.github/react-native-agent-next.mdx
+.github/
+react-native-agent-next.mdx
