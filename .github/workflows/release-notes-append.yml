@@ -1,0 +1,39 @@
+name: Release notes - append
+
+# On every PR merged to main, add its release-note bullet to this agent's next branch (and draft PR)
+# on newrelic/docs-website. See the README of newrelic/newrelic-android-agent's
+# .github/actions/release-notes/.
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write # the label-request comment on an unlabelled PR
+
+jobs:
+  append:
+    # Fork PRs get no secrets and Dependabot merges a read-only token; the release run covers both.
+    # Job level, so a PR closed without merging never takes the concurrency slot.
+    if: >-
+      github.event.pull_request.merged == true
+      && github.event.pull_request.head.repo.full_name == github.repository
+      && github.actor != 'dependabot[bot]'
+    concurrency:
+      group: docs-release-notes-next
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          fetch-depth: 0 # tags, for the already-released check
+          persist-credentials: false
+      - uses: newrelic/newrelic-android-agent/.github/actions/release-notes/append@develop
+        with:
+          bot-pat: ${{ secrets.BOT_PAT }}
+          bot-email: ${{ secrets.BOT_EMAIL }}
+          docs-repo: ${{ vars.DOCS_REPO || 'newrelic/docs-website' }}

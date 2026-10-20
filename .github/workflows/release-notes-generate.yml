@@ -1,0 +1,50 @@
+name: Release notes - generate
+
+# Build a release's docs-website note and open it as a draft PR for a person to edit. release-testing.yml creates
+# the release with GITHUB_TOKEN, which fires no release event, so it calls this workflow instead.
+# Run it by hand to rebuild the note for an existing tag.
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "Release version, e.g. 1.9.3 (its tag must exist)"
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, e.g. 1.9.3 (its tag must exist)"
+        required: true
+      overwrite:
+        description: "Replace an existing release-notes branch or file for this version (discards edits on it)"
+        type: boolean
+        default: false
+      dry-run:
+        description: "Only build the note into the job summary"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write # POST /releases/generate-notes needs it
+
+jobs:
+  generate:
+    concurrency:
+      group: docs-release-notes-next
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0 # tags and history
+          persist-credentials: false
+      - uses: newrelic/newrelic-android-agent/.github/actions/release-notes/generate@develop
+        with:
+          version: ${{ inputs.version }}
+          overwrite: ${{ inputs.overwrite || false }}
+          dry-run: ${{ inputs.dry-run || false }}
+          bot-pat: ${{ secrets.BOT_PAT }}
+          bot-email: ${{ secrets.BOT_EMAIL }}
+          docs-repo: ${{ vars.DOCS_REPO || 'newrelic/docs-website' }}

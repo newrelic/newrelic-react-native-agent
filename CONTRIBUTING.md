@@ -18,6 +18,40 @@ Before submitting an Issue, please search for similar ones in the
 2. Increase the version numbers in any examples files and the README.md to the new version that this Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
 3. You may merge the Pull Request in once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.
 
+## Release notes
+
+Release notes for the React Native agent are drafted automatically and reviewed by a person before they are published on docs.newrelic.com, in the docs-website release-notes format (`features`, `enhancements`, `bugs` and `security` arrays, a blank `category`, and only the sections that have entries). The automation is shared with the other mobile agents and lives in [newrelic/newrelic-android-agent `.github/actions/release-notes/`](https://github.com/newrelic/newrelic-android-agent/tree/develop/.github/actions/release-notes); its README explains how each bullet is built.
+
+**Every PR merged to `main` needs exactly one of these labels**, unless it is left out of the notes (see below). The label decides which section of the published note the PR appears in:
+
+| Label | Section | Use it for |
+|---|---|---|
+| `release-note:feature` | New features | A capability that did not exist before |
+| `release-note:enhancement` | Improvements and enhancements | Improvements to existing behavior, **including native Android and iOS agent version bumps** |
+| `release-note:bug` | Bug fixes | Something that was broken; say what was broken |
+| `release-note:security` | Security updates | Security fixes |
+
+Most React Native releases are native agent version bumps. Those are enhancements, not features. The `chore: Update native agents` PRs opened by `update_native_agent_version.yml` are labelled `release-note:enhancement` automatically, and their `## Release note` section repeats the `CHANGELOG.md` entries word for word.
+
+- If the description has a `## Release note` heading (or a `Release note:` line), that text becomes the bullet as written, so say what changed for app developers or their users and, for a bug, what was broken. Otherwise the title is used with its type prefix and Jira key removed and the leading verb put in the past tense (`fix: guard against null filename (NR-1)` becomes "Guarded against null filename."). Write `N/A` to use the title.
+- Unlabelled PRs whose title type is `docs`, `test`, `ci`, `chore`, `build` or `style`, and Dependabot PRs, are left out as not user-facing; add a `release-note:*` label to include one. Use `security:` as the title type for a security fix, or the `release-note:security` label.
+- Put `[skip-docs]` anywhere in the PR description to leave a PR out (internal refactors, release chores).
+- The `Release notes - check` check comments on your PR with the section and the exact bullet it will produce, and goes red if a user-facing PR into `main` does not have exactly one `release-note:*` label. A user-facing PR that merges without a label is still included (section guessed from the title, bot comment), and any PR that is left out is listed in the release's docs PR, so nothing disappears silently.
+
+### How the notes are built
+
+1. **On every merge to `main`**, `.github/workflows/release-notes-append.yml` adds the PR's bullet to the `react-native-next` branch of `newrelic/docs-website` (draft PR "React Native agent: next release notes", which is never merged). The branch starts from `react-native-agent-next.mdx` at the root of this repository.
+2. **On every release**, `release-testing.yml` calls `.github/workflows/release-notes-generate.yml`, which reconciles three sources: the bullets on `react-native-next`, every PR between the previous tag and the new one, and the version's entries in `CHANGELOG.md`. A change that appears in more than one source appears once. It writes `react-native-agent-<version without dots>.mdx` (for example `react-native-agent-193.mdx`) with a version-pinned npm `downloadLink`, and opens a **draft** PR on `newrelic/docs-website`.
+3. Settings are in `.github/release-notes.json`. The workflows need the `BOT_PAT` and `BOT_EMAIL` repository secrets.
+
+### Release checklist
+
+- [ ] Every user-facing PR since the last release carries one `release-note:*` label (native agent bumps: `release-note:enhancement`).
+- [ ] `CHANGELOG.md` has a `## <version>` entry for the release.
+- [ ] After the release, open the draft `React Native agent <version> release notes` PR on `newrelic/docs-website` and **edit it before it merges**: each bullet is specific and user-facing, bug bullets say what was broken, each bullet sits in the right section, each frontmatter array mirrors its section, and the lists under "From the CHANGELOG" and "PRs left out" in the PR description have been checked.
+- [ ] Mark the docs PR ready for review. The `react-native-next` draft PR is updated or closed automatically.
+- [ ] To rebuild the notes for an existing tag, run `release-notes-generate.yml` by hand with the version (for example `1.9.3`); tick `overwrite` only to discard edits already made on the docs PR.
+
 ## Contributor License Agreement
 
 Keep in mind that when you submit your Pull Request, you'll need to sign the CLA via the click-through using CLA-Assistant. If you'd like to execute our corporate CLA, or if you have any questions, please drop us an email at opensource@newrelic.com.
