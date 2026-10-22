@@ -8,10 +8,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up Node 18
+      - name: Set up Node 22
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22.23.4
       - name: Install dependencies
         run: npm install
       - name: Run tests and collect coverage
