@@ -4,6 +4,8 @@
 =end
 
 require 'json'
+# Embeds NewRelic.framework in the app when the agent comes from SPM; see the file.
+require_relative 'newrelic_spm'
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
 #NewRelic IOS Agent
@@ -36,15 +38,22 @@ Pod::Spec.new do |s|
   # react-native/scripts/cocoapods/spm.rb) AND a consumer Podfile that uses
   # `use_frameworks! :linkage => :dynamic`. Mixing static linkage with SPM
   # produces linker errors at build time.
+  # newrelic_spm.rb (required above) embeds NewRelic.framework in the app,
+  # which React Native's SPM helper doesn't do before facebook/react-native#58781.
   if ENV['NEWRELIC_USE_SPM'] == '1'
     unless defined?(SPM) && SPM.respond_to?(:dependency)
       raise 'NEWRELIC_USE_SPM=1 is set but the SPM helper is not loaded. ' \
             'This requires React Native >= 0.75 and a Podfile that imports ' \
             'react_native_pods.rb.'
     end
+    spm_url = 'https://github.com/newrelic/newrelic-ios-agent-spm'
+    # sdkVersions holds a CocoaPods requirement (`~> 7.7.8`, ">= 7.7.8, < 7.8.0"), which is
+    # SPM's upToNextMinorVersion from 7.7.8. Passed as is, Xcode can't parse it as a version.
+    spm_requirement = { kind: 'upToNextMinorVersion', minimumVersion: newrelic_sdk_version.sub(/\A\s*~>\s*/, '') }
+    NewRelicSPM.activate!(spm_url, spm_requirement)
     SPM.dependency(s,
-      url: 'https://github.com/newrelic/newrelic-ios-agent-spm',
-      requirement: { kind: 'exactVersion', version: newrelic_sdk_version },
+      url: spm_url,
+      requirement: spm_requirement,
       products: ['NewRelic']
     )
   else

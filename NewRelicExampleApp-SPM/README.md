@@ -56,6 +56,12 @@ After `pod install`:
 - `ios/Podfile.lock` should NOT contain `NewRelicAgent`.
 - `ios/Pods/Pods.xcodeproj/project.pbxproj` should contain
   `XCRemoteSwiftPackageReference "newrelic-ios-agent-spm"`.
+- `ios/Pods/Target Support Files/Pods-AwesomeProject/Pods-AwesomeProject-frameworks.sh`
+  should contain `install_spm_framework "NewRelic"` (added by `newrelic_spm.rb`).
+
+After building, the app bundle's `Frameworks/` must contain `NewRelic.framework`, and the
+app must launch and log `[NRMA] React Native agent started.` A launch crash with
+`Library not loaded: @rpath/NewRelic.framework/NewRelic` means the framework wasn't embedded.
 
 Switch back to the CocoaPods path by removing `ENV['NEWRELIC_USE_SPM'] = '1'`
 and the `use_frameworks!` line from `ios/Podfile`, then re-run `pod install`.
