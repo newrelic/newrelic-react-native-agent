@@ -13,7 +13,7 @@ import {Platform} from 'react-native';
 let appToken;
 
 if (Platform.OS === 'ios') {
-  appToken = 'AAa413614341452f701db5d23e4574ff22fd30bf8b-NRMA';
+  appToken = 'REPLACE_WITH_YOUR_IOS_APP_TOKEN';
 } else {
   appToken = 'placeholder';
 }
