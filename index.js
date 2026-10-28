@@ -50,6 +50,7 @@ class NewRelic {
         newEventSystemEnabled: false,
         distributedTracingEnabled: true,
         jsErrorReportingEnabled: true,
+        consoleCaptureEnabled: true,
     };
   }
 
@@ -182,7 +183,9 @@ class NewRelic {
         this.NRMAModularAgentWrapper.startAgent(appkey, this.agentVersion, this.getReactNativeVersion(), this.config);
         this.addNewRelicErrorHandler();
         this.addNewRelicPromiseRejectionHandler();
-        this._overrideConsole();
+        if (this.config.consoleCaptureEnabled !== false) {
+            this._overrideConsole();
+        }
         //this.enableNetworkInteraction();
         this.LOG.info('React Native agent started.');
         this.LOG.info(`New Relic React Native agent version ${this.agentVersion}`);
