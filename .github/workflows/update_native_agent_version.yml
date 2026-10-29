@@ -66,29 +66,45 @@ jobs:
             VERSION="${{ inputs.ios_version }}"
             echo "Using provided iOS version: $VERSION"
           else
-            # Fetch latest version from the newest non-prerelease GitHub release of the iOS agent SPM repo
-            VERSION=$(gh api repos/newrelic/newrelic-ios-agent-spm/releases/latest -q .tag_name | sed 's/^v//')
-            if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-              echo "::error::Could not determine the latest iOS agent version (got '$VERSION')"
-              exit 1
-            fi
+            # Highest X.Y.Z tag on the iOS agent SPM repo. Every production build pushes a tag there, but
+            # GitHub Releases are created by hand and some versions (e.g. 7.7.8) never got one.
+            VERSION=$(gh api --paginate 'repos/newrelic/newrelic-ios-agent-spm/tags?per_page=100' -q '.[].name' | \
+              grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
             echo "Fetched latest iOS version: $VERSION"
           fi
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Could not determine the iOS agent version (got '$VERSION')"
+            exit 1
+          fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          # Only move the NewRelicAgent pod pin to versions that are on CocoaPods. The SPM tag can land before
+          # the pod, and once CocoaPods trunk is read-only new versions won't be published as pods at all; pinning
+          # a pod that doesn't exist breaks `pod install`. 1/a/2 is the CocoaPods CDN shard for NewRelicAgent.
+          if curl -sfL --retry 3 --max-time 30 -o /dev/null "https://cdn.cocoapods.org/Specs/1/a/2/NewRelicAgent/$VERSION/NewRelicAgent.podspec.json"; then
+            echo "pod_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "::notice::NewRelicAgent $VERSION is not on CocoaPods; leaving the CocoaPods pin unchanged"
+            echo "pod_available=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Get current versions
         id: current_versions
         run: |
           CURRENT_ANDROID=$(jq -r '.sdkVersions.android.newrelic' package.json)
           CURRENT_IOS=$(jq -r '.sdkVersions.ios.newrelic' package.json | sed 's/~>//')
+          # sdkVersions.ios.cocoapods is only present when the pod pin lags the SPM version
+          CURRENT_IOS_POD=$(jq -r '.sdkVersions.ios.cocoapods // .sdkVersions.ios.newrelic' package.json | sed 's/~>//')
           CURRENT_PLUGIN=$(jq -r '.version' package.json)
 
           echo "current_android=$CURRENT_ANDROID" >> $GITHUB_OUTPUT
           echo "current_ios=$CURRENT_IOS" >> $GITHUB_OUTPUT
+          echo "current_ios_pod=$CURRENT_IOS_POD" >> $GITHUB_OUTPUT
           echo "current_plugin=$CURRENT_PLUGIN" >> $GITHUB_OUTPUT
 
           echo "Current Android version: $CURRENT_ANDROID"
           echo "Current iOS version: $CURRENT_IOS"
+          echo "Current iOS version (CocoaPods): $CURRENT_IOS_POD"
           echo "Current Plugin version: $CURRENT_PLUGIN"
 
       - name: Check if updates are needed
@@ -141,11 +157,20 @@ jobs:
           ANDROID_VERSION="${{ steps.android_version.outputs.version }}"
           IOS_VERSION="${{ steps.ios_version.outputs.version }}"
 
+          # sdkVersions.ios.newrelic drives the SPM requirement (NEWRELIC_USE_SPM=1) and, unless
+          # sdkVersions.ios.cocoapods is set, the NewRelicAgent pod requirement too. When this version
+          # isn't on CocoaPods, keep the pod on its current requirement by saving it to .cocoapods.
+          if [ "${{ steps.ios_version.outputs.pod_available }}" = "true" ]; then
+            IOS_POD_FILTER='del(.sdkVersions.ios.cocoapods)'
+          else
+            IOS_POD_FILTER='.sdkVersions.ios.cocoapods //= .sdkVersions.ios.newrelic'
+          fi
+
           # Update package.json using jq
           jq --arg version "$NEW_VERSION" \
              --arg android "$ANDROID_VERSION" \
              --arg ios "~>$IOS_VERSION" \
-             '.version = $version | .sdkVersions.android.newrelic = $android | .sdkVersions.ios.newrelic = $ios' \
+             ".version = \$version | .sdkVersions.android.newrelic = \$android | $IOS_POD_FILTER | .sdkVersions.ios.newrelic = \$ios" \
              package.json > package-tmp.json && mv package-tmp.json package.json
 
           echo "Updated package.json"
@@ -168,6 +193,8 @@ jobs:
           NEW_VERSION="${{ steps.new_plugin_version.outputs.new_version }}"
           ANDROID_UPDATED="${{ steps.check_updates.outputs.android_updated }}"
           IOS_UPDATED="${{ steps.check_updates.outputs.ios_updated }}"
+          POD_AVAILABLE="${{ steps.ios_version.outputs.pod_available }}"
+          CURRENT_IOS_POD="${{ steps.current_versions.outputs.current_ios_pod }}"
 
           # Create changelog entry
           CHANGELOG_ENTRY="## $NEW_VERSION\n\n## Improvements\n\n"
@@ -176,8 +203,10 @@ jobs:
             CHANGELOG_ENTRY="${CHANGELOG_ENTRY}- Updated the Native Android agent to version ${ANDROID_VERSION}.\n"
           fi
 
-          if [ "$IOS_UPDATED" = "true" ]; then
+          if [ "$IOS_UPDATED" = "true" ] && [ "$POD_AVAILABLE" = "true" ]; then
             CHANGELOG_ENTRY="${CHANGELOG_ENTRY}- Updated the Native iOS agent to version ${IOS_VERSION}.\n"
+          elif [ "$IOS_UPDATED" = "true" ]; then
+            CHANGELOG_ENTRY="${CHANGELOG_ENTRY}- Updated the Native iOS agent to version ${IOS_VERSION} for Swift Package Manager (\`NEWRELIC_USE_SPM=1\`). CocoaPods installs stay on ${CURRENT_IOS_POD} because ${IOS_VERSION} is not available on CocoaPods.\n"
           fi
 
           CHANGELOG_ENTRY="${CHANGELOG_ENTRY}\n"
@@ -209,6 +238,8 @@ jobs:
           CURRENT_IOS="${{ steps.current_versions.outputs.current_ios }}"
           ANDROID_UPDATED="${{ steps.check_updates.outputs.android_updated }}"
           IOS_UPDATED="${{ steps.check_updates.outputs.ios_updated }}"
+          POD_AVAILABLE="${{ steps.ios_version.outputs.pod_available }}"
+          CURRENT_IOS_POD="${{ steps.current_versions.outputs.current_ios_pod }}"
 
           # Create branch name
           BRANCH_NAME="update-native-agents-${NEW_VERSION}"
@@ -242,8 +273,10 @@ jobs:
             PR_BODY="${PR_BODY}- **Android Agent**: ${CURRENT_ANDROID} → ${ANDROID_VERSION}\n"
           fi
 
-          if [ "$IOS_UPDATED" = "true" ]; then
+          if [ "$IOS_UPDATED" = "true" ] && [ "$POD_AVAILABLE" = "true" ]; then
             PR_BODY="${PR_BODY}- **iOS Agent**: ${CURRENT_IOS} → ${IOS_VERSION}\n"
+          elif [ "$IOS_UPDATED" = "true" ]; then
+            PR_BODY="${PR_BODY}- **iOS Agent**: ${CURRENT_IOS} → ${IOS_VERSION} (Swift Package Manager only; \`NewRelicAgent\` ${IOS_VERSION} is not on CocoaPods, so \`sdkVersions.ios.cocoapods\` keeps the pod at \`~>${CURRENT_IOS_POD}\`)\n"
           fi
 
           PR_BODY="${PR_BODY}- **Plugin Version**: ${CURRENT_VERSION} → ${NEW_VERSION}\n\n"
@@ -255,8 +288,10 @@ jobs:
           if [ "$ANDROID_UPDATED" = "true" ]; then
             RELEASE_NOTE="Updated the Native Android agent to version ${ANDROID_VERSION}."
           fi
-          if [ "$IOS_UPDATED" = "true" ]; then
+          if [ "$IOS_UPDATED" = "true" ] && [ "$POD_AVAILABLE" = "true" ]; then
             RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE }Updated the Native iOS agent to version ${IOS_VERSION}."
+          elif [ "$IOS_UPDATED" = "true" ]; then
+            RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE }Updated the Native iOS agent to version ${IOS_VERSION} for Swift Package Manager (\`NEWRELIC_USE_SPM=1\`). CocoaPods installs stay on ${CURRENT_IOS_POD} because ${IOS_VERSION} is not available on CocoaPods."
           fi
           PR_BODY="${PR_BODY}## Release note\n\n${RELEASE_NOTE}\n\n"
           PR_BODY="${PR_BODY}## Files Updated\n\n- \`package.json\`\n- \`README.md\`\n- \`CHANGELOG.md\`\n\n"
