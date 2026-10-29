@@ -284,7 +284,7 @@ Or, if you are using the traditional way to apply the plugin:
      }
      dependencies {
        ...
-       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.8.4"
+       classpath "com.newrelic.agent.android:agent-gradle-plugin:7.8.5"
      }
    }
    ```
