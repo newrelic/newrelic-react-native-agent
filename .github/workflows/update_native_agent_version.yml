@@ -59,14 +59,19 @@ jobs:
 
       - name: Fetch latest iOS agent version
         id: ios_version
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ -n "${{ inputs.ios_version }}" ]; then
             VERSION="${{ inputs.ios_version }}"
             echo "Using provided iOS version: $VERSION"
           else
-            # Fetch latest version from CocoaPods using jq to properly parse JSON
-            VERSION=$(curl -s 'https://trunk.cocoapods.org/api/v1/pods/NewRelicAgent' | \
-              jq -r '.versions[-1].name')
+            # Fetch latest version from the newest non-prerelease GitHub release of the iOS agent SPM repo
+            VERSION=$(gh api repos/newrelic/newrelic-ios-agent-spm/releases/latest -q .tag_name | sed 's/^v//')
+            if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+              echo "::error::Could not determine the latest iOS agent version (got '$VERSION')"
+              exit 1
+            fi
             echo "Fetched latest iOS version: $VERSION"
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
