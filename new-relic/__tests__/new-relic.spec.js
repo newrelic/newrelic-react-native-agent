@@ -564,21 +564,6 @@ describe('New Relic', () => {
 
     afterEach(() => {
       jest.restoreAllMocks();
-  describe('consoleCaptureEnabled', () => {
-    const methods = ['log', 'warn', 'error', 'debug'];
-    let originals;
-
-    beforeEach(() => {
-      originals = {};
-      methods.forEach((method) => {
-        originals[method] = console[method];
-        console[method] = jest.fn();
-        originals[method + 'Stub'] = console[method];
-      });
-      NRMAModularAgentWrapper.isAgentStarted = false;
-    });
-
-    afterEach(() => {
       methods.forEach((method) => {
         console[method] = originals[method];
       });
@@ -623,6 +608,29 @@ describe('New Relic', () => {
       console.warn('hello', { a: 1 });
 
       expect(logWarn).toHaveBeenCalledWith('[CONSOLE][WARN]{"0":"hello","1":{"a":1}}');
+    });
+  });
+
+  describe('consoleCaptureEnabled', () => {
+    const methods = ['log', 'warn', 'error', 'debug'];
+    let originals;
+
+    beforeEach(() => {
+      originals = {};
+      methods.forEach((method) => {
+        originals[method] = console[method];
+        console[method] = jest.fn();
+        originals[method + 'Stub'] = console[method];
+      });
+      NRMAModularAgentWrapper.isAgentStarted = false;
+    });
+
+    afterEach(() => {
+      methods.forEach((method) => {
+        console[method] = originals[method];
+      });
+    });
+
     it('should default to true and override the console', () => {
       NewRelic.startAgent('12345');
 
