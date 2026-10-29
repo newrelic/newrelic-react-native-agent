@@ -690,21 +690,31 @@ class NewRelic {
             const defaultDebug = console.debug;
             const self = this;
 
+            // Agent instrumentation must never make a console.* call throw
+            // or stop the original console method from running.
+            const safeSendConsole = function (type, args) {
+                try {
+                    self.sendConsole(type, args);
+                } catch (e) {
+                    // drop the New Relic copy of this console call
+                }
+            };
+
             console.log = function () {
-                self.sendConsole('log', arguments);
+                safeSendConsole('log', arguments);
                 defaultLog.apply(console, arguments);
             };
             console.warn = function () {
-                self.sendConsole('warn', arguments);
+                safeSendConsole('warn', arguments);
                 defaultWarn.apply(console, arguments);
             };
             console.error = function () {
-                self.sendConsole('error', arguments);
+                safeSendConsole('error', arguments);
                 defaultError.apply(console, arguments);
             };
 
             console.debug = function () {
-                self.sendConsole('debug', arguments);
+                safeSendConsole('debug', arguments);
                 defaultDebug.apply(console, arguments);
             }
 
@@ -714,12 +724,36 @@ class NewRelic {
     }
 
     /**
+     * Serializes console arguments, replacing any argument that cannot be
+     * serialized (e.g. an object with a getter that throws) with a placeholder.
+     *
+     * @private
+     * @param {IArguments | Array<unknown>} args
+     * @returns {string}
+     */
+    _stringifyConsoleArgs(args) {
+        try {
+            return JSON.stringify(args, getCircularReplacer());
+        } catch (e) {
+            const safeArgs = Array.from(args).map((arg) => {
+                try {
+                    JSON.stringify(arg, getCircularReplacer());
+                    return arg;
+                } catch (argError) {
+                    return '[unserializable]';
+                }
+            });
+            return JSON.stringify(safeArgs, getCircularReplacer());
+        }
+    }
+
+    /**
      * @private
      * @param {string} type
      * @param {IArguments | Array<unknown>} args
      */
     sendConsole(type, args) {
-        const argsStr = JSON.stringify(args, getCircularReplacer());
+        const argsStr = this._stringifyConsoleArgs(args);
 
         if (type === 'error') {
             this.logError("[CONSOLE][ERROR]" + argsStr);

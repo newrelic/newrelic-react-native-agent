@@ -537,6 +537,80 @@ describe('New Relic', () => {
     expect(nativeConfig.jsErrorReportingEnabled).toBe(false);
   });
 
+  describe('console override', () => {
+    const methods = ['log', 'warn', 'error', 'debug'];
+    let originals;
+    let originalMocks;
+
+    const throwingGetterArg = () => ({
+      get boom() {
+        throw new Error('getter threw');
+      },
+    });
+
+    beforeEach(() => {
+      originals = {};
+      originalMocks = {};
+      methods.forEach((method) => {
+        originals[method] = console[method];
+        originalMocks[method] = jest.fn();
+        console[method] = originalMocks[method];
+      });
+      NRMAModularAgentWrapper.isAgentStarted = false;
+      NewRelic.startAgent('12345');
+      // startAgent logs through console itself; only count calls made by the test
+      methods.forEach((method) => originalMocks[method].mockClear());
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+      methods.forEach((method) => {
+        console[method] = originals[method];
+      });
+    });
+
+    it.each(methods)('console.%s should not throw when an argument has a throwing getter', (method) => {
+      expect(() => console[method](throwingGetterArg())).not.toThrow();
+    });
+
+    it.each(methods)('console.%s should still call the original console method when an argument has a throwing getter', (method) => {
+      const arg = throwingGetterArg();
+
+      console[method]('message', arg);
+
+      expect(originalMocks[method]).toHaveBeenCalledTimes(1);
+      expect(originalMocks[method]).toHaveBeenCalledWith('message', arg);
+    });
+
+    it('should still call the original console method when sendConsole throws', () => {
+      const sendConsole = jest.spyOn(NewRelic, 'sendConsole').mockImplementation(() => {
+        throw new Error('sendConsole failed');
+      });
+
+      expect(() => console.log('hello')).not.toThrow();
+      expect(originalMocks.log).toHaveBeenCalledWith('hello');
+      expect(sendConsole).toHaveBeenCalledTimes(1);
+    });
+
+    it('should replace an unserializable argument with a placeholder instead of dropping the log', () => {
+      const logInfo = jest.spyOn(NewRelic, 'logInfo').mockImplementation(() => {});
+
+      console.log(throwingGetterArg());
+
+      expect(logInfo).toHaveBeenCalledTimes(1);
+      expect(logInfo.mock.calls[0][0]).toContain('[CONSOLE][LOG]');
+      expect(logInfo.mock.calls[0][0]).toContain('[unserializable]');
+    });
+
+    it('should still forward serializable arguments unchanged', () => {
+      const logWarn = jest.spyOn(NewRelic, 'logWarn').mockImplementation(() => {});
+
+      console.warn('hello', { a: 1 });
+
+      expect(logWarn).toHaveBeenCalledWith('[CONSOLE][WARN]{"0":"hello","1":{"a":1}}');
+    });
+  });
+
   describe('consoleCaptureEnabled', () => {
     const methods = ['log', 'warn', 'error', 'debug'];
     let originals;
