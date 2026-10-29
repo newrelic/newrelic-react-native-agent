@@ -235,6 +235,10 @@ import {Platform} from 'react-native';
       // Optional: Enable or disable collection of JavaScript errors reported via recordError
       // (routed through the MobileJSError / /mobile/errors protocol). Enabled by default.
        jsErrorReportingEnabled: true,
+
+      // Optional: Enable or disable capturing console.log/warn/error/debug calls as New Relic logs.
+      // When false, the agent does not override the global console methods. Enabled by default.
+       consoleCaptureEnabled: true,
   };
 
 

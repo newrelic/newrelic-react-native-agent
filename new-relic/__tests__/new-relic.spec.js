@@ -564,6 +564,21 @@ describe('New Relic', () => {
 
     afterEach(() => {
       jest.restoreAllMocks();
+  describe('consoleCaptureEnabled', () => {
+    const methods = ['log', 'warn', 'error', 'debug'];
+    let originals;
+
+    beforeEach(() => {
+      originals = {};
+      methods.forEach((method) => {
+        originals[method] = console[method];
+        console[method] = jest.fn();
+        originals[method + 'Stub'] = console[method];
+      });
+      NRMAModularAgentWrapper.isAgentStarted = false;
+    });
+
+    afterEach(() => {
       methods.forEach((method) => {
         console[method] = originals[method];
       });
@@ -608,6 +623,35 @@ describe('New Relic', () => {
       console.warn('hello', { a: 1 });
 
       expect(logWarn).toHaveBeenCalledWith('[CONSOLE][WARN]{"0":"hello","1":{"a":1}}');
+    it('should default to true and override the console', () => {
+      NewRelic.startAgent('12345');
+
+      expect(NewRelic.config.consoleCaptureEnabled).toBe(true);
+      expect(NewRelic.state.didOverrideConsole).toBe(true);
+      methods.forEach((method) => {
+        expect(console[method]).not.toBe(originals[method + 'Stub']);
+      });
+    });
+
+    it('should not override the console when set to false', () => {
+      NewRelic.startAgent('12345', { consoleCaptureEnabled: false });
+
+      expect(NewRelic.config.consoleCaptureEnabled).toBe(false);
+      expect(NewRelic.state.didOverrideConsole).toBe(false);
+      methods.forEach((method) => {
+        expect(console[method]).toBe(originals[method + 'Stub']);
+      });
+    });
+
+    it('should not forward console calls as logs when set to false', () => {
+      const sendConsole = jest.spyOn(NewRelic, 'sendConsole');
+      NewRelic.startAgent('12345', { consoleCaptureEnabled: false });
+
+      console.log('hello');
+      console.error('boom');
+
+      expect(sendConsole).not.toHaveBeenCalled();
+      sendConsole.mockRestore();
     });
   });
 
