@@ -20,7 +20,7 @@ Before submitting an Issue, please search for similar ones in the
 
 ## Release notes
 
-Release notes for the React Native agent are drafted automatically and reviewed by a person before they are published on docs.newrelic.com, in the docs-website release-notes format (`features`, `enhancements`, `bugs` and `security` arrays, a blank `category`, and only the sections that have entries). The automation is shared with the other mobile agents and lives in [newrelic/newrelic-android-agent `.github/actions/release-notes/`](https://github.com/newrelic/newrelic-android-agent/tree/develop/.github/actions/release-notes); its README explains how each bullet is built.
+Release notes for the React Native agent are drafted automatically and reviewed by a person before they are published on docs.newrelic.com, in the docs-website release-notes template format (`features`, `enhancements`, `bugs` and `security` arrays, no `category` line, and a `###` heading for each section that has entries). The automation is shared with the other mobile agents and lives in [newrelic/newrelic-android-agent `.github/actions/release-notes/`](https://github.com/newrelic/newrelic-android-agent/tree/develop/.github/actions/release-notes); its README explains how each bullet is built.
 
 **Every PR merged to `main` needs exactly one of these labels**, unless it is left out of the notes (see below). The label decides which section of the published note the PR appears in:
 
@@ -31,7 +31,7 @@ Release notes for the React Native agent are drafted automatically and reviewed 
 | `release-note:bug` | Bug fixes | Something that was broken; say what was broken |
 | `release-note:security` | Security updates | Security fixes |
 
-Most React Native releases are native agent version bumps. Those are enhancements, not features. The `chore: Update native agents` PRs opened by `update_native_agent_version.yml` are labelled `release-note:enhancement` automatically, and their `## Release note` section repeats the `CHANGELOG.md` entries word for word.
+Most React Native releases are native agent version bumps. Those are enhancements, not features. The `chore: Update native agents` PRs opened by `update_native_agent_version.yml` are labelled `release-note:enhancement` automatically, and their `## Release note` section repeats the `CHANGELOG.md` entries word for word, one `- ` line per updated agent, so each update is its own bullet.
 
 - If the description has a `## Release note` heading (or a `Release note:` line), that text becomes the bullet as written, so say what changed for app developers or their users and, for a bug, what was broken. Otherwise the title is used with its type prefix and Jira key removed and the leading verb put in the past tense (`fix: guard against null filename (NR-1)` becomes "Guarded against null filename."). Write `N/A` to use the title.
 - Unlabelled PRs whose title type is `docs`, `test`, `ci`, `chore`, `build` or `style`, and Dependabot PRs, are left out as not user-facing; add a `release-note:*` label to include one. Use `security:` as the title type for a security fix, or the `release-note:security` label.
