@@ -305,6 +305,10 @@ Run the following, and it will install the New Relic XCFramework agent:
 
 ### iOS package manager: CocoaPods (default) or Swift Package Manager (opt-in)
 
+> **CocoaPods trunk is becoming read-only.** [CocoaPods plans to make its trunk read-only on December 2, 2026](https://blog.cocoapods.org/CocoaPods-Specs-Repo/). Builds that use already-published pod versions keep working, but no new pod versions, including new releases of the `NewRelicAgent` pod, can be published after that date.
+>
+> On **React Native 0.75+**, use the Swift Package Manager opt-in described below to keep receiving new iOS agent versions. On earlier React Native versions the SPM path is not available, so the `NewRelicAgent` pod stays at the last version published to trunk.
+
 By default the agent is consumed via the `NewRelicAgent` CocoaPods spec, which works on every supported React Native version (>= 0.61).
 
 Consumers on **React Native 0.75+** can opt-in to fetch the underlying NewRelic iOS agent via Swift Package Manager (from [newrelic/newrelic-ios-agent-spm](https://github.com/newrelic/newrelic-ios-agent-spm)) instead. This anticipates CocoaPods moving to read-only and aligns with apps that already integrate other iOS dependencies through SPM.

@@ -10,6 +10,9 @@ package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
 #NewRelic IOS Agent
 newrelic_sdk_version = package['sdkVersions']['ios']['newrelic']
+# Requirement for the NewRelicAgent pod. sdkVersions.ios.cocoapods is only set when it lags the SPM
+# version above, because newer iOS agent versions aren't published to CocoaPods.
+newrelic_pod_version = package['sdkVersions']['ios']['cocoapods'] || newrelic_sdk_version
 
 Pod::Spec.new do |s|
   s.name         = package['name']
@@ -57,7 +60,7 @@ Pod::Spec.new do |s|
       products: ['NewRelic']
     )
   else
-    s.dependency 'NewRelicAgent', newrelic_sdk_version
+    s.dependency 'NewRelicAgent', newrelic_pod_version
   end
 
   s.preserve_paths = '*.js'
