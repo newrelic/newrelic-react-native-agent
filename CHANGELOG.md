@@ -1,4 +1,12 @@
 # Changelog
+## 1.9.4
+
+## Improvements
+
+- Updated the Native Android agent to version 7.8.5.
+- Updated the Native iOS agent to version 7.7.10 for Swift Package Manager (`NEWRELIC_USE_SPM=1`). CocoaPods installs stay on 7.7.9 because 7.7.10 is not available on CocoaPods.
+
+
 ## 1.9.3
 
 ## Improvements
