@@ -281,17 +281,18 @@ jobs:
 
           PR_BODY="${PR_BODY}- **Plugin Version**: ${CURRENT_VERSION} → ${NEW_VERSION}\n\n"
 
-          # Becomes the bullet in the docs-website release notes (see CONTRIBUTING.md, "Release notes").
-          # Native agent updates are enhancements. The sentences match the CHANGELOG.md entries written
-          # above word for word, so the release-time reconciliation lists each update only once.
+          # Becomes the docs-website release notes (see CONTRIBUTING.md, "Release notes"): one list
+          # line per updated agent, each its own bullet. Native agent updates are enhancements. The
+          # sentences match the CHANGELOG.md entries written above word for word, so the release-time
+          # reconciliation lists each update only once.
           RELEASE_NOTE=""
           if [ "$ANDROID_UPDATED" = "true" ]; then
-            RELEASE_NOTE="Updated the Native Android agent to version ${ANDROID_VERSION}."
+            RELEASE_NOTE="- Updated the Native Android agent to version ${ANDROID_VERSION}."
           fi
           if [ "$IOS_UPDATED" = "true" ] && [ "$POD_AVAILABLE" = "true" ]; then
-            RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE }Updated the Native iOS agent to version ${IOS_VERSION}."
+            RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE\n}- Updated the Native iOS agent to version ${IOS_VERSION}."
           elif [ "$IOS_UPDATED" = "true" ]; then
-            RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE }Updated the Native iOS agent to version ${IOS_VERSION} for Swift Package Manager (\`NEWRELIC_USE_SPM=1\`). CocoaPods installs stay on ${CURRENT_IOS_POD} because ${IOS_VERSION} is not available on CocoaPods."
+            RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE\n}- Updated the Native iOS agent to version ${IOS_VERSION} for Swift Package Manager (\`NEWRELIC_USE_SPM=1\`). CocoaPods installs stay on ${CURRENT_IOS_POD} because ${IOS_VERSION} is not available on CocoaPods."
           fi
           PR_BODY="${PR_BODY}## Release note\n\n${RELEASE_NOTE}\n\n"
           PR_BODY="${PR_BODY}## Files Updated\n\n- \`package.json\`\n- \`README.md\`\n- \`CHANGELOG.md\`\n\n"

@@ -6,5 +6,6 @@
   "tagPrefix": "v",
   "skeleton": "react-native-agent-next.mdx",
   "downloadLink": "https://www.npmjs.com/package/{npmPackage}/v/{version}",
-  "changelog": "CHANGELOG.md"
+  "changelog": "CHANGELOG.md",
+  "readyForReview": true
 }
