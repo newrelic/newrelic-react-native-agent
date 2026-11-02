@@ -41,15 +41,15 @@ Most React Native releases are native agent version bumps. Those are enhancement
 ### How the notes are built
 
 1. **On every merge to `main`**, `.github/workflows/release-notes-append.yml` adds the PR's bullet to the `react-native-next` branch of `newrelic/docs-website` (draft PR "React Native agent: next release notes", which is never merged). The branch starts from `react-native-agent-next.mdx` at the root of this repository.
-2. **On every release**, `release-testing.yml` calls `.github/workflows/release-notes-generate.yml`, which reconciles three sources: the bullets on `react-native-next`, every PR between the previous tag and the new one, and the version's entries in `CHANGELOG.md`. A change that appears in more than one source appears once. It writes `react-native-agent-<version without dots>.mdx` (for example `react-native-agent-193.mdx`) with a version-pinned npm `downloadLink`, and opens a **draft** PR on `newrelic/docs-website`.
+2. **On every release**, `release-testing.yml` calls `.github/workflows/release-notes-generate.yml`, which reconciles three sources: the bullets on `react-native-next`, every PR between the previous tag and the new one, and the version's entries in `CHANGELOG.md`. A change that appears in more than one source appears once. It writes `react-native-agent-<version without dots>.mdx` (for example `react-native-agent-193.mdx`) with a version-pinned npm `downloadLink`, and opens a PR on `newrelic/docs-website`, ready for review (`readyForReview` in the settings). Its branch is on the bot's fork `newrelic-mobile-agents-bot/docs-website`, where collaborators can still edit the note.
 3. Settings are in `.github/release-notes.json`. The workflows need the `BOT_PAT` and `BOT_EMAIL` repository secrets.
 
 ### Release checklist
 
 - [ ] Every user-facing PR since the last release carries one `release-note:*` label (native agent bumps: `release-note:enhancement`).
 - [ ] `CHANGELOG.md` has a `## <version>` entry for the release.
-- [ ] After the release, open the draft `React Native agent <version> release notes` PR on `newrelic/docs-website` and **edit it before it merges**: each bullet is specific and user-facing, bug bullets say what was broken, each bullet sits in the right section, each frontmatter array mirrors its section, and the lists under "From the CHANGELOG" and "PRs left out" in the PR description have been checked.
-- [ ] Mark the docs PR ready for review. The `react-native-next` draft PR is updated or closed automatically.
+- [ ] After the release, open the `React Native agent <version> release notes` PR on `newrelic/docs-website` and **edit it before it merges**: each bullet is specific and user-facing, bug bullets say what was broken, each bullet sits in the right section, each frontmatter array mirrors its section, and the lists under "From the CHANGELOG" and "PRs left out" in the PR description have been checked.
+- [ ] Nothing to mark: the docs PR opens ready for review, and the `react-native-next` draft PR is updated or closed automatically.
 - [ ] To rebuild the notes for an existing tag, run `release-notes-generate.yml` by hand with the version (for example `1.9.3`); tick `overwrite` only to discard edits already made on the docs PR.
 
 ## Contributor License Agreement
