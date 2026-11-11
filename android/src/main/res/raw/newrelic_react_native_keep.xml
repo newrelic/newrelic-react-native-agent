@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The agent finds the string by name at runtime, which resource shrinking cannot see; keep it in release builds. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/com_newrelic_application_framework" />
