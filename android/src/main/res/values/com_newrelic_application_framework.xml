@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Read by the New Relic Android agent to learn which framework hosts it, even when the app starts
+         the agent natively before React Native code runs. Must match a com.newrelic.agent.android.ApplicationFramework name. -->
+    <string name="com_newrelic_application_framework" translatable="false">ReactNative</string>
+</resources>
