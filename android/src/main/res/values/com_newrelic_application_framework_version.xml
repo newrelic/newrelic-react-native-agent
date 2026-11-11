@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The package version the New Relic Android agent reports as platformVersion from the first session, even when the
+         app starts the agent natively before React Native code runs. Kept equal to package.json by the update workflow
+         and new-relic/__tests__/android-framework-resource.spec.js; do not edit it by hand. -->
+    <string name="com_newrelic_application_framework_version" translatable="false">1.9.4</string>
+</resources>
