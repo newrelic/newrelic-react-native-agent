@@ -175,6 +175,22 @@ jobs:
 
           echo "Updated package.json"
 
+      # The Android agent reads the plugin version from this string resource so platformVersion is right
+      # from the first session. sed exits 0 when nothing matches, so assert the new version landed.
+      - name: Update Android framework version resource
+        if: steps.check_updates.outputs.needs_update == 'true'
+        run: |
+          NEW_VERSION="${{ steps.new_plugin_version.outputs.new_version }}"
+          RES=android/src/main/res/values/com_newrelic_application_framework_version.xml
+
+          sed -i "s|\(<string name=\"com_newrelic_application_framework_version\" translatable=\"false\">\)[^<]*|\1${NEW_VERSION}|" "$RES"
+
+          if ! grep -Fq ">${NEW_VERSION}</string>" "$RES"; then
+            echo "::error file=$RES::expected version ${NEW_VERSION} after substitution but it is absent. The sed pattern no longer matches; the version was NOT updated."
+            exit 1
+          fi
+          echo "Updated $RES"
+
       - name: Update README.md
         if: steps.check_updates.outputs.needs_update == 'true'
         run: |
@@ -248,7 +264,7 @@ jobs:
           git checkout -b "$BRANCH_NAME"
 
           # Add changes
-          git add package.json README.md CHANGELOG.md
+          git add package.json android/src/main/res/values/com_newrelic_application_framework_version.xml README.md CHANGELOG.md
 
           # Create commit message
           COMMIT_MSG="chore: Update native agents to v${NEW_VERSION}"
@@ -295,7 +311,7 @@ jobs:
             RELEASE_NOTE="${RELEASE_NOTE:+$RELEASE_NOTE\n}- Updated the Native iOS agent to version ${IOS_VERSION} for Swift Package Manager (\`NEWRELIC_USE_SPM=1\`). CocoaPods installs stay on ${CURRENT_IOS_POD} because ${IOS_VERSION} is not available on CocoaPods."
           fi
           PR_BODY="${PR_BODY}## Release note\n\n${RELEASE_NOTE}\n\n"
-          PR_BODY="${PR_BODY}## Files Updated\n\n- \`package.json\`\n- \`README.md\`\n- \`CHANGELOG.md\`\n\n"
+          PR_BODY="${PR_BODY}## Files Updated\n\n- \`package.json\`\n- \`android/src/main/res/values/com_newrelic_application_framework_version.xml\`\n- \`README.md\`\n- \`CHANGELOG.md\`\n\n"
           PR_BODY="${PR_BODY}## Testing\n\n- [ ] Tests pass\n- [ ] Android app builds successfully\n- [ ] iOS app builds successfully\n- [ ] Manual testing completed\n\n---\n\n"
           PR_BODY="${PR_BODY}This PR was automatically created by the Update Native Agent Versions workflow.\n\n"
           PR_BODY="${PR_BODY}🤖 Generated with [Claude Code](https://claude.com/claude-code)"
