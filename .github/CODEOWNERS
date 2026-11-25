@@ -1,0 +1,35 @@
+# Changes to CI, build, packaging and publishing files need a review from the
+# Mobile Agents release owners. The last matching pattern wins, so keep this
+# file's own entry at the bottom.
+
+# CI: workflows, scripts and dependency update config
+/.github/                               @newrelic/mobagent
+
+# npm package: dependencies, published files and the JS build
+/package.json                           @newrelic/mobagent
+/.npmignore                             @newrelic/mobagent
+/tsconfig.json                          @newrelic/mobagent
+/babel.config.js                        @newrelic/mobagent
+
+# iOS packaging, the prebuilt bridge it installs, and SPM setup for customer Podfiles
+/newrelic-react-native-agent.podspec    @newrelic/mobagent
+/ios/ios-bridge.zip                     @newrelic/mobagent
+/newrelic_spm.rb                        @newrelic/mobagent
+
+# Android build, wrapper and native agent dependency
+/android/build.gradle                   @newrelic/mobagent
+/android/settings.gradle                @newrelic/mobagent
+/android/gradle.properties              @newrelic/mobagent
+/android/gradlew                        @newrelic/mobagent
+/android/gradlew.bat                    @newrelic/mobagent
+/android/gradle/                        @newrelic/mobagent
+
+# Code that runs in customer builds: the Gradle script apps apply, the Expo
+# config plugin, and the dSYM upload and source map scripts
+/newrelic.gradle                        @newrelic/mobagent
+/app.plugin.js                          @newrelic/mobagent
+/plugin/                                @newrelic/mobagent
+/new-relic/scripts/                     @newrelic/mobagent
+
+# This file
+/.github/CODEOWNERS                     @newrelic/mobagent
